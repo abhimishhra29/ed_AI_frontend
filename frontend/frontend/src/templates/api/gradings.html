@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Grading Results</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 2rem;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 1rem;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #aaa;
+            vertical-align: top;
+        }
+        th {
+            background-color: #f0f0f0;
+        }
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .actions {
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Past Grading Results</h1>
+
+    {% if gradings %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Grader</th>
+                    <th>Created At</th>
+                    <th>BERT Similarity</th>
+                    <th>Cosine Similarity</th>
+                    <th>Grading Output</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for g in gradings %}
+                    <tr>
+                        <td>{{ g.grader_name|default:"–" }}</td>
+                        <td>{{ g.created_at|date:"Y-m-d H:i"|default:"–" }}</td>
+                        <td>{{ g.similarity_bert|floatformat:3|default:"–" }}</td>
+                        <td>{{ g.similarity_cosine|floatformat:3|default:"–" }}</td>
+                        <td><pre>{{ g.description|default:"(No output returned)" }}</pre></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No grading records found.</p>
+    {% endif %}
+
+    <div class="actions">
+        <a href="{% url 'add_reviewer' %}">➕ Grade Another Assignment</a>
+    </div>
+</body>
+</html>
