@@ -21,6 +21,7 @@
       background-color: var(--background);
       color: var(--primary);
       min-height: 100vh;
+      overflow-x: hidden;
     }
     .sidebar {
       background-color: var(--primary);
@@ -57,6 +58,7 @@
       margin-left: 250px;
       padding: 3em 4em;
       width: 100%;
+      max-width: 100%;
     }
     section { display: none; animation: fadeIn 0.4s ease forwards; }
     section.active { display: block; }
@@ -75,6 +77,7 @@
       box-shadow: 0 6px 20px var(--shadow);
       max-width: 800px;
       margin-bottom: 2em;
+      width: 100%;
     }
     .card p {
       font-size: 1.1em;
@@ -105,6 +108,7 @@
       width: 100%;
       max-width: 800px;
       box-shadow: 0 8px 20px var(--shadow);
+      margin-bottom: 2em;
     }
     label {
       font-weight: 600;
@@ -120,6 +124,7 @@
       border-radius: 8px;
       border: 1px solid #ccc;
       background-color: #fff;
+      margin-bottom: 1em;
     }
     button {
       margin-top: 2em;
@@ -163,16 +168,36 @@
       background-color: var(--accent);
       color: #fff;
     }
+
     @media (max-width: 768px) {
-      body { flex-direction: column; }
+      body {
+        flex-direction: column;
+        overflow-x: hidden;
+      }
       .sidebar {
         width: 100%;
         flex-direction: row;
         justify-content: center;
         padding: 1.5em;
         position: relative;
+        flex-wrap: wrap;
       }
-      .main { margin-left: 0; padding: 2em 1.5em; }
+      .main {
+        margin-left: 0;
+        padding: 1.5em;
+      }
+      form, .card, #output {
+        width: 100%;
+        max-width: 100%;
+        padding: 1.5em;
+        box-sizing: border-box;
+      }
+      input, select, button {
+        margin-top: 0.8em;
+      }
+      h1 {
+        font-size: 1.5em;
+      }
     }
   </style>
 </head>
@@ -184,7 +209,6 @@
     <a href="#" class="nav-link" onclick="showSection('about')">About Us</a>
     <a href="#" class="nav-link" onclick="showSection('register')">Trial Access</a>
     <a href="#" class="nav-link" onclick="showSection('contact')">Contact Us</a>
-
   </aside>
 
   <main class="main">
@@ -228,7 +252,6 @@
 
         <button type="submit">Submit</button>
       </form>
-
       <div id="output"></div>
       <button class="export-btn" onclick="exportToCSV()">Export as CSV</button>
     </section>
