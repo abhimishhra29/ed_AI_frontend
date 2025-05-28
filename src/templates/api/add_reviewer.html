@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head><title>Submit Assignment for Grading</title></head>
+<body>
+    <h1>Upload Files for Grading</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label>Grader Name:</label><br>
+        <input type="text" name="graderName" required><br><br>
+
+        <label>Assignment File:</label><br>
+        <input type="file" name="assignmentFile" required><br><br>
+
+        <label>Solution File:</label><br>
+        <input type="file" name="solutionFile" required><br><br>
+
+        <label>Sample File:</label><br>
+        <input type="file" name="sampleFile" required><br><br>
+
+        <label>Rubrics File:</label><br>
+        <input type="file" name="rubricsFile" required><br><br>
+
+        <button type="submit">Submit for Grading</button>
+    </form>
+</body>
+</html>

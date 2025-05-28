@@ -1,0 +1,31 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/.next
+/out
+
+# misc
+.DS_Store
+.env*
+.npmrc
+yarn-error.log
+package-lock.json
+npm-debug.log*
+.vscode
+.idea
+
+# local build
+/build
+
+# logs
+logs
+*.log
+
+# OS
+Thumbs.db
