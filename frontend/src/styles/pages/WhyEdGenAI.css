@@ -1,0 +1,23 @@
+.why-page h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: var(--primary-dark);
+  font-size: clamp(2.8rem, 6vw, 3.8rem);
+}
+
+.page-section {
+  scroll-margin-top: 100px; /* adjust if your header is taller */
+  margin-bottom: 3.5rem;
+}
+
+.page-section h2 {
+  font-size: 1.8rem;
+  color: var(--primary-highlight);
+  margin-bottom: 1rem;
+}
+
+.page-section p {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--text-dark);
+}

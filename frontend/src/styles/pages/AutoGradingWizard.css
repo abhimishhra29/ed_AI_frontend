@@ -1,0 +1,724 @@
+/*================================================================
+  1. GLOBAL STYLES
+================================================================*/
+:root {
+  /* Shared palette */
+  --primary-dark: #213342;
+  --primary-highlight: #4e6f8a;
+  --warm-white: #fdfcfb;
+  --warm-white-light: #ece8e4;
+  --accent: #ffe6cc;
+  --text-dark: #1e293b;
+  --text-light: #fdfcfb;
+  --muted: #64748b;
+
+  /* Warning palette */
+  --warning-bg: #fff8dc;
+  --warning-text: #aa8800;
+
+  /* Layout spacing */
+  --wizard-gap: 4rem;
+}
+
+.auto-grading-wizard {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+/*================================================================
+  2. LAYOUT
+================================================================*/
+/* 55% form / 45% right column (templates + validation) */
+.auto-grading-wizard .wizard-content {
+  display: grid;
+  grid-template-columns: 55% minmax(400px, 45%);
+  column-gap: var(--wizard-gap);
+  align-items: start;
+  margin-top: 1.5rem;
+}
+
+.auto-grading-wizard .form-column {
+  display: flex;
+  flex-direction: column;
+  padding-right: 1rem;
+  width: 100%;
+  min-width: 0;
+}
+
+.auto-grading-wizard .right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/*================================================================
+  3. GENERAL UI ELEMENTS
+================================================================*/
+/* ---------- Buttons ---------- */
+.auto-grading-wizard .btn {
+  padding: 8px 18px;
+  font-size: 16px;
+  font-weight: 600;
+  border: 1px solid var(--warm-white-light);
+  border-radius: 5px;
+  background: var(--warm-white-light);
+  color: var(--text-dark);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.auto-grading-wizard .btn.primary {
+  background: var(--primary-dark);
+  color: var(--text-light);
+  border: none;
+}
+
+.auto-grading-wizard .btn.primary:hover {
+  background: var(--primary-highlight);
+}
+
+.auto-grading-wizard .btn:disabled {
+  background: var(--warm-white);
+  color: var(--text-dark);
+  cursor: not-allowed;
+}
+
+/* ---------- Form Elements ---------- */
+.auto-grading-wizard label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: var(--primary-highlight);
+}
+
+.auto-grading-wizard .text-input,
+.auto-grading-wizard select {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 1rem;
+  border: 1.6px solid var(--warm-white-light);
+  border-radius: 6px;
+  background: var(--warm-white);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.auto-grading-wizard .text-input:focus,
+.auto-grading-wizard select:focus {
+  border-color: var(--primary-highlight);
+  box-shadow: 0 0 0 3px rgba(78, 111, 138, 0.15);
+  transform: translateY(-1px);
+}
+
+/*================================================================
+  4. COMPONENT-SPECIFIC STYLES
+================================================================*/
+/* ---------- Form Column ---------- */
+.auto-grading-wizard .input-group {
+  margin-bottom: 1.5rem;
+}
+
+/* ---------- File Picker ---------- */
+.auto-grading-wizard .file-input-wrapper {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border: 2px dashed var(--warm-white-light);
+  border-radius: 0.5rem;
+  transition: border-color 0.2s;
+}
+
+.auto-grading-wizard .file-input-wrapper.has-file {
+  border-style: solid;
+  border-color: var(--primary-dark);
+}
+
+.auto-grading-wizard .file-input-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.375rem;
+  background: var(--primary-dark);
+  color: var(--text-light);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.auto-grading-wizard .file-input-button:hover {
+  background: var(--primary-highlight);
+}
+
+.auto-grading-wizard .file-input-filename {
+  margin-left: 1rem;
+  color: var(--text-dark);
+}
+
+.auto-grading-wizard .file-input-input {
+  display: none; /* Hide the native file input */
+}
+
+/* ---------- Templates Section ---------- */
+.auto-grading-wizard .templates-section {
+  position: relative;
+}
+
+.auto-grading-wizard .template-dropdown {
+  position: relative;
+  width: 100%;
+}
+
+.auto-grading-wizard .template-dropdown-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--warm-white-light);
+  border-radius: 8px;
+  background: var(--warm-white);
+  color: var(--text-dark);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  list-style: none;
+}
+
+.auto-grading-wizard .template-dropdown-trigger:hover {
+  background: var(--warm-white-light);
+  border-color: var(--primary-highlight);
+}
+
+.auto-grading-wizard .template-dropdown-trigger::-webkit-details-marker {
+  display: none;
+}
+
+.auto-grading-wizard .dropdown-icon {
+  transition: transform 0.2s ease;
+  color: var(--primary-highlight);
+}
+
+/* ---------- Rubric Preview ---------- */
+.auto-grading-wizard .rubric-summary {
+  margin: 0 0 1rem 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.auto-grading-wizard .rubric-json-preview {
+  padding: 1.25rem;
+  border-radius: 0.75rem;
+  background: #0f172a;
+  color: #e2e8f0;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  max-height: 480px;
+  overflow: auto;
+  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.2);
+}
+
+.auto-grading-wizard .loading-indicator {
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background: var(--warm-white-light);
+  color: var(--primary-dark);
+  font-weight: 600;
+}
+
+.auto-grading-wizard .question-preview {
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background: var(--warm-white);
+  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.25);
+}
+
+.auto-grading-wizard .question-preview h3 {
+  margin: 0 0 0.5rem 0;
+  color: var(--primary-dark);
+}
+
+.auto-grading-wizard .question-preview ol {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  color: var(--text-dark);
+  font-size: 0.95rem;
+}
+
+.auto-grading-wizard .template-dropdown[open] .dropdown-icon {
+  transform: rotate(180deg);
+}
+
+.auto-grading-wizard .template-dropdown-content {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  margin-top: 4px;
+  padding: 8px;
+  background: var(--warm-white);
+  border: 1px solid var(--warm-white-light);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.auto-grading-wizard .template-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  margin-bottom: 4px;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-dark);
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.auto-grading-wizard .template-link:hover {
+  background: var(--warm-white-light);
+  color: var(--primary-dark);
+}
+
+.auto-grading-wizard .template-link:last-child {
+  margin-bottom: 0;
+}
+
+.auto-grading-wizard .template-link svg {
+  color: var(--primary-highlight);
+  transition: color 0.2s ease;
+}
+
+.auto-grading-wizard .template-link:hover svg {
+  color: var(--primary-dark);
+}
+
+/* ---------- Validation Section ---------- */
+.auto-grading-wizard .validation-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.auto-grading-wizard .validation-section h2 {
+  margin: 0;
+  color: var(--primary-dark);
+  font-size: 1.5rem;
+}
+
+.auto-grading-wizard .validation-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.auto-grading-wizard .validation-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.auto-grading-wizard .validation-buttons .btn {
+  width: 100%;
+}
+
+/* ---------- Validation Feedback ---------- */
+.auto-grading-wizard .validation-feedback {
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--warning-text);
+  background: var(--warning-bg);
+  color: var(--warning-text);
+  box-shadow: 0 2px 8px rgba(34, 34, 84, 0.05);
+}
+
+.auto-grading-wizard .validation-feedback h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.25rem;
+  color: var(--warning-text);
+}
+
+
+
+/* ---------- Validation Success Message ---------- */
+.auto-grading-wizard .success-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: var(--warning-bg);
+  border-radius: 8px;
+}
+
+.auto-grading-wizard .success-icon {
+  width: 3rem;
+  height: 3rem;
+  margin-right: 0.75rem;
+}
+
+.auto-grading-wizard .success-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.auto-grading-wizard .success-text {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #22c55e;
+}
+
+/* ---------- Status & Error Messages ---------- */
+.auto-grading-wizard .validation-error,
+.auto-grading-wizard .grading-error {
+  margin: 1em 0;
+  font-weight: 500;
+  color: var(--warning-text);
+}
+
+.auto-grading-wizard .no-feedback,
+.auto-grading-wizard .no-results {
+  font-style: italic;
+  color: var(--muted);
+}
+
+.auto-grading-wizard .timer {
+  margin: 1rem 0;
+  font-weight: 500;
+}
+
+/* ---------- Grading Results ---------- */
+.auto-grading-wizard .results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.auto-grading-wizard .grading-result-card {
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+  border: 1px solid var(--warm-white-light);
+  border-radius: 8px;
+  background: var(--warm-white);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.auto-grading-wizard .grading-result-filename {
+  margin: 0 0 0.5rem 0;
+  color: var(--primary-dark);
+}
+
+.auto-grading-wizard .total-score {
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.auto-grading-wizard .rationale-item {
+  padding: 0.75rem 0.9rem;
+  margin-bottom: 0.75rem;
+  border-radius: 6px;
+  background: var(--warm-white-light);
+  line-height: 1.45;
+}
+
+/*================================================================
+  5. RESPONSIVE STYLES
+================================================================*/
+@media (max-width: 768px) {
+  .auto-grading-wizard .wizard-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .auto-grading-wizard .right-column {
+    order: -1;
+    margin-bottom: 2rem;
+  }
+  
+  .auto-grading-wizard .template-dropdown-content {
+    position: static;
+    margin-top: 0;
+    box-shadow: none;
+    border: none;
+    background: var(--warm-white-light);
+  }
+}
+
+/* FileInputWithHelp.css */
+
+/* File input wrapper */
+.file-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border: 2px dashed var(--warm-white-light);
+  border-radius: 0.5rem;
+  transition: border-color 0.2s;
+}
+
+.file-input-wrapper.has-file {
+  border-style: solid;
+  border-color: var(--primary-dark);
+}
+
+.file-input-wrapper.has-file .file-input-button {
+  background-color: var(--primary-highlight);
+}
+
+/* File input button */
+.file-input-button {
+  background-color: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  flex-shrink: 0;
+}
+
+.file-input-button:hover {
+  background-color: #e5e7eb;
+}
+
+/* File input filename display */
+.file-input-filename {
+  margin-left: 8px;
+  font-size: 0.875rem;
+  color: #4b5563;
+  flex: 1;
+}
+
+/* Hidden file input */
+.file-input-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 50%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Help icon */
+.help-icon {
+  margin-left: 8px;
+  width: 20px;
+  height: 20px;
+  color: #6b7280;
+  cursor: pointer;
+  transition: color 0.2s;
+  flex-shrink: 0;
+}
+
+.help-icon:hover {
+  color: #374151;
+}
+
+/* Workflow input wrapper */
+.workflow-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.workflow-select {
+  flex: 1;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  font-size: 1rem;
+  border: 1.6px solid var(--warm-white-light);
+  border-radius: 6px;
+  background: var(--warm-white);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.workflow-select:focus {
+  border-color: var(--primary-highlight);
+  box-shadow: 0 0 0 3px rgba(78, 111, 138, 0.15);
+  transform: translateY(-1px);
+}
+
+/* Help overlay */
+.help-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.help-modal {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  max-width: 90vw;
+  max-height: 90vh;
+  position: relative;
+  overflow: auto;
+}
+
+.help-close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+  z-index: 1001;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.help-close-button:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+/* Help content sections */
+.help-content {
+  padding-right: 20px; /* Space for close button */
+}
+
+.help-content h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  color: var(--primary-dark);
+}
+
+.help-description {
+  margin-bottom: 20px;
+  color: var(--text-dark);
+  line-height: 1.5;
+}
+
+.help-image-container {
+  margin-bottom: 20px;
+}
+
+.help-image-container h4 {
+  margin-bottom: 12px;
+  color: var(--primary-dark);
+}
+
+/* Fixed image sizing - show full image */
+.help-image-preview {
+  max-width: 100%;
+  max-height: 60vh;
+  width: auto;
+  height: auto;
+  display: block;
+  margin: 0 auto 12px auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  object-fit: contain;
+}
+
+.help-download-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--primary-dark);
+  text-decoration: none;
+  font-size: 0.875rem;
+  padding: 8px 12px;
+  border: 1px solid var(--primary-dark);
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.help-download-link:hover {
+  background-color: #f3f4f6;
+}
+
+.help-instructions {
+  margin-top: 20px;
+}
+
+.help-instructions h4 {
+  margin-bottom: 12px;
+  color: var(--primary-dark);
+}
+
+.help-instructions ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.help-instructions li {
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .help-modal {
+    margin: 10px;
+    padding: 16px;
+    max-width: calc(100vw - 20px);
+    max-height: calc(100vh - 20px);
+  }
+  
+  .help-image-preview {
+    max-height: 50vh;
+  }
+  
+  .workflow-input-wrapper {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  
+  .workflow-select {
+    margin-bottom: 0;
+  }
+  
+  .workflow-input-wrapper .help-icon {
+    margin-left: 0;
+    align-self: flex-start;
+  }
+  
+  .file-input-wrapper {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .file-input-wrapper .help-icon {
+    order: 3;
+    margin-left: 0;
+  }
+}
+
+/* StepTwo.css */
+.rationale-raw__pre {
+  color: #b8860b;               /* dark yellow text */
+  background-color: #f5deb3;    /* wheat as a soft dark-yellow background */
+  padding: 0.75rem;
+  border-radius: 4px;
+  white-space: pre-wrap;        /* wrap long lines */
+  font-family: Menlo, monospace;
+  overflow-x: auto;
+}

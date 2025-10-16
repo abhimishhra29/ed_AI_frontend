@@ -1,0 +1,30 @@
+.footer {
+  text-align: center;
+  padding: 2rem 1rem;
+  background: #f3f4f6;
+  color: #374151;
+  margin-top: 3rem;
+}
+
+.footer-links,
+.footer-social {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+
+.footer a {
+  color: inherit;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+.copyright {
+  margin-top: 0.5rem;
+}

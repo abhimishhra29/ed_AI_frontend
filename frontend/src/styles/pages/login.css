@@ -1,0 +1,111 @@
+:root {
+  /* Color overrides */
+  --primary-dark:       #213342;
+  --primary-highlight:  #4E6F8A;
+  --warm-white-light:   #ece8e4;
+  --text-dark:          #1e293b;
+  --text-light:         #fdfcfb;
+}
+
+/* Container */
+.login {
+  max-width: 420px;
+  margin: 80px auto;
+  padding: 32px 28px;
+  background: var(--warm-white);
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.07), 0 1.5px 3px rgba(0, 0, 0, 0.05);
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+/* Header */
+.login h2 {
+  margin-top: 0;
+  margin-bottom: 24px;
+  font-size: 2rem;
+  color: var(--primary-dark);
+  text-align: center;
+}
+
+/* Error Message */
+.error-banner {
+  background: var(--accent);
+  border: 1px solid var(--primary-highlight);
+  color: var(--primary-dark);
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.95rem;
+}
+
+.error-banner button {
+  background: none;
+  border: none;
+  color: var(--primary-dark);
+  font-weight: bold;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* Form Layout */
+.login form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Input Group */
+.login form > div {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Labels */
+.login label {
+  font-weight: 600;
+  color: var(--primary-highlight);
+  margin-bottom: 6px;
+  font-size: 0.95rem;
+}
+
+/* Inputs */
+.login input[type="text"],
+.login input[type="password"] {
+  padding: 10px 12px;
+  font-size: 1rem;
+  border: 1.6px solid var(--warm-white-light);
+  border-radius: 6px;
+  background: var(--warm-white);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.login input:focus {
+  border-color: var(--primary-highlight);
+  box-shadow: 0 0 0 3px rgba(78, 111, 138, 0.15);
+  outline: none;
+}
+
+/* Submit Button */
+.login button[type="submit"] {
+  width: 100%;
+  padding: 12px 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-light);
+  border: none;
+  border-radius: 8px;
+  background: var(--primary-dark);                                  /* solid navy */
+  box-shadow: 0 2px 8px rgba(78, 111, 138, 0.15);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  letter-spacing: 0.03em;
+}
+
+.login button[type="submit"]:hover {
+  background: linear-gradient(90deg, var(--primary-dark), var(--primary-highlight));  /* gradient on hover */
+  transform: translateY(-1px);
+}

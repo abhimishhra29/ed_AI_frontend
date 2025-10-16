@@ -1,0 +1,148 @@
+
+:root {
+  --primary-dark:       #213342;
+  --primary-highlight:  #4E6F8A;
+  --warm-white:         #fdfcfb;
+  --warm-white-light:   #ece8e4;
+  --accent:             #ffe6cc;
+  --text-dark:          #1e293b;
+  --text-light:         #fdfcfb;
+  --muted:              #64748b;
+  --card-shadow:        0 1px 4px rgba(0, 0, 0, 0.06);
+  --card-shadow-hover:  0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* ---------- Page Container ---------- */
+.container.services-page {
+  max-width: 1200px;
+  margin: 4rem auto;
+  padding: 0 1.5rem 4rem;
+  font-family: "Inter", "Segoe UI", Arial, sans-serif;
+}
+
+/* ---------- Header ---------- */
+.services-header h1 {
+  text-align: center;
+  margin-bottom: 1.25rem;
+  color: var(--primary-dark);
+}
+
+.services-header p {
+  max-width: 780px;
+  margin: 0 auto 0.75rem auto;
+  line-height: 1.55;
+  color: var(--text-dark);
+}
+
+/* ---------- Rows ---------- */
+.service-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 3rem;
+  padding: 4rem 0;
+  border-bottom: 1px solid var(--warm-white-light);
+  flex-wrap: wrap;
+  scroll-margin-top: 100px; /* or whatever your fixed header height is */
+}
+
+/* alternate image position for rhythm */
+.service-row:nth-of-type(even) {
+  flex-direction: row-reverse;
+}
+
+.service-text {
+  flex: 1 1 380px;
+}
+
+.service-text h2 {
+  margin-top: 0;
+  color: var(--primary-dark);
+  margin-bottom: 0.5rem;
+}
+
+/* ---------- Sleek bullet list (no boxes) ---------- */
+.service-text ul {
+  list-style: none;
+  margin: 1rem 0 0 0;
+  padding: 0;
+}
+
+.service-text li {
+  position: relative;
+  padding: 0.4rem 0 0.4rem 1.4rem; /* space for bullet */
+  margin-bottom: 0.35rem;
+  color: var(--text-dark);
+  line-height: 1.55;
+  background: transparent;   /* remove boxed look */
+  border: none;              /* ensure no border */
+  border-radius: 0;          /* reset radius if any */
+}
+
+.service-text li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.9rem; /* vertically center the bullet */
+  width: 0.4rem;
+  height: 0.4rem;
+  background: var(--primary-highlight);
+  border-radius: 50%;
+}
+
+/* ---------- Image ---------- */
+.service-row img {
+  flex: 1 1 320px;
+  max-width: 420px;
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: var(--card-shadow);
+  object-fit: contain;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .service-row {
+    flex-direction: column;
+    text-align: center;
+    gap: 2rem;
+  }
+
+  .service-row:nth-of-type(even) {
+    flex-direction: column; /* cancel reverse on mobile */
+  }
+
+  .service-text ul {
+    text-align: left;
+  }
+
+  .service-row img {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+}
+
+.service-text ul {
+  list-style: disc inside;
+  padding-left: 1rem;
+}
+
+.service-row img {
+  flex: 1;
+  max-width: 400px;
+  width: 100%;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-light);
+}
+
+@media (max-width: 768px) {
+  .service-row {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .service-text ul {
+    text-align: left;
+  }
+}
+

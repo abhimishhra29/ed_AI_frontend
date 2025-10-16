@@ -1,0 +1,279 @@
+:root {
+  /* Shared palette */
+  --primary-dark:       #213342;
+  --primary-highlight:  #4E6F8A;
+  --warm-white:         #fdfcfb;
+  --warm-white-light:   #ece8e4;
+  --accent:             #ffe6cc;
+  --text-dark:          #1e293b;
+  --text-light:         #fdfcfb;
+  --muted:              #64748b;
+
+  /* Shadow palette */
+  --card-shadow:        0 1px 4px rgba(0, 0, 0, 0.06);
+  --card-shadow-hover:  0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+/*****************  Container  *****************/
+.container.tools {
+  max-width: 1200px;
+  margin: 4rem auto;
+  padding: 3rem 2rem;
+  background: var(--warm-white);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(34, 34, 84, 0.07);
+  font-family: "Inter", "Segoe UI", Arial, sans-serif;
+}
+
+/*****************  Layout  *****************/
+.tools-layout {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 3rem;
+  margin-top: 1rem;
+}
+
+.form-section {
+  flex: 1;
+  max-width: 480px;
+}
+
+.output-container {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.output-section {
+  padding: 2rem;
+  background: var(--warm-white);
+  border: 1px solid var(--warm-white-light);
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(34, 34, 84, 0.05);
+  overflow-y: auto;
+  max-height: 75vh;
+}
+
+/* —— Header with export button —— */
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+/*****************  Form Controls  *****************/
+form label {
+  color: var(--primary-highlight);
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
+form input[type="text"],
+form select {
+  padding: 1rem 1.25rem;
+  font-size: 1rem;
+  border: 2px solid var(--warm-white-light);
+  border-radius: 10px;
+  background: var(--warm-white);
+  width: 100%;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+  margin-bottom: 0.5rem;
+}
+
+form input[type="text"]:focus,
+form select:focus {
+  border-color: var(--primary-highlight);
+  box-shadow: 0 0 0 3px rgba(78, 111, 138, 0.1);
+  transform: translateY(-1px);
+}
+
+form select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg fill='none' height='20' width='20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='%234E6F8A' stroke-width='2' d='M6 9l4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1rem;
+  padding-right: 2.5rem;
+}
+
+/* —— File input —— */
+form input[type="file"] {
+  padding: 1rem 1.25rem;
+  font-size: 1rem;
+  border: 2px dashed var(--warm-white-light);
+  border-radius: 10px;
+  background: var(--warm-white);
+  color: var(--primary-dark);
+  cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+form input[type="file"]:hover,
+form input[type="file"]:focus {
+  border-color: var(--primary-highlight);
+  border-style: solid;
+  transform: translateY(-1px);
+}
+
+form input[type="file"]::-webkit-file-upload-button,
+form input[type="file"]::file-selector-button {
+  background: linear-gradient(135deg, var(--primary-highlight) 0%, var(--primary-dark) 100%);
+  color: var(--text-light);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+  margin-right: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+}
+
+/*****************  Buttons  *****************/
+button[type="submit"],
+.export-btn {
+  background: linear-gradient(135deg, var(--primary-highlight) 0%, var(--primary-dark) 100%);
+  color: var(--text-light);
+  font-weight: 700;
+  padding: 1rem 1.5rem;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.05rem;
+  box-shadow: 0 4px 15px rgba(34, 34, 84, 0.25);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+button[type="submit"]:hover:not(:disabled),
+.export-btn:hover {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-highlight) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(34, 34, 84, 0.35);
+}
+
+button[type="submit"]:disabled {
+  background: var(--warm-white-light);
+  color: var(--muted);
+  cursor: not-allowed;
+}
+
+.export-btn {
+  margin-top: 0;
+  width: auto;
+  padding: 0.75rem 2rem;
+}
+
+/*****************  Task Cards  *****************/
+.task-block {
+  background: var(--warm-white);
+  border: 1px solid var(--warm-white-light);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.25rem;
+  color: var(--primary-dark);
+  font-size: 1rem;
+  line-height: 1.6;
+  box-shadow: var(--card-shadow);
+  transition: box-shadow 0.2s ease;
+}
+
+.task-block:hover {
+  box-shadow: var(--card-shadow-hover);
+}
+
+.task-header {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 0.4rem;
+  color: var(--primary-dark);
+}
+
+.task-effort {
+  font-style: italic;
+  color: var(--muted);
+  margin-bottom: 0.75rem;
+}
+
+.task-block ul {
+  list-style: disc inside;
+  padding-left: 0.25rem;
+  margin: 0.25rem 0 0.5rem 0;
+}
+
+.task-block li {
+  line-height: 1.45;
+  margin-bottom: 0.35rem;
+}
+
+/*****************  Output Helpers  *****************/
+#output p,
+#output b {
+  color: var(--primary-dark);
+  font-weight: 600;
+  font-size: 1.05rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+#output pre {
+  background: var(--warm-white-light);
+  border-radius: 10px;
+  padding: 1.25rem;
+  overflow-x: auto;
+  font-size: 0.9rem;
+  color: var(--text-dark);
+  border: 1px solid var(--warm-white-light);
+  line-height: 1.5;
+  margin: 1rem 0;
+}
+
+/*****************  Responsive  *****************/
+@media (max-width: 1024px) {
+  .tools-layout {
+    flex-direction: column;
+  }
+  .output-section {
+    max-height: none;
+    overflow: visible;
+  }
+}
+
+@media (max-width: 768px) {
+  .container.tools {
+    padding: 1rem;
+  }
+  .task-block {
+    padding: 1.25rem;
+    font-size: 0.95rem;
+  }
+  form input[type="text"],
+  form select,
+  form input[type="file"] {
+    padding: 0.875rem 1rem;
+    font-size: 0.95rem;
+  }
+  button[type="submit"],
+  .export-btn {
+    font-size: 1rem;
+    padding: 0.875rem 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container.tools {
+    margin: 1rem auto;
+    padding: 1rem;
+  }
+}
+

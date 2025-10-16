@@ -1,0 +1,490 @@
+/* Home.css - Unified and Refined Color Scheme */
+:root {
+  /* Core palette */
+  --primary-dark: #213342;
+  --primary-highlight: #4E6F8A;
+  --warm-white: #f3eee4;
+  --warm-white-light: #F8F5F0; /* Made slightly lighter for better contrast */
+  --accent: #f3eee4;
+  --text-dark: #1e293b;
+  --text-light: #fdfcfb;
+
+  /* Refined Hero gradient with more dynamism */
+  --hero-gradient-start: #f3eee4;
+  --hero-gradient-end:   #EADFD0; /* A slightly richer, peachy end color */
+
+  /* Radii & shadows */
+  --radius: 20px;
+  --shadow-light: 0 6px 16px rgba(34, 34, 84, 0.06);
+  --shadow-strong: 0 12px 40px rgba(34, 34, 84, 0.12);
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: var(--warm-white);
+  color: var(--text-dark);
+  -webkit-font-smoothing: antialiased;
+  /* Improved base line-height for readability */
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 1020px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  /* More dynamic gradient angle */
+  background: linear-gradient(125deg, var(--hero-gradient-start) 0%, var(--hero-gradient-end) 100%);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-light);
+  padding: 5rem 2rem; /* Increased padding */
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.hero h1 {
+  font-size: clamp(2.8rem, 6vw, 4.2rem); /* Slightly larger */
+  font-weight: 800;
+  color: var(--primary-dark);
+  margin-bottom: 1rem;
+  /* Tighten up letter spacing on large headings */
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  color: var(--text-dark);
+  opacity: 0.85;
+  max-width: 700px;
+  margin: 0 auto 1.5rem;
+}
+
+.hero-tagline {
+  font-size: 1.1rem;
+  color: var(--primary-highlight); /* Use highlight color for emphasis */
+  opacity: 0.9;
+  margin-bottom: 2.5rem; /* More space before buttons */
+  font-style: italic;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  background: var(--primary-dark);
+  color: var(--text-light) !important;
+  padding: 0.8rem 2rem;
+  border-radius: var(--radius);
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: var(--shadow-light);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-strong);
+}
+
+.btn-secondary {
+  background: transparent; /* Cleaner secondary button */
+  color: var(--primary-dark) !important;
+  border: 1px solid #d1c8b9; /* Subtle border */
+  box-shadow: none;
+}
+
+.btn-secondary:hover {
+  background: var(--warm-white-light);
+  box-shadow: var(--shadow-light);
+}
+
+
+/* ---------- Section Titles ---------- */
+.page-section {
+  padding: 5rem 0; /* Increased vertical spacing */
+  text-align: center;
+}
+
+
+.page-section h2 {
+  font-size: clamp(2.2rem, 5vw, 3.2rem); /* Slightly larger */
+  font-weight: 700;
+  color: var(--primary-highlight);
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em; /* Tighten up spacing */
+}
+
+.subheading {
+  font-size: 1.1rem;
+  color: var(--text-dark);
+  opacity: 0.8;
+  max-width: 600px;
+  margin: 0 auto 3rem; /* More space after subheading */
+}
+
+/* ---------- Persona Cards ---------- */
+.persona-grid {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.persona-card {
+  background: var(--hero-gradient-start);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-light);
+  /* Add a subtle border for definition */
+  border: 1px solid #e0dace;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+  display: flex;
+ 
+}
+
+.persona-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-strong);
+}
+
+/* Wrapper for image to create zoom effect */
+.persona-image-wrapper {
+  overflow: hidden;
+  height: 200px;
+}
+
+.persona-image-wrapper span {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+}
+
+.persona-image-wrapper span img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+}
+
+.persona-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease-out; /* Smooth transition for zoom */
+}
+
+.persona-card:hover img {
+  transform: scale(1.05); /* Zoom image on card hover */
+}
+
+.persona-content {
+  padding: 1.5rem;
+  text-align: left;
+  flex-grow: 1; /* Allows content to fill space */
+}
+
+.persona-content h3 {
+  font-size: 1.5rem;
+  color: var(--primary-dark);
+  margin: 0 0 0.5rem;
+}
+
+.persona-content p {
+  font-size: 1rem;
+  color: var(--text-dark);
+  opacity: 0.8;
+  margin-bottom: 1.5rem; /* More space */
+}
+
+
+
+/* CSS */
+.feature-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem; /* spacing between items */
+}
+
+.icon-wrapper {
+  background-color: #e4f8e7;
+  border-radius: 50%;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-right: 0.5rem; /* space between icon and text */
+}
+
+.icon {
+  color: #22c55e;
+}
+
+.feature-text strong {
+  margin-right: 0.25rem;
+}
+
+
+.icon-wrapper {
+  background-color: #e4f8e7;
+  border-radius: 50px;
+  padding: 4px;
+  display: flex;
+  align-items: left;
+  justify-content: left;
+  flex-shrink: 0;
+}
+
+.persona-content .icon {
+  color: #22c55e;
+  display: block;
+}
+
+.persona-content strong {
+  margin-right: 0.25rem;
+}
+
+
+/* ---------- Solutions Section ---------- */
+.solutions-container {
+  background: linear-gradient(160deg, var(--warm-white-light), #fff); /* Subtle gradient */
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-light);
+  border: 1px solid #e0dace;
+  padding: 3rem 2rem;
+  margin: 0 auto;
+  max-width: 900px;
+  text-align: left;
+  position: relative;
+}
+
+.solutions-container h3 {
+  font-size: 1.75rem;
+  color: var(--primary-dark);
+  margin-top: 0;
+}
+
+.solutions-container p {
+  font-size: 1.1rem;
+  color: var(--text-dark);
+  opacity: 0.8;
+  margin-bottom: 2rem;
+}
+
+.product-cards,
+.service-cards {
+  display: grid;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .product-cards { grid-template-columns: 1fr 1fr; }
+  .service-cards { grid-template-columns: repeat(3, 1fr); }
+}
+
+.product-card,
+.service-card {
+  background: var(--warm-white);
+  border: 1px solid #e0dace; /* Matching border style */
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  transition: transform 0.2s, box-shadow 0.2s; /* Add transition */
+}
+
+.product-card h4,
+.service-card h4 {
+  font-size: 1.2rem;
+  color: var(--primary-highlight);
+  margin: 0 0 0.5rem;
+}
+
+/* More elegant divider */
+.solutions-divider {
+  margin: 3rem auto;
+  border: none;
+  width: 100px;
+  height: 2px;
+  background-color: #d1c8b9;
+}
+
+/* ---------- Why Section & Cards ---------- */
+.cards {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  margin-top: 2rem;
+}
+
+.card {
+  background: var(--warm-white-light);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-light);
+  border: 1px solid #e0dace; /* Matching border style */
+  padding: 2rem; /* More padding */
+  transition: transform 0.3s, box-shadow 0.3s;
+  text-align: left;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-strong);
+}
+
+.card h3 {
+  color: var(--primary-dark);
+  margin-top: 0;
+}
+
+.card p {
+  color: var(--text-dark);
+  opacity: 0.8;
+  margin: 0.5rem 0 0;
+}
+
+/* ---------- Final CTA ---------- */
+.final-cta {
+  /* High-contrast background for strong CTA */
+  background: var(--hero-gradient-start);
+  padding: 5rem 2rem;
+  border-radius: var(--radius);
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.final-cta h2 {
+  /* Dark text on light background */
+  color: var(--primary-dark);
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin-bottom: 1rem;
+}
+
+.final-cta .subheading {
+  /* Dark text on light background */
+  color: var(--text-dark);
+  opacity: 0.85;
+  max-width: 600px;
+  margin: 0 auto 2.5rem;
+}
+
+.final-cta .btn-primary {
+  /* Primary button on light background */
+  background: var(--primary);
+  color: var(--text-light) !important;
+  padding: 1rem 2.5rem;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .hero { padding: 3rem 1.5rem; }
+  .solutions-container { padding: 2rem 1.5rem; }
+  .persona-grid, .cards { grid-template-columns: 1fr; }
+}
+
+/* Reset link styles on link-card elements */
+.link-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Ensure headings and paragraphs inside link-cards inherit the card’s typography */
+.link-card h4,
+.link-card p {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Hover effect is now on the base .product-card class */
+.link-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-strong);
+}
+
+
+
+/* Assuming the page background is your warm-white color */
+body {
+  background-color: var(--warm-white);
+}
+
+/* Styling for the main container of each solution */
+.solution-container {
+  display: flex;
+  align-items: right;
+  gap: 2rem;
+  margin: 4rem auto;
+  max-width: 1100px;
+}
+
+/* Reverses the flex direction to alternate the layout */
+.solution-container.reverse {
+  flex-direction: row-reverse;
+}
+
+.solution-text {
+  flex: 1;
+}
+
+.solution-image {
+  flex: 1;
+}
+
+.solution-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.solution-image span {
+  display: block !important;
+  width: 100% !important;
+}
+
+.solution-image span img {
+  width: 100% !important;
+  height: auto !important;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Text styles using your palette */
+.solution-text h3 {
+  font-size: 2rem;
+  color: var(--primary-dark);
+}
+
+.solution-text .subheading {
+  font-size: 1.2rem;
+  color: var(--primary-highlight);
+  margin-bottom: 1rem;
+}
+
+.solution-text .details {
+  color: var(--text-dark);
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+/* Button styling using your palette */
+.btn.btn-primary {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: var(--primary-highlight);
+  color: var(--text-light);
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.btn.btn-primary:hover {
+  background-color: var(--primary-dark); /* Use the darker shade for hover */
+}
