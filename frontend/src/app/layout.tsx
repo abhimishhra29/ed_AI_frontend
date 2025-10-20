@@ -31,10 +31,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body>
-        <ActivityReporter />
-        <Header />
-        <main>{children}</main>
-        <Footer />
+        <div className="app-wrapper">
+          <ActivityReporter />
+          <Header />
+          <main className="main-content">{children}</main>
+          <Footer />
+        </div>
       </body>
     </html>
   );
