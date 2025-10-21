@@ -18,7 +18,7 @@
   padding: 0.5rem 1rem;
   background: var(--header-bg);
   color: var(--link-color);
-  z-index: 10;
+  z-index: 10000;
   box-shadow: var(--nav-shadow);
   border-bottom: 0.2px solid #2e3b4e;
 }

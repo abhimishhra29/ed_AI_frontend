@@ -29,6 +29,7 @@ const TIMEOUT_SECONDS = 600;
 function CombinedAutoGradingWizard() {
   // ----- Navigation
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
+  const [isInfoPanelOpen, setIsInfoPanelOpen] = useState(false);
 
   // ----- File pickers
   const [assignmentFile, setAssignmentFile] = useState<File | null>(null);
@@ -287,11 +288,42 @@ function CombinedAutoGradingWizard() {
             <ChevronLeft size={16} />
             Back
           </button>
+          
+          <button 
+            className="info-button"
+            onClick={() => {
+              console.log('Info button clicked!', isInfoPanelOpen);
+              setIsInfoPanelOpen(!isInfoPanelOpen);
+            }}
+          >
+          </button>
         </div>
         {step === 1 && <StepOne WORKFLOW_LABELS={WORKFLOW_LABELS} />}
         {step === 2 && <StepTwo />}
         {step === 3 && <StepThree />}
         {step === 4 && <StepFour />}
+        
+        {/* Info Panel */}
+        <div className={`info-panel ${isInfoPanelOpen ? 'open' : ''}`}>
+          <div className="info-panel-header">
+            <div className="info-panel-title">
+              <div className="info-panel-icon"></div>
+              <h3>Information</h3>
+            </div>
+            <button 
+              className="info-panel-close"
+              onClick={() => {
+                console.log('Close button clicked!');
+                setIsInfoPanelOpen(false);
+              }}
+            >
+              ×
+            </button>
+          </div>
+          <div className="info-panel-content">
+            {/* Content will be added here */}
+          </div>
+        </div>
       </div>
     </AutoGradingWizardContext.Provider>
   );
