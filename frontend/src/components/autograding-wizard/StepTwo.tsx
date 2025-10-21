@@ -11,11 +11,6 @@ const StepTwo: FC = () => {
     setStep,
     assignmentFile,
     setAssignmentFile,
-    loading,
-    setFeedback,
-    setRawValidate,
-    setToken,
-    setValidatedFiles,
     setGeneratedRubric,
     setRubricGenerationError,
     setExtractedQuestions,
@@ -35,11 +30,7 @@ const StepTwo: FC = () => {
     ],
   };
 
-  const resetValidationState = () => {
-    setFeedback(null);
-    setRawValidate(null);
-    setToken(null);
-    setValidatedFiles(null);
+  const resetWizardState = () => {
     setGeneratedRubric(null);
     setRubricGenerationError(null);
     setExtractedQuestions(null);
@@ -64,7 +55,7 @@ const StepTwo: FC = () => {
   const handleAssignmentChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] ?? null;
     setAssignmentFile(file);
-    resetValidationState();
+    resetWizardState();
   };
 
   const handleNext = (event: FormEvent<HTMLFormElement>) => {
@@ -100,7 +91,6 @@ const StepTwo: FC = () => {
                 type="file"
                 accept="application/pdf"
                 className="file-input-input"
-                disabled={loading}
                 onChange={handleAssignmentChange}
               />
             </div>
@@ -110,14 +100,13 @@ const StepTwo: FC = () => {
                 type="button"
                 className="btn primary"
                 onClick={() => setStep(1)}
-                disabled={loading}
               >
                 ← Back
               </button>
               <button
                 type="submit"
                 className="btn primary"
-                disabled={loading || !assignmentFile}
+                disabled={!assignmentFile}
               >
                 Continue
               </button>

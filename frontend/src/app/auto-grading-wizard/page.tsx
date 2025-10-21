@@ -29,26 +29,13 @@ export default function CombinedAutoGradingWizard() {
   // ----- Navigation
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
 
-  // ----- Validation
-  const [feedback, setFeedback] = useState<string[] | null>(null);
-  const [rawValidate, setRawValidate] = useState<any | null>(null);
-  const [validationError, setValidationError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [token, setToken] = useState<string | null>(null);
-
   // ----- File pickers
   const [assignmentFile, setAssignmentFile] = useState<File | null>(null);
-  const [rubricsFile, setRubricsFile] = useState<File | null>(null);
-  const [validatedFiles, setValidatedFiles] = useState<{
-    assignmentFile: File;
-    rubricsFile: File;
-  } | null>(null);
 
   // ----- Grading
   const [assignmentName, setAssignmentName] = useState<string>("");
   const [workflows, setWorkflows] = useState<string[]>([]);
-  // Default to Assignment_grader
-  const [selectedWorkflow, setSelectedWorkflow] = useState<string>("auto_grade");
+  const [selectedWorkflow, setSelectedWorkflow] = useState<string>("Assignment_grader");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [gradingError, setGradingError] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
@@ -86,11 +73,15 @@ export default function CombinedAutoGradingWizard() {
         const data = await resp.json();
         if (alive && Array.isArray(data.workflows)) {
           setWorkflows(data.workflows);
-          if (data.workflows.includes("auto_grade")) {
-            setSelectedWorkflow("auto_grade");
-          } else if (data.workflows.length) {
-            setSelectedWorkflow(data.workflows[0]);
-          }
+          const preferredOrder = [
+            "Assignment_grader",
+            "auto_grade",
+            "handwritten_ocr",
+          ];
+          const nextWorkflow =
+            preferredOrder.find((wf) => data.workflows.includes(wf)) ??
+            data.workflows[0];
+          if (nextWorkflow) setSelectedWorkflow(nextWorkflow);
         }
       } catch {
         // ignore; StepOne can surface errors later if needed
@@ -108,19 +99,6 @@ export default function CombinedAutoGradingWizard() {
     setIsGeneratingRubric(false);
   }, [assignmentFile]);
 
-  useEffect(() => {
-    if (!generatedRubric) {
-      return;
-    }
-    const preferredWorkflow =
-      generatedRubric?.rubric_type === "assignment"
-        ? "Assignment_grader"
-        : "auto_grade";
-    if (workflows.includes(preferredWorkflow)) {
-      setSelectedWorkflow(preferredWorkflow);
-    }
-  }, [generatedRubric, workflows]);
-
   // -----------------------------------------------------------------------
   // Handlers ----------------------------------------------------------------
   // -----------------------------------------------------------------------
@@ -133,15 +111,14 @@ export default function CombinedAutoGradingWizard() {
     setIsGeneratingRubric(true);
     setRubricGenerationError(null);
 
-    const runWorkflow = async (workflowName: string) => {
-      const fd = new FormData();
-      fd.append("workflow", workflowName);
-      fd.append("assignmentFile", assignmentFile);
-      if (assignmentName) {
-        fd.append("assignmentName", assignmentName);
-      }
+    const fd = new FormData();
+    fd.append("assignmentFile", assignmentFile);
+    if (assignmentName) {
+      fd.append("assignmentName", assignmentName);
+    }
 
-      const resp = await apiFetch("/api/v2/workflow", {
+    try {
+      const resp = await apiFetch("/api/v2/rubric", {
         method: "POST",
         body: fd,
       });
@@ -164,128 +141,21 @@ export default function CombinedAutoGradingWizard() {
         throw new Error(message);
       }
 
-      return resp.json();
-    };
-
-    const mapRubricPayload = (json: any) =>
-      json?.rubric ??
-      json?.generated_rubric ??
-      json?.generated_assignment_rubric ??
-      json;
-
-    const shouldFallbackToAssignment = (message?: string) => {
-      if (!message) return false;
-      const normalized = message.toLowerCase();
-      return (
-        normalized.includes("no questions available") ||
-        normalized.includes("failed to parse question") ||
-        normalized.includes("question extraction") ||
-        normalized.includes("could not detect any questions")
-      );
-    };
-
-    try {
-      const primaryJson = await runWorkflow("rubric_generation");
-      const rubricPayload = mapRubricPayload(primaryJson);
+      const json = await resp.json();
+      const rubricPayload = json?.rubric ?? json?.generated_rubric ?? json;
       setGeneratedRubric(rubricPayload);
-      const questionPayload = primaryJson?.questions;
+      const questionPayload = json?.questions;
       setExtractedQuestions(
-        Array.isArray(questionPayload) && questionPayload.length
-          ? questionPayload
-          : null
+        Array.isArray(questionPayload) ? questionPayload : null
       );
-    } catch (primaryError: any) {
-      if (!shouldFallbackToAssignment(primaryError?.message)) {
-        setGeneratedRubric(null);
-        setExtractedQuestions(null);
-        setRubricGenerationError(
-          primaryError?.message || "Rubric generation failed."
-        );
-        return;
-      }
-
-      try {
-        const assignmentJson = await runWorkflow(
-          "assignment_rubric_generation"
-        );
-        const rubricPayload = mapRubricPayload(assignmentJson);
-        setGeneratedRubric(rubricPayload);
-        setExtractedQuestions(null);
-      } catch (secondaryError: any) {
-        setGeneratedRubric(null);
-        setExtractedQuestions(null);
-        setRubricGenerationError(
-          secondaryError?.message ||
-            primaryError?.message ||
-            "Rubric generation failed."
-        );
-      }
+    } catch (err: any) {
+      setGeneratedRubric(null);
+      setExtractedQuestions(null);
+      setRubricGenerationError(err?.message || "Rubric generation failed.");
     } finally {
       setIsGeneratingRubric(false);
     }
-  }, [
-    assignmentFile,
-    assignmentName,
-    setGeneratedRubric,
-    setExtractedQuestions,
-    setRubricGenerationError,
-  ]);
-
-  async function handleValidate(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setValidationError(null);
-    setLoading(true);
-
-    if (!localStorage.getItem("refreshToken")) {
-      setValidationError("You must be logged in.");
-      setLoading(false);
-      return;
-    }
-    if (!assignmentFile || !rubricsFile) {
-      setValidationError("Please pick both PDFs.");
-      setLoading(false);
-      return;
-    }
-
-    const fd = new FormData();
-    fd.append("workflow", selectedWorkflow);
-    fd.append("graderName", assignmentName);
-    fd.append("assignmentName", assignmentName);
-    fd.append("assignmentFile", assignmentFile);
-    fd.append("rubricsFile", rubricsFile);
-
-    try {
-      const res = await apiFetch("/api/validate", {
-        method: "POST",
-        body: fd,
-      });
-      if (!res.ok) {
-        if (res.status === 401) {
-          setValidationError("Session expired. Please log in again.");
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("refreshToken");
-        } else {
-          const text = await res.text();
-          setValidationError(
-            text || `Validation failed (HTTP ${res.status}).`
-          );
-        }
-        return;
-      }
-      const json = await res.json();
-      setRawValidate(json);
-      setFeedback(
-        Array.isArray(json.validation_feedback) ? json.validation_feedback : []
-      );
-      setToken(json.token ?? null);
-      setValidatedFiles({ assignmentFile, rubricsFile });
-    } catch (err: any) {
-      // apiFetch throws on refresh denial with "Session expired"
-      setValidationError(err?.message || "Network error");
-    } finally {
-      setLoading(false);
-    }
-  }
+  }, [assignmentFile, assignmentName]);
 
   async function handleGrade(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -295,13 +165,12 @@ export default function CombinedAutoGradingWizard() {
       setGradingError("You must be logged in.");
       return;
     }
-    const usingGeneratedRubric = Boolean(generatedRubric);
-    if (!usingGeneratedRubric && !validatedFiles) {
-      setGradingError("Complete validation first.");
+    if (!assignmentFile) {
+      setGradingError("Upload the assignment before grading.");
       return;
     }
-    if (usingGeneratedRubric && !assignmentFile) {
-      setGradingError("Upload the assignment before grading.");
+    if (!generatedRubric) {
+      setGradingError("Generate a rubric before grading.");
       return;
     }
     if (solutionFilesSelected.length === 0) {
@@ -326,19 +195,10 @@ export default function CombinedAutoGradingWizard() {
         const fd = new FormData();
         fd.append("graderName", assignmentName);
         fd.append("assignmentName", assignmentName);
-        const workflowToUse = usingGeneratedRubric
-          ? generatedRubric?.rubric_type === "assignment"
-            ? "Assignment_grader"
-            : "auto_grade"
-          : selectedWorkflow;
+        const workflowToUse = selectedWorkflow || "auto_grade";
         fd.append("workflow", workflowToUse);
-        if (usingGeneratedRubric) {
-          fd.append("assignmentFile", assignmentFile as File);
-          fd.append("rubricJson", JSON.stringify(generatedRubric));
-        } else if (validatedFiles) {
-          fd.append("assignmentFile", validatedFiles.assignmentFile);
-          fd.append("rubricsFile", validatedFiles.rubricsFile);
-        }
+        fd.append("assignmentFile", assignmentFile as File);
+        fd.append("rubricJson", JSON.stringify(generatedRubric));
         fd.append("solutionFile", file);
 
         const resp = await apiFetch("/api/v1/grade", {
@@ -377,21 +237,8 @@ export default function CombinedAutoGradingWizard() {
     step,
     setStep,
 
-    feedback,
-    setFeedback,
-    rawValidate,
-    setRawValidate,
-    validationError,
-    loading,
-    token,
-    setToken,
-
     assignmentFile,
     setAssignmentFile,
-    rubricsFile,
-    setRubricsFile,
-    validatedFiles,
-    setValidatedFiles,
 
     assignmentName,
     setAssignmentName,
@@ -414,7 +261,6 @@ export default function CombinedAutoGradingWizard() {
     setExtractedQuestions,
     setRubricGenerationError,
 
-    handleValidate,
     handleGrade,
   };
 

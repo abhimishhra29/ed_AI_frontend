@@ -177,7 +177,7 @@ const StepFour: FC = () => {
                 onClick={() => setStep(3)}
                 disabled={isSubmitting}
               >
-                ← Back to Validation
+                ← Back to Rubric
               </button>
               <button
                 type="submit"

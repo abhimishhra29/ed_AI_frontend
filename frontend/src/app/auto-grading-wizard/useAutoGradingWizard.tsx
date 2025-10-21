@@ -13,32 +13,9 @@ export interface AutoGradingWizardContextType {
   step: 1 | 2 | 3 | 4;
   setStep: Dispatch<SetStateAction<1 | 2 | 3 | 4>>;
 
-  /* validation‑stage state */
-  feedback: string[] | null;
-  setFeedback: Dispatch<SetStateAction<string[] | null>>;
-  rawValidate: any | null;
-  setRawValidate: Dispatch<SetStateAction<any | null>>;
-  validationError: string | null;
-  loading: boolean;
-  token: string | null;
-  setToken: Dispatch<SetStateAction<string | null>>;
-
   /* file pickers */
   assignmentFile: File | null;
   setAssignmentFile: Dispatch<SetStateAction<File | null>>;
-  rubricsFile: File | null;
-  setRubricsFile: Dispatch<SetStateAction<File | null>>;
-
-  validatedFiles: {
-    assignmentFile: File;
-    rubricsFile: File;
-  } | null;
-  setValidatedFiles: Dispatch<
-    SetStateAction<{
-      assignmentFile: File;
-      rubricsFile: File;
-    } | null>
-  >;
 
   /* grading‑stage state */
   assignmentName: string;
@@ -64,7 +41,6 @@ export interface AutoGradingWizardContextType {
   setRubricGenerationError: Dispatch<SetStateAction<string | null>>;
 
   /* actions */
-  handleValidate: (e: FormEvent<HTMLFormElement>) => Promise<void>;
   handleGrade: (e: FormEvent<HTMLFormElement>) => Promise<void>;
 }
 

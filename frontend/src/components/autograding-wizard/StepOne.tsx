@@ -17,11 +17,9 @@ const StepOne: FC<StepOneProps> = ({ WORKFLOW_LABELS }) => {
     workflows,
     selectedWorkflow,
     setSelectedWorkflow,
-    loading,
-    setFeedback,
-    setRawValidate,
-    setToken,
-    setValidatedFiles,
+    setGeneratedRubric,
+    setRubricGenerationError,
+    setExtractedQuestions,
   } = useAutoGradingWizard();
 
   const [showHelp, setShowHelp] = useState(false);
@@ -30,16 +28,15 @@ const StepOne: FC<StepOneProps> = ({ WORKFLOW_LABELS }) => {
   const workflowOptions =
     workflows.length > 0 ? workflows : Object.keys(WORKFLOW_LABELS);
 
-  const resetValidationState = () => {
-    setFeedback(null);
-    setRawValidate(null);
-    setToken(null);
-    setValidatedFiles(null);
+  const resetWizardState = () => {
+    setGeneratedRubric(null);
+    setRubricGenerationError(null);
+    setExtractedQuestions(null);
   };
 
   const handleWorkflowChange = (value: string) => {
     setSelectedWorkflow(value);
-    resetValidationState();
+    resetWizardState();
   };
 
   const handleNext = (event: FormEvent<HTMLFormElement>) => {
@@ -77,11 +74,10 @@ const StepOne: FC<StepOneProps> = ({ WORKFLOW_LABELS }) => {
               value={assignmentName}
               onChange={(e) => {
                 setAssignmentName(e.target.value);
-                resetValidationState();
+                resetWizardState();
               }}
               placeholder="e.g., Research Essay on Climate Change"
               required
-              disabled={loading}
               className="text-input"
             />
 
@@ -91,7 +87,7 @@ const StepOne: FC<StepOneProps> = ({ WORKFLOW_LABELS }) => {
                 id="workflow-select"
                 value={selectedWorkflow}
                 onChange={(e) => handleWorkflowChange(e.target.value)}
-                disabled={loading || workflowOptions.length === 0}
+                disabled={workflowOptions.length === 0}
                 className="workflow-select"
               >
                 {workflowOptions.map((w) => (
@@ -116,7 +112,7 @@ const StepOne: FC<StepOneProps> = ({ WORKFLOW_LABELS }) => {
               <button
                 type="submit"
                 className="btn primary"
-                disabled={!assignmentName || loading || workflowOptions.length === 0}
+                disabled={!assignmentName || workflowOptions.length === 0}
               >
                 Continue
               </button>

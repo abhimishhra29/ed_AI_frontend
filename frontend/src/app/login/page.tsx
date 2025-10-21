@@ -4,13 +4,6 @@ import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { apiFetch } from '../../lib/api';
 
-// ============================================================================
-// 🎭 NOTE: This login works with both MOCK MODE and REAL BACKEND
-// - When MOCK_MODE = true in api.ts: ANY username/password will work
-// - When MOCK_MODE = false: Only valid credentials will work
-// - No changes needed here! The apiFetch function handles everything.
-// ============================================================================
-
 interface TokenResponse {
   access: string;
   refresh: string;
@@ -35,11 +28,6 @@ export default function Login() {
     }
 
     try {
-      // ========================================================================
-      // 🔐 LOGIN REQUEST
-      // - In MOCK MODE: This will accept ANY credentials and return fake tokens
-      // - In REAL MODE: This will validate against actual backend
-      // ========================================================================
       const res = await apiFetch('/token/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -48,19 +36,13 @@ export default function Login() {
       const data: TokenResponse = await res.json();
 
       if (res.ok && data.access && data.refresh) {
-        // ====================================================================
-        // ✅ LOGIN SUCCESS: Store tokens in localStorage
-        // - In MOCK MODE: These are fake tokens like "mock_access_token_123"
-        // - In REAL MODE: These are real JWT tokens from backend
-        // ====================================================================
         localStorage.setItem('accessToken', data.access);
         localStorage.setItem('refreshToken', data.refresh);
         localStorage.setItem('loggedIn', 'true');
 
-        // ✅ Notify other tabs and Header component that user logged in
+        // ✅ Notify other tabs and Header component
         window.dispatchEvent(new Event('storage'));
 
-        // Redirect to appropriate page
         router.push(data.is_superuser ? '/admin' : '/');
       } else {
         setErrorMsg(data.detail || 'Invalid credentials');
