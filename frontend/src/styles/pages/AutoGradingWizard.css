@@ -24,36 +24,345 @@
   max-width: 900px;
   margin: 0 auto;
   padding: 24px;
+  position: relative;
 }
 
 /*================================================================
-  2. LAYOUT
+  2. WIZARD HEADER
 ================================================================*/
-/* 55% form / 45% right column (templates + validation) */
+.wizard-header h1 {
+  font-family: 'Inter', sans-serif;
+  font-size: 48px;
+  font-weight: 700;
+  color: #000000;
+  line-height: auto;
+  letter-spacing: 0%;
+  margin: 1.5rem 0 0 -6rem;
+  text-align: left;
+}
+
+/*================================================================
+  3. TOP NAVIGATION BUTTONS
+================================================================*/
+.wizard-top-buttons {
+  position: absolute;
+  top: 0.5rem;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.back-button {
+  position: fixed;
+  top:  7rem;
+  left: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-family: 'Mulish', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 40px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #213342;
+  pointer-events: auto;
+  z-index: 1000;
+}
+
+.continue-button {
+  position: fixed;
+  top:  7rem;
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 30px;
+  font-family: 'Mulish', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 40px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #213342;
+  pointer-events: auto;
+  z-index: 1000;
+}
+
+.back-button:hover,
+.continue-button:hover:not(:disabled) {
+  background-color: #1a2a35;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.continue-button:disabled {
+  background-color: #213342;
+  color: white;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.back-button:focus,
+.continue-button:focus {
+  outline: 2px solid #4E6F8A;
+  outline-offset: 2px;
+}
+
+/*================================================================
+  4. ASSIGNMENT DETAILS BOX
+================================================================*/
+.assignment-details-box {
+  background-color: #F3EEE4;
+  border-radius: 0;
+  padding: 2rem;
+  margin: 1rem auto;
+  max-width: 90vw;
+  width: 100%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.assignment-details-box h2 {
+  color: #213342;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  text-align: left;
+}
+
+.step-indicator {
+  color: #213342;
+  font-size: 1rem;
+  font-weight: 400;
+  margin: 0 0 1rem 0;
+  text-align: left;
+}
+
+.assignment-details-box .form-fields-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.assignment-details-box .form-field {
+  margin: 0;
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.assignment-details-box label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #213342;
+  font-size: 1rem;
+}
+
+.assignment-details-box .text-input,
+.assignment-details-box .workflow-select {
+  width: 100% !important;
+  max-width: 388px !important;
+  height: 50px !important;
+  padding: 0 1rem !important;
+  border: 2px solid #4E6F8A !important;
+  border-radius: 5px !important;
+  font-size: 1rem !important;
+  line-height: 1 !important;
+  background: #FFFFFF !important;
+  color: #213342 !important;
+  box-sizing: border-box !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  vertical-align: top !important;
+}
+
+.assignment-details-box .workflow-select {
+  padding-right: 3rem !important;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234E6F8A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 1rem center !important;
+  background-size: 16px !important;
+}
+
+.assignment-details-box .text-input:focus,
+.assignment-details-box .workflow-select:focus {
+  outline: none;
+  border-color: #213342;
+  box-shadow: 0 0 0 2px rgba(33, 51, 66, 0.1);
+}
+
+.assignment-details-box .text-input::placeholder {
+  color: #808080;
+}
+
+.workflow-input-wrapper {
+  position: relative;
+}
+
+.workflow-input-wrapper .help-icon {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  color: #4E6F8A;
+  cursor: pointer;
+}
+
+.validation-error {
+  color: #dc2626;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .wizard-header h1 {
+    font-size: 36px;
+    margin: 1rem 0 0 0; /* Reset negative margin on mobile */
+  }
+  
+  .assignment-details-box {
+    margin: 1rem;
+    padding: 1.5rem;
+    max-width: calc(100vw - 2rem);
+  }
+  
+  .assignment-details-box h2 {
+    font-size: 1.25rem;
+  }
+  
+  .step-indicator {
+    font-size: 0.875rem;
+  }
+  
+  .assignment-details-box .form-fields-container {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .assignment-details-box .text-input,
+  .assignment-details-box .workflow-select {
+    width: 100%;
+    max-width: 388px;
+    height: 50px;
+    padding: 0 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .auto-grading-wizard .wizard-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .auto-grading-wizard .right-column {
+    order: -1;
+    margin-bottom: 2rem;
+  }
+  
+  .auto-grading-wizard .template-dropdown-content {
+    position: static;
+    margin-top: 0;
+    box-shadow: none;
+    border: none;
+    background: var(--warm-white-light);
+  }
+  
+  .help-modal {
+    margin: 10px;
+    padding: 16px;
+    max-width: calc(100vw - 20px);
+    max-height: calc(100vh - 20px);
+  }
+  
+  .help-image-preview {
+    max-height: 50vh;
+  }
+  
+  .workflow-input-wrapper {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  
+  .workflow-input-wrapper .help-icon {
+    margin-left: 0;
+    align-self: flex-start;
+  }
+  
+  .file-input-wrapper {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .file-input-wrapper .help-icon {
+    order: 3;
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .wizard-header h1 {
+    font-size: 28px;
+    margin: 0.5rem 0 0 0; /* Reset negative margin on small mobile */
+  }
+  
+  .assignment-details-box {
+    margin: 0.5rem;
+    padding: 1rem;
+    max-width: calc(100vw - 1rem);
+  }
+  
+  .assignment-details-box h2 {
+    font-size: 1.125rem;
+  }
+  
+  .assignment-details-box .text-input,
+  .assignment-details-box .workflow-select {
+    width: 100%;
+    height: 50px;
+    padding: 0 0.875rem;
+  }
+}
+
+/*================================================================
+  5. LAYOUT
+================================================================*/
+/* Single column layout */
 .auto-grading-wizard .wizard-content {
-  display: grid;
-  grid-template-columns: 55% minmax(400px, 45%);
-  column-gap: var(--wizard-gap);
-  align-items: start;
+  display: flex;
+  justify-content: center;
   margin-top: 1.5rem;
 }
 
 .auto-grading-wizard .form-column {
   display: flex;
   flex-direction: column;
-  padding-right: 1rem;
   width: 100%;
+  max-width: 600px;
   min-width: 0;
 }
 
-.auto-grading-wizard .right-column {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
 /*================================================================
-  3. GENERAL UI ELEMENTS
+  6. GENERAL UI ELEMENTS
 ================================================================*/
 /* ---------- Buttons ---------- */
 .auto-grading-wizard .btn {
@@ -92,28 +401,8 @@
   color: var(--primary-highlight);
 }
 
-.auto-grading-wizard .text-input,
-.auto-grading-wizard select {
-  box-sizing: border-box;
-  width: 100%;
-  padding: 10px 12px;
-  font-size: 1rem;
-  border: 1.6px solid var(--warm-white-light);
-  border-radius: 6px;
-  background: var(--warm-white);
-  outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.auto-grading-wizard .text-input:focus,
-.auto-grading-wizard select:focus {
-  border-color: var(--primary-highlight);
-  box-shadow: 0 0 0 3px rgba(78, 111, 138, 0.15);
-  transform: translateY(-1px);
-}
-
 /*================================================================
-  4. COMPONENT-SPECIFIC STYLES
+  7. COMPONENT-SPECIFIC STYLES
 ================================================================*/
 /* ---------- Form Column ---------- */
 .auto-grading-wizard .input-group {
@@ -343,8 +632,6 @@
   color: var(--warning-text);
 }
 
-
-
 /* ---------- Validation Success Message ---------- */
 .auto-grading-wizard .success-container {
   display: flex;
@@ -428,125 +715,50 @@
 }
 
 /*================================================================
-  5. RESPONSIVE STYLES
+  8. STEP ONE CONTINUE BUTTON
 ================================================================*/
-@media (max-width: 768px) {
-  .auto-grading-wizard .wizard-content {
-    grid-template-columns: 1fr;
-  }
-  
-  .auto-grading-wizard .right-column {
-    order: -1;
-    margin-bottom: 2rem;
-  }
-  
-  .auto-grading-wizard .template-dropdown-content {
-    position: static;
-    margin-top: 0;
-    box-shadow: none;
-    border: none;
-    background: var(--warm-white-light);
-  }
-}
-
-/* FileInputWithHelp.css */
-
-/* File input wrapper */
-.file-input-wrapper {
-  position: relative;
+.step-one-continue-button {
+  width: 100% !important;
+  max-width: 150px !important;
+  height: 50px !important;
+  margin-top: 1.5rem !important; 
+  padding: 0 1rem !important;
+  border: 2px solid #4E6F8A !important;
+  border-radius: 5px !important;
+  font-family: 'Mulish', sans-serif !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  color: white !important;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: #213342 !important;
+  text-align: center;
+  box-sizing: border-box !important;
   display: flex;
   align-items: center;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  border: 2px dashed var(--warm-white-light);
-  border-radius: 0.5rem;
-  transition: border-color 0.2s;
+  justify-content: center;
 }
 
-.file-input-wrapper.has-file {
-  border-style: solid;
-  border-color: var(--primary-dark);
+.step-one-continue-button:hover:not(:disabled) {
+  background-color: #1a2a35;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-.file-input-wrapper.has-file .file-input-button {
-  background-color: var(--primary-highlight);
+.step-one-continue-button:disabled {
+  background-color: #213342;
+  color: white;
+  cursor: not-allowed;
+  opacity: 1;
 }
 
-/* File input button */
-.file-input-button {
-  background-color: #f3f4f6;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  padding: 8px 12px;
-  font-size: 0.875rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  flex-shrink: 0;
+.step-one-continue-button:focus {
+  outline: 2px solid #4E6F8A;
+  outline-offset: 2px;
 }
 
-.file-input-button:hover {
-  background-color: #e5e7eb;
-}
-
-/* File input filename display */
-.file-input-filename {
-  margin-left: 8px;
-  font-size: 0.875rem;
-  color: #4b5563;
-  flex: 1;
-}
-
-/* Hidden file input */
-.file-input-input {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 50%;
-  height: 50%;
-  opacity: 0;
-  cursor: pointer;
-}
-
-/* Help icon */
-.help-icon {
-  margin-left: 8px;
-  width: 20px;
-  height: 20px;
-  color: #6b7280;
-  cursor: pointer;
-  transition: color 0.2s;
-  flex-shrink: 0;
-}
-
-.help-icon:hover {
-  color: #374151;
-}
-
-/* Workflow input wrapper */
-.workflow-input-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
-
-.workflow-select {
-  flex: 1;
-  box-sizing: border-box;
-  padding: 10px 12px;
-  font-size: 1rem;
-  border: 1.6px solid var(--warm-white-light);
-  border-radius: 6px;
-  background: var(--warm-white);
-  outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.workflow-select:focus {
-  border-color: var(--primary-highlight);
-  box-shadow: 0 0 0 3px rgba(78, 111, 138, 0.15);
-  transform: translateY(-1px);
-}
+/*================================================================
+  9. FILE INPUT & HELP COMPONENTS
+================================================================*/
 
 /* Help overlay */
 .help-overlay {
@@ -692,9 +904,7 @@
     gap: 8px;
   }
   
-  .workflow-select {
-    margin-bottom: 0;
-  }
+  /* Removed conflicting workflow-select responsive rule */
   
   .workflow-input-wrapper .help-icon {
     margin-left: 0;

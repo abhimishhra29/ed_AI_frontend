@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, FormEvent, useCallback } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 // Step pages (presentational-only)
 import StepOne from '../../components/autograding-wizard/StepOne';
@@ -25,7 +26,7 @@ const TIMEOUT_SECONDS = 600;
 // ---------------------------------------------------------------------------
 // 🎩 Main container component ------------------------------------------------
 // ---------------------------------------------------------------------------
-export default function CombinedAutoGradingWizard() {
+function CombinedAutoGradingWizard() {
   // ----- Navigation
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
 
@@ -271,6 +272,22 @@ export default function CombinedAutoGradingWizard() {
     <AutoGradingWizardContext.Provider value={ctx}>
       <div className="auto-grading-wizard">
         <Header step={step} />
+        {/* Top navigation buttons */}
+        <div className="wizard-top-buttons">
+          <button
+            onClick={() => {
+              if (step === 1) {
+                window.location.href = '/';
+              } else {
+                setStep((prevStep) => (prevStep - 1) as 1 | 2 | 3 | 4);
+              }
+            }}
+            className="back-button"
+          >
+            <ChevronLeft size={16} />
+            Back
+          </button>
+        </div>
         {step === 1 && <StepOne WORKFLOW_LABELS={WORKFLOW_LABELS} />}
         {step === 2 && <StepTwo />}
         {step === 3 && <StepThree />}
@@ -287,7 +304,8 @@ function Header({ step }: { step: 1 | 2 | 3 | 4 }) {
   return (
     <div className="wizard-header">
       <h1>AutoGrade</h1>
-      <div className="wizard-step-indicator">Step {step}/4</div>
     </div>
   );
 }
+
+export default CombinedAutoGradingWizard;
