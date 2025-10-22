@@ -121,15 +121,17 @@ const StepFour: FC = () => {
     <div className="wizard-step-four">
       <div className="wizard-content">
         {/* ─────────────────── Left column – form ─────────────────── */}
-        <div className="form-column">
+        <div className="assignment-details-box">
           <h2>Grade Submissions</h2>
+          <div className="step-indicator">Step 4/4</div>
           <form
             onSubmit={handleGrade}
             encType="multipart/form-data"
             className="grading-form"
           >
-            {/* Solution PDFs */}
-            <label>Attach Submission:</label>
+            <div className="form-fields-container">
+              <div className="form-field">
+                <label>Attach Submission:</label>
             <div
               className={
                 "file-input-wrapper " +
@@ -168,24 +170,25 @@ const StepFour: FC = () => {
             <div className="timer">
               Time left: {timeLeft !== null ? `${timeLeft}s` : "--"}
             </div>
+              </div>
 
-            {/* Submit button */}
-            <div className="btn-row">
-              <button
-                type="button"
-                className="btn primary"
-                onClick={() => setStep(3)}
-                disabled={isSubmitting}
-              >
-                ← Back to Rubric
-              </button>
-              <button
-                type="submit"
-                className="btn primary"
-                disabled={isSubmitting || !!pageError}
-              >
-                {isSubmitting ? "Grading…" : "Submit"}
-              </button>
+              <div className="form-field">
+                <button
+                  type="button"
+                  className="btn primary"
+                  onClick={() => setStep(3)}
+                  disabled={isSubmitting}
+                >
+                  ← Back
+                </button>
+                <button
+                  type="submit"
+                  className="btn primary"
+                  disabled={isSubmitting || !!pageError}
+                >
+                  {isSubmitting ? "Grading…" : "Submit"}
+                </button>
+              </div>
             </div>
           </form>
         </div>

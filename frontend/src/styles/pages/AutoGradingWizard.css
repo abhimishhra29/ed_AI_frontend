@@ -65,7 +65,7 @@
 
 .back-button {
   position: fixed;
-  top: calc(6rem + 1.5rem); /* Nav bar height + 1.5rem gap */
+  top: 7.3rem; /* Nav bar height + 1.3rem gap */
   left: 1rem;
   display: flex;
   align-items: center;
@@ -88,7 +88,7 @@
 
 .continue-button {
   position: fixed;
-  top: calc(6rem + 1.5rem); /* Nav bar height + 1.5rem gap */
+  top: 6rem; /* Nav bar height - no gap */
   right: 1rem;
   display: flex;
   align-items: center;
@@ -124,13 +124,13 @@
 
 .info-button {
   position: fixed;
-  top: calc(6rem + 1.5rem); /* Nav bar height + 1.5rem gap */
+  top: 6rem; /* Nav bar height - no gap */
   right: 2rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 80px;
+  height: 80px;
   border: none; /* Remove border */
   border-radius: 0; /* Remove border radius */
   background: url('../../assets/icons/info.png') no-repeat center;
@@ -140,6 +140,7 @@
   transition: all 0.2s ease;
   z-index: var(--z-info-button);
   pointer-events: auto;
+  padding-top: 2rem; /* Added padding from top */
 }
 
 .info-button:hover {
@@ -153,30 +154,179 @@
 }
 
 /*================================================================
-  10. INFO PANEL
+  10. INFO PANEL - SLIDE-OUT SIDEBAR
 ================================================================*/
-.info-panel {
+
+/* Main Info Panel Container */
+.click-info-panel {
+  /* Positioning */
   position: fixed;
-  top: calc(6rem + 1.5rem); /* Nav bar height + 1.5rem gap */
-  right: -20%; /* Hidden by default - slide from right */
-  width: 20%; /* Responsive width - 25% of screen width */
-  height: calc(100vh - 6rem - 1.5rem - 2rem); /* Height from button to bottom minus gap and margin */
-  background-color: rgba(243, 238, 228, 0.8); /* 80% opacity peach container */
-  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1); /* Shadow on left side */
+  top: 6rem; /* Position below nav bar */
+  right: -30px; /* Move closer to screen edge */
   z-index: var(--z-info-panel);
-  transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smooth animation */
-  overflow-y: auto; /* Vertical scrolling */
-  pointer-events: auto; /* Allow interaction with slider */
-  border-radius: 8px 0 0 8px; /* Rounded left corners */
+  
+  /* Dimensions - Collapsed State */
+  width: 50px;
+  height: 50px;
+  
+  /* Appearance - Collapsed State */
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+  
+  /* Layout */
+  display: flex;
+  flex-direction: column;
+  overflow: visible; /* Show icon when collapsed */
+  
+  /* Remove any margins/padding that could cause gaps */
+  margin: 0;
+  padding: 0;
+  
+  /* Ultra Smooth Slider Animation */
+  transition: 
+    width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    background-color 0.3s ease-out,
+    box-shadow 0.3s ease-out,
+    border-left 0.3s ease-out,
+    overflow 0.1s ease-out;
 }
 
-.info-panel.open {
-  right: 0; /* Slide in when open */
+/* Expanded State */
+.click-info-panel.open {
+  /* Dimensions - Expanded State */
+  width: min(25vw, 300px);
+  max-width: 400px;
+  min-width: 250px;
+  height: calc(100vh - 6rem); /* Full height minus nav bar */
+  
+  /* Appearance - Expanded State */
+  background-color: white;
+  border-left: 1px solid #e5e5e5;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+  
+  /* Layout - Expanded State */
+  overflow: hidden;
 }
 
-/* Ensure main page remains interactive when slider is open */
-.auto-grading-wizard {
-  pointer-events: auto;
+/* Info Panel Header */
+.info-panel-header {
+  /* Layout */
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centers icon when collapsed */
+  
+  /* Dimensions - Collapsed State */
+  width: 50px;
+  height: 50px;
+  min-height: 50px;
+  
+  /* Spacing - Remove all margins/padding */
+  padding: 0;
+  margin: 0;
+  
+  /* Appearance - Collapsed State */
+  border-bottom: none;
+  
+  /* Interaction */
+  cursor: pointer;
+  
+  /* Smooth Slider Animation */
+  transition: 
+    justify-content 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    padding 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    border-bottom 0.3s ease-out,
+    width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    min-height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Header - Expanded State */
+.click-info-panel.open .info-panel-header {
+  /* Layout - Expanded State */
+  justify-content: flex-start; /* Left-aligns icon and text */
+  
+  /* Dimensions - Expanded State */
+  width: auto;
+  height: auto;
+  min-height: 60px;
+  
+  /* Spacing - Expanded State */
+  padding: 1rem;
+  
+  /* Appearance - Expanded State */
+  border-bottom: 1px solid #e5e5e5;
+}
+
+/* Info Icon */
+.info-icon {
+  /* Dimensions */
+  width: 40px;
+  height: 40px;
+  
+  /* Background Image */
+  background: url('../../assets/icons/info.png') no-repeat center;
+  background-size: contain;
+  background-color: transparent;
+  
+  /* Layout */
+  display: block;
+  flex-shrink: 0;
+  margin: 0;
+}
+
+/* Info Text */
+.info-text {
+  /* Typography */
+  font-weight: 600;
+  font-size: 1rem;
+  color: #213342;
+  white-space: nowrap;
+  
+  /* Spacing */
+  margin-left: 12px;
+  
+  /* Visibility - Collapsed State */
+  opacity: 0;
+  
+  /* Smooth Slider Animation */
+  transition: opacity 0.3s ease-out 0.1s;
+}
+
+/* Text - Expanded State */
+.click-info-panel.open .info-text {
+  opacity: 1;
+}
+
+/* Info Panel Content */
+.info-panel-content {
+  /* Layout */
+  flex: 1;
+  overflow-y: auto;
+  
+  /* Spacing */
+  padding: 1rem;
+  
+  /* Typography */
+  color: #213342;
+  
+  /* Visibility - Collapsed State */
+  opacity: 0;
+  
+  /* Smooth Slider Animation */
+  transition: opacity 0.3s ease-out 0.15s;
+}
+
+/* Content Paragraphs */
+.info-panel-content p {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+/* Content - Expanded State */
+.click-info-panel.open .info-panel-content {
+  opacity: 1;
 }
 
 /* Make sure other elements are not blocked */
@@ -185,101 +335,35 @@
 .assignment-details-box,
 .step-one-continue-button {
   pointer-events: auto;
-  z-index: var(--z-buttons); /* Lower than slider but still interactive */
-}
-
-.info-panel-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.5rem 1.5rem 1rem 1.5rem; /* Smaller padding */
-  border-bottom: 1px solid rgba(33, 51, 66, 0.1);
-}
-
-.info-panel-title {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.info-panel-icon {
-  width: 24px;
-  height: 24px;
-  background: url('../../assets/icons/info.png') no-repeat center;
-  background-size: contain;
-}
-
-.info-panel-header h3 {
-  color: #213342;
-  font-size: 1.25rem; /* Smaller font */
-  font-weight: 600;
-  margin: 0;
-}
-
-.info-panel-close {
-  background: none;
-  border: none;
-  font-size: 2rem;
-  color: #213342;
-  cursor: pointer;
-  padding: 0;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  transition: background-color 0.2s ease;
-}
-
-.info-panel-close:hover {
-  background-color: rgba(33, 51, 66, 0.1);
-}
-
-.info-panel-content {
-  padding: 1.5rem; /* Smaller padding */
-  color: #213342;
-}
-
-.info-panel-content p {
-  margin-bottom: 1rem;
-  line-height: 1.6;
-}
-
-.info-panel-content h4 {
-  color: #213342;
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin: 1.5rem 0 1rem 0;
-}
-
-.info-panel-content ul {
-  margin: 0;
-  padding-left: 1.5rem;
-}
-
-.info-panel-content li {
-  margin-bottom: 0.5rem;
-  line-height: 1.5;
+  z-index: var(--z-buttons); /* Lower than sidebar but still interactive */
 }
 
 /*================================================================
   4. ASSIGNMENT DETAILS BOX
 ================================================================*/
 .assignment-details-box {
-  background-color: #F3EEE4;
-  border-radius: 0;
+  /* Size */
+  width: 860px;
+  max-width: 96vw;  /* Responsive - won't get too wide on small screens */
+  
+  /* Appearance */
+  background: white;
+  border: 1px solid #e5e5e5;  /* Light gray border */
+  border-radius: 16px;        /* Rounded corners */
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);  /* Soft shadow */
+  
+  /* Centering */
+  margin: 0 auto;  /* Centers horizontally */
+  margin-top: 20px;  /* Reduced space from top */
+  
+  /* Padding */
   padding: 2rem;
-  margin: 1rem auto;
-  max-width: 90vw;
-  width: 100%;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .assignment-details-box h2 {
   color: #213342;
   font-size: 1.5rem;
-  font-weight: 600;
+  font-weight: 700;
   margin: 0 0 0.5rem 0;
   text-align: left;
 }
@@ -306,7 +390,7 @@
   max-width: 400px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .assignment-details-box label {
@@ -314,7 +398,8 @@
   margin-bottom: 0.5rem;
   font-weight: 500;
   color: #213342;
-  font-size: 1rem;
+  font-size: 1.3rem;
+  text-align: left;
 }
 
 .assignment-details-box .text-input,
@@ -553,13 +638,21 @@
 
 /* ---------- File Picker ---------- */
 .auto-grading-wizard .file-input-wrapper {
-  display: flex;
-  align-items: center;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  border: 2px dashed var(--warm-white-light);
-  border-radius: 0.5rem;
-  transition: border-color 0.2s;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0.5rem 1rem !important;
+  margin-bottom: 1rem !important;
+  border: 2px solid #4E6F8A !important;
+  border-radius: 5px !important;
+  transition: border-color 0.2s !important;
+  width: 100% !important;
+  max-width: 388px !important;
+  height: 50px !important;
+  box-sizing: border-box !important;
+  background: #FFFFFF !important;
+  gap: 0.75rem !important;
+  flex-wrap: nowrap !important;
 }
 
 .auto-grading-wizard .file-input-wrapper.has-file {
@@ -568,13 +661,21 @@
 }
 
 .auto-grading-wizard .file-input-button {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 0.375rem;
-  background: var(--primary-dark);
-  color: var(--text-light);
-  cursor: pointer;
-  transition: background 0.2s;
+  padding: 0.5rem 1rem !important;
+  border: none !important;
+  border-radius: 3px !important;
+  background: var(--primary-dark) !important;
+  color: var(--text-light) !important;
+  cursor: pointer !important;
+  transition: background 0.2s !important;
+  height: 36px !important;
+  font-size: 0.9rem !important;
+  flex-shrink: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  vertical-align: middle !important;
 }
 
 .auto-grading-wizard .file-input-button:hover {
@@ -582,8 +683,10 @@
 }
 
 .auto-grading-wizard .file-input-filename {
-  margin-left: 1rem;
-  color: var(--text-dark);
+  margin-left: 0 !important;
+  color: var(--text-dark) !important;
+  display: flex !important;
+  align-items: center !important;
 }
 
 .auto-grading-wizard .file-input-input {
@@ -861,14 +964,14 @@
 ================================================================*/
 .step-one-continue-button {
   width: 100% !important;
-  max-width: 150px !important;
+  max-width: 860px !important;
   height: 50px !important;
   margin-top: 1.5rem !important; 
   padding: 0 1rem !important;
   border: 2px solid #4E6F8A !important;
   border-radius: 5px !important;
   font-family: 'Mulish', sans-serif !important;
-  font-size: 1rem !important;
+  font-size: 1.3rem !important;
   font-weight: 600 !important;
   color: white !important;
   cursor: pointer;

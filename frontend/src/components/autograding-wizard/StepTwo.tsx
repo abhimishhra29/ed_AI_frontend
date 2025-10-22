@@ -64,99 +64,53 @@ const StepTwo: FC = () => {
     setStep(3);
   };
 
+  const handleContinue = () => {
+    if (!assignmentFile) return;
+    setStep(3);
+  };
+
   return (
     <div className="wizard-step wizard-step-two">
       <div className="wizard-content">
-        <div className="form-column">
+        <div className="assignment-details-box">
           <h2>Upload Assignment Question</h2>
+          <div className="step-indicator">Step 2/4</div>
           <form className="validation-form" onSubmit={handleNext}>
-            <label>Assignment Question:</label>
-            <div
-              className={`file-input-wrapper ${
-                assignmentFile ? "has-file" : ""
-              }`}
-            >
-              <label htmlFor="assignmentInput" className="file-input-button">
-                {assignmentFile ? "Change PDF" : "Choose PDF"}
-              </label>
-              <span className="file-input-filename">
-                {assignmentFile?.name || "No file selected"}
-              </span>
-              <HelpCircle
-                className="help-icon"
-                onClick={() => setShowHelp(true)}
-              />
-              <input
-                id="assignmentInput"
-                type="file"
-                accept="application/pdf"
-                className="file-input-input"
-                onChange={handleAssignmentChange}
-              />
-            </div>
+            <div className="form-fields-container">
+              <div className="form-field">
+                <label>Assignment Question:</label>
+                <div
+                  className={`file-input-wrapper ${
+                    assignmentFile ? "has-file" : ""
+                  }`}
+                >
+                  <label htmlFor="assignmentInput" className="file-input-button">
+                    {assignmentFile ? "Change PDF" : "Choose PDF"}
+                  </label>
+                  <span className="file-input-filename">
+                    {assignmentFile?.name || "No file selected"}
+                  </span>
+                  <input
+                    id="assignmentInput"
+                    type="file"
+                    accept="application/pdf"
+                    className="file-input-input"
+                    onChange={handleAssignmentChange}
+                  />
+                </div>
+              </div>
 
-            <div className="form-actions">
-              <button
-                type="button"
-                className="btn primary"
-                onClick={() => setStep(1)}
-              >
-                ← Back
-              </button>
-              <button
-                type="submit"
-                className="btn primary"
-                disabled={!assignmentFile}
-              >
-                Continue
-              </button>
+              <div className="form-field">
+                <button
+                  onClick={handleContinue}
+                  disabled={!assignmentFile}
+                  className="step-one-continue-button"
+                >
+                  Continue
+                </button>
+              </div>
             </div>
           </form>
-        </div>
-
-        <div className="right-column">
-          <div className="templates-section">
-            <details className="template-dropdown">
-              <summary className="template-dropdown-trigger">
-                <span>Download Templates</span>
-                <svg
-                  className="dropdown-icon"
-                  width="12"
-                  height="8"
-                  viewBox="0 0 12 8"
-                  fill="none"
-                >
-                  <path
-                    d="M1 1.5L6 6.5L11 1.5"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </summary>
-              <div className="template-dropdown-content">
-                <a
-                  href={`/downloads/Questions_Template.docx`}
-                  download
-                  className="template-link"
-                  target="_blank"
-                  rel="noopener"
-                >
-                  <span>Questions Template</span>
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <path
-                      d="M8 1V11M8 11L11 8M8 11L5 8M2 13H14"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </a>
-              </div>
-            </details>
-          </div>
         </div>
       </div>
 

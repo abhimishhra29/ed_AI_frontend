@@ -289,38 +289,22 @@ function CombinedAutoGradingWizard() {
             Back
           </button>
           
-          <button 
-            className="info-button"
-            onClick={() => {
-              console.log('Info button clicked!', isInfoPanelOpen);
-              setIsInfoPanelOpen(!isInfoPanelOpen);
-            }}
-          >
-          </button>
         </div>
         {step === 1 && <StepOne WORKFLOW_LABELS={WORKFLOW_LABELS} />}
         {step === 2 && <StepTwo />}
         {step === 3 && <StepThree />}
         {step === 4 && <StepFour />}
         
-        {/* Info Panel */}
-        <div className={`info-panel ${isInfoPanelOpen ? 'open' : ''}`}>
-          <div className="info-panel-header">
-            <div className="info-panel-title">
-              <div className="info-panel-icon"></div>
-              <h3>Information</h3>
-            </div>
-            <button 
-              className="info-panel-close"
-              onClick={() => {
-                console.log('Close button clicked!');
-                setIsInfoPanelOpen(false);
-              }}
-            >
-              ×
-            </button>
+        {/* Click-based Expanding Info Panel */}
+        <div className={`click-info-panel ${isInfoPanelOpen ? 'open' : ''}`}>
+          <div className="info-panel-header" onClick={() => setIsInfoPanelOpen(!isInfoPanelOpen)}>
+            <div className="info-icon"></div>
+            <span className="info-text">Information</span>
           </div>
           <div className="info-panel-content">
+            <p>This is the information panel content.</p>
+            <p>You can add helpful information here for users.</p>
+            <p>Click the icon to toggle the panel.</p>
             {/* Content will be added here */}
           </div>
         </div>
