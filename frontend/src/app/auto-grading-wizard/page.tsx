@@ -1,58 +1,54 @@
 'use client';
 
-import { useEffect, useState, FormEvent, useCallback } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { ChevronLeft, ChevronRight, Info } from "lucide-react";
 
 // Step pages (presentational-only)
-import StepOne from '../../components/autograding-wizard/StepOne';
-import StepTwo from '../../components/autograding-wizard/StepTwo';
-import StepThree from '../../components/autograding-wizard/StepThree';
-import StepFour from '../../components/autograding-wizard/StepFour';
+import StepOne from "../../components/autograding-wizard/StepOne";
+import StepTwo from "../../components/autograding-wizard/StepTwo";
+import StepThree from "../../components/autograding-wizard/StepThree";
+import StepFour from "../../components/autograding-wizard/StepFour";
 
 // API wrapper
-import { apiFetch } from '../../lib/api'; // adjust to "@/lib/api" if you use path aliases
+import { apiFetch } from "../../lib/api"; // adjust to "@/lib/api" if you use path aliases
 
 import {
   AutoGradingWizardContext,
   AutoGradingWizardContextType,
-} from './useAutoGradingWizard';
-
-// ---------------------------------------------------------------------------
-// 🛠 Context -----------------------------------------------------------------
-// ---------------------------------------------------------------------------
+} from "./useAutoGradingWizard";
 
 const TIMEOUT_SECONDS = 600;
 
-// ---------------------------------------------------------------------------
-// 🎩 Main container component ------------------------------------------------
-// ---------------------------------------------------------------------------
+type WizardStep = 1 | 2 | 3 | 4;
+
 function CombinedAutoGradingWizard() {
-  // ----- Navigation
-  const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
+  const [step, setStep] = useState<WizardStep>(1);
   const [isInfoPanelOpen, setIsInfoPanelOpen] = useState(false);
 
-  // ----- File pickers
   const [assignmentFile, setAssignmentFile] = useState<File | null>(null);
 
-  // ----- Grading
   const [assignmentName, setAssignmentName] = useState<string>("");
   const [workflows, setWorkflows] = useState<string[]>([]);
-  const [selectedWorkflow, setSelectedWorkflow] = useState<string>("Assignment_grader");
+  const [selectedWorkflow, setSelectedWorkflow] =
+    useState<string>("Assignment_grader");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [gradingError, setGradingError] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
-  const [rawOutputs, setRawOutputs] = useState<{ filename: string; data: any }[]>(
+  const [rawOutputs, setRawOutputs] = useState<
+    { filename: string; data: any }[]
+  >([]);
+  const [solutionFilesSelected, setSolutionFilesSelected] = useState<File[]>(
     []
   );
-  const [solutionFilesSelected, setSolutionFilesSelected] = useState<File[]>([]);
 
-  // ----- Rubric generation -----
   const [generatedRubric, setGeneratedRubric] = useState<any | null>(null);
-  const [extractedQuestions, setExtractedQuestions] = useState<any[] | null>(null);
-  const [isGeneratingRubric, setIsGeneratingRubric] = useState(false);
-  const [rubricGenerationError, setRubricGenerationError] = useState<string | null>(
+  const [extractedQuestions, setExtractedQuestions] = useState<any[] | null>(
     null
   );
+  const [isGeneratingRubric, setIsGeneratingRubric] = useState(false);
+  const [rubricGenerationError, setRubricGenerationError] = useState<
+    string | null
+  >(null);
 
   const WORKFLOW_LABELS: Record<string, string> = {
     Assignment_grader: "Report/Essay/General Assignment",
@@ -62,33 +58,39 @@ function CombinedAutoGradingWizard() {
     rubric_generation: "Rubric Generation",
   };
 
-  // -----------------------------------------------------------------------
-  // Effect: Load available workflows once user is logged in.
-  // -----------------------------------------------------------------------
   useEffect(() => {
     let alive = true;
+
     (async () => {
-      if (!localStorage.getItem("refreshToken")) return; // not logged in
+      if (!localStorage.getItem("refreshToken")) return;
+
       try {
         const resp = await apiFetch("/api/v1/workflow/list/grade");
         if (!resp.ok) return;
+
         const data = await resp.json();
         if (alive && Array.isArray(data.workflows)) {
           setWorkflows(data.workflows);
+
           const preferredOrder = [
             "Assignment_grader",
             "auto_grade",
             "handwritten_ocr",
           ];
+
           const nextWorkflow =
             preferredOrder.find((wf) => data.workflows.includes(wf)) ??
             data.workflows[0];
-          if (nextWorkflow) setSelectedWorkflow(nextWorkflow);
+
+          if (nextWorkflow) {
+            setSelectedWorkflow(nextWorkflow);
+          }
         }
       } catch {
         // ignore; StepOne can surface errors later if needed
       }
     })();
+
     return () => {
       alive = false;
     };
@@ -101,12 +103,11 @@ function CombinedAutoGradingWizard() {
     setIsGeneratingRubric(false);
   }, [assignmentFile]);
 
-  // -----------------------------------------------------------------------
-  // Handlers ----------------------------------------------------------------
-  // -----------------------------------------------------------------------
   const generateRubric = useCallback(async () => {
     if (!assignmentFile) {
-      setRubricGenerationError("Upload an assignment PDF before generating a rubric.");
+      setRubricGenerationError(
+        "Upload an assignment PDF before generating a rubric."
+      );
       return;
     }
 
@@ -159,168 +160,261 @@ function CombinedAutoGradingWizard() {
     }
   }, [assignmentFile, assignmentName]);
 
-  async function handleGrade(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setGradingError(null);
+  const handleGrade = useCallback(
+    async (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      setGradingError(null);
 
-    if (!localStorage.getItem("refreshToken")) {
-      setGradingError("You must be logged in.");
-      return;
-    }
-    if (!assignmentFile) {
-      setGradingError("Upload the assignment before grading.");
-      return;
-    }
-    if (!generatedRubric) {
-      setGradingError("Generate a rubric before grading.");
-      return;
-    }
-    if (solutionFilesSelected.length === 0) {
-      setGradingError("Pick at least one submission file.");
-      return;
-    }
-
-    setIsSubmitting(true);
-    setTimeLeft(TIMEOUT_SECONDS);
-    setRawOutputs([]);
-
-    const interval = setInterval(() => {
-      setTimeLeft((t) => (t && t > 1 ? t - 1 : 0));
-    }, 1000);
-    const timeout = setTimeout(() => {
-      clearInterval(interval);
-      alert("Timeout");
-    }, TIMEOUT_SECONDS * 1000);
-
-    try {
-      for (const file of solutionFilesSelected) {
-        const fd = new FormData();
-        fd.append("graderName", assignmentName);
-        fd.append("assignmentName", assignmentName);
-        const workflowToUse = selectedWorkflow || "auto_grade";
-        fd.append("workflow", workflowToUse);
-        fd.append("assignmentFile", assignmentFile as File);
-        fd.append("rubricJson", JSON.stringify(generatedRubric));
-        fd.append("solutionFile", file);
-
-        const resp = await apiFetch("/api/v1/grade", {
-          method: "POST",
-          body: fd,
-        });
-
-        if (!resp.ok) {
-          if (resp.status === 401) {
-            setGradingError("Session expired. Please log in again.");
-            localStorage.removeItem("accessToken");
-            localStorage.removeItem("refreshToken");
-            break;
-          }
-          const text = await resp.text();
-          setGradingError(text || `Grade request failed (HTTP ${resp.status}).`);
-          continue;
-        }
-
-        const data = await resp.json();
-        setRawOutputs((o) => [...o, { filename: file.name, data }]);
+      if (!localStorage.getItem("refreshToken")) {
+        setGradingError("You must be logged in.");
+        return;
       }
-    } catch (err: any) {
-      setGradingError(err?.message || "Network error");
-    } finally {
-      clearTimeout(timeout);
-      clearInterval(interval);
-      setIsSubmitting(false);
+
+      if (!assignmentFile) {
+        setGradingError("Upload the assignment before grading.");
+        return;
+      }
+
+      if (!generatedRubric) {
+        setGradingError("Generate a rubric before grading.");
+        return;
+      }
+
+      if (solutionFilesSelected.length === 0) {
+        setGradingError("Pick at least one submission file.");
+        return;
+      }
+
+      setIsSubmitting(true);
+      setTimeLeft(TIMEOUT_SECONDS);
+      setRawOutputs([]);
+
+      const tick = setInterval(() => {
+        setTimeLeft((time) => (time && time > 1 ? time - 1 : 0));
+      }, 1000);
+
+      const timer = setTimeout(() => {
+        clearInterval(tick);
+        alert("Timeout");
+      }, TIMEOUT_SECONDS * 1000);
+
+      try {
+        const assignmentSource = assignmentFile as File;
+        const rubricPayload = JSON.stringify(generatedRubric);
+        const workflowToUse = selectedWorkflow || "auto_grade";
+
+        for (const file of solutionFilesSelected) {
+          const formData = new FormData();
+          formData.append("graderName", assignmentName);
+          formData.append("assignmentName", assignmentName);
+          formData.append("workflow", workflowToUse);
+          formData.append("assignmentFile", assignmentSource);
+          formData.append("rubricJson", rubricPayload);
+          formData.append("solutionFile", file);
+
+          const response = await apiFetch("/api/v1/grade", {
+            method: "POST",
+            body: formData,
+          });
+
+          if (!response.ok) {
+            if (response.status === 401) {
+              setGradingError("Session expired. Please log in again.");
+              localStorage.removeItem("accessToken");
+              localStorage.removeItem("refreshToken");
+              break;
+            }
+
+            const text = await response.text();
+            setGradingError(
+              text || `Grade request failed (HTTP ${response.status}).`
+            );
+            continue;
+          }
+
+          const data = await response.json();
+          setRawOutputs((existing) => [
+            ...existing,
+            { filename: file.name, data },
+          ]);
+        }
+      } catch (error: any) {
+        setGradingError(error?.message || "Network error");
+      } finally {
+        clearTimeout(timer);
+        clearInterval(tick);
+        setIsSubmitting(false);
+      }
+    },
+    [
+      assignmentFile,
+      assignmentName,
+      generatedRubric,
+      selectedWorkflow,
+      solutionFilesSelected,
+    ]
+  );
+
+  const ctx = useMemo<AutoGradingWizardContextType>(
+    () => ({
+      step,
+      setStep,
+
+      assignmentFile,
+      setAssignmentFile,
+
+      assignmentName,
+      setAssignmentName,
+      workflows,
+      selectedWorkflow,
+      setSelectedWorkflow,
+      isSubmitting,
+      gradingError,
+      timeLeft,
+      rawOutputs,
+      solutionFilesSelected,
+      setSolutionFilesSelected,
+
+      generatedRubric,
+      extractedQuestions,
+      isGeneratingRubric,
+      rubricGenerationError,
+      generateRubric,
+      setGeneratedRubric,
+      setExtractedQuestions,
+      setRubricGenerationError,
+
+      handleGrade,
+    }),
+    [
+      assignmentFile,
+      assignmentName,
+      extractedQuestions,
+      generatedRubric,
+      generateRubric,
+      gradingError,
+      handleGrade,
+      isGeneratingRubric,
+      isSubmitting,
+      rawOutputs,
+      rubricGenerationError,
+      selectedWorkflow,
+      solutionFilesSelected,
+      step,
+      timeLeft,
+      workflows,
+    ]
+  );
+
+  const handleBack = useCallback(() => {
+    if (step === 1) {
+      window.location.href = "/";
+      return;
     }
-  }
 
-  // -----------------------------------------------------------------------
-  // Context object ---------------------------------------------------------
-  // -----------------------------------------------------------------------
-  const ctx: AutoGradingWizardContextType = {
-    step,
-    setStep,
+    setStep((previous) => (previous - 1) as WizardStep);
+  }, [step]);
 
-    assignmentFile,
-    setAssignmentFile,
+  const toggleInfoPanel = useCallback(() => {
+    setIsInfoPanelOpen((open) => !open);
+  }, []);
 
-    assignmentName,
-    setAssignmentName,
-    workflows,
-    selectedWorkflow,
-    setSelectedWorkflow,
-    isSubmitting,
-    gradingError,
-    timeLeft,
-    rawOutputs,
-    solutionFilesSelected,
-    setSolutionFilesSelected,
-
-    generatedRubric,
-    extractedQuestions,
-    isGeneratingRubric,
-    rubricGenerationError,
-    generateRubric,
-    setGeneratedRubric,
-    setExtractedQuestions,
-    setRubricGenerationError,
-
-    handleGrade,
-  };
-
-  // -----------------------------------------------------------------------
-  // Render -----------------------------------------------------------------
-  // -----------------------------------------------------------------------
   return (
     <AutoGradingWizardContext.Provider value={ctx}>
       <div className="auto-grading-wizard">
         <Header step={step} />
-        {/* Top navigation buttons */}
+
         <div className="wizard-top-buttons">
-          <button
-            onClick={() => {
-              if (step === 1) {
-                window.location.href = '/';
-              } else {
-                setStep((prevStep) => (prevStep - 1) as 1 | 2 | 3 | 4);
-              }
-            }}
-            className="back-button"
-          >
-            <ChevronLeft size={16} />
+          <button type="button" onClick={handleBack} className="back-button">
+            <ChevronLeft size={18} />
             Back
           </button>
-          
         </div>
-        {step === 1 && <StepOne WORKFLOW_LABELS={WORKFLOW_LABELS} />}
-        {step === 2 && <StepTwo />}
-        {step === 3 && <StepThree />}
-        {step === 4 && <StepFour />}
-        
-        {/* Click-based Expanding Info Panel */}
-        <div className={`click-info-panel ${isInfoPanelOpen ? 'open' : ''}`}>
-          <div className="info-panel-header" onClick={() => setIsInfoPanelOpen(!isInfoPanelOpen)}>
-            <div className="info-icon"></div>
-            <span className="info-text">Information</span>
-          </div>
-          <div className="info-panel-content">
-            <p>This is the information panel content.</p>
-            <p>You can add helpful information here for users.</p>
-            <p>Click the icon to toggle the panel.</p>
-            {/* Content will be added here */}
-          </div>
-        </div>
+
+        <main className="wizard-stage" aria-live="polite">
+          {step === 1 && <StepOne WORKFLOW_LABELS={WORKFLOW_LABELS} />}
+          {step === 2 && <StepTwo />}
+          {step === 3 && <StepThree />}
+          {step === 4 && <StepFour />}
+        </main>
+
+        <InfoPanel isOpen={isInfoPanelOpen} onToggle={toggleInfoPanel} />
       </div>
     </AutoGradingWizardContext.Provider>
   );
 }
 
-// ---------------------------------------------------------------------------
-// 🖼 Header (local, no import) ----------------------------------------------
-// ---------------------------------------------------------------------------
-function Header({ step }: { step: 1 | 2 | 3 | 4 }) {
+function Header({ step }: { step: WizardStep }) {
   return (
-    <div className="wizard-header">
+    <header className="wizard-header">
       <h1>AutoGrade</h1>
-    </div>
+      <span className="wizard-step-count">Step {step} of 4</span>
+    </header>
+  );
+}
+
+type InfoPanelProps = {
+  isOpen: boolean;
+  onToggle: () => void;
+};
+
+function InfoPanel({ isOpen, onToggle }: InfoPanelProps) {
+  const titleId = "auto-grading-info-panel-title";
+  const contentId = "auto-grading-info-panel-content";
+  const tips = [
+    "Upload the full assignment brief before generating your rubric so the context is complete.",
+    "Preview the rubric once it’s created and tweak any criteria before you start grading files.",
+    "Keep the assignment name consistent—support can resolve questions faster when they see the exact title.",
+  ];
+
+  return (
+    <aside
+      className={`click-info-panel ${isOpen ? "open" : ""}`}
+      role="complementary"
+      aria-labelledby={titleId}
+    >
+      <button
+        type="button"
+        className="info-panel-toggle"
+        aria-expanded={isOpen}
+        aria-controls={contentId}
+        onClick={onToggle}
+      >
+        <span className="toggle-icon" aria-hidden="true">
+          <Info size={20} />
+        </span>
+        <span className="toggle-label">Helper</span>
+        {isOpen ? (
+          <ChevronRight className="toggle-chevron" aria-hidden="true" />
+        ) : (
+          <ChevronLeft className="toggle-chevron" aria-hidden="true" />
+        )}
+      </button>
+      <div className="info-panel-inner">
+        <div className="info-panel-header">
+          <h2 className="info-panel-title" id={titleId}>
+            Helper Tips
+          </h2>
+          <p className="info-panel-subtitle">
+            Quick reminders while you guide submissions.
+          </p>
+        </div>
+        <div
+          className="info-panel-content"
+          id={contentId}
+          aria-hidden={!isOpen}
+        >
+          <div className="info-panel-tips">
+            {tips.map((tip) => (
+              <div key={tip} className="info-panel-tip">
+                <span className="info-panel-tip-dot" aria-hidden="true" />
+                <p>{tip}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </aside>
   );
 }
 
