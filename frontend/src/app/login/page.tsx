@@ -39,8 +39,14 @@ export default function Login() {
         localStorage.setItem('accessToken', data.access);
         localStorage.setItem('refreshToken', data.refresh);
         localStorage.setItem('loggedIn', 'true');
+        setErrorMsg('');
 
         // ✅ Notify other tabs and Header component
+        try {
+          const bc = new BroadcastChannel('auth');
+          bc.postMessage({ type: 'login' });
+          bc.close();
+        } catch {}
         window.dispatchEvent(new Event('storage'));
 
         router.push(data.is_superuser ? '/admin' : '/');

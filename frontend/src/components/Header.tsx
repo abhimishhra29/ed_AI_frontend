@@ -43,10 +43,14 @@ const Header: FC = () => {
       setSessionExpired(false);
     } catch {
       setSessionExpired(true);
+      setLoggedIn(false);
+      localStorage.removeItem("loggedIn");
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       try {
-        new BroadcastChannel("auth").postMessage({ type: "logout" });
+        const bc = new BroadcastChannel("auth");
+        bc.postMessage({ type: "logout" });
+        bc.close();
       } catch {}
       window.dispatchEvent(new Event("storage"));
     }
@@ -86,7 +90,9 @@ const Header: FC = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     try {
-      new BroadcastChannel('auth').postMessage({ type: 'logout' });
+      const bc = new BroadcastChannel('auth');
+      bc.postMessage({ type: 'logout' });
+      bc.close();
     } catch {}
     window.dispatchEvent(new Event('storage'));
     setLoggedIn(false);
@@ -100,16 +106,26 @@ const Header: FC = () => {
       return;
     }
 
-    const storageHandler = () =>
-      setLoggedIn(localStorage.getItem('loggedIn') === 'true');
+    const storageHandler = () => {
+      const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
+      setLoggedIn(isLoggedIn);
+      if (isLoggedIn) {
+        setSessionExpired(false);
+      }
+    };
     window.addEventListener('storage', storageHandler);
 
     let bc: BroadcastChannel | null = null;
     try {
       bc = new BroadcastChannel('auth');
       bc.onmessage = (e) => {
-        if (e?.data?.type === 'logout') setLoggedIn(false);
-        if (e?.data?.type === 'login' || e?.data?.type === 'access-updated') setLoggedIn(true);
+        if (e?.data?.type === 'logout') {
+          setLoggedIn(false);
+        }
+        if (e?.data?.type === 'login' || e?.data?.type === 'access-updated') {
+          setLoggedIn(true);
+          setSessionExpired(false);
+        }
       };
     } catch {
       // ignore if BroadcastChannel unsupported
@@ -121,6 +137,12 @@ const Header: FC = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (loggedIn) {
+      setSessionExpired(false);
+    }
+  }, [loggedIn]);
+
   const closeMenus = () => setOpenMenu(null);
   const closeAll = () => {
     closeMenus();
@@ -129,7 +151,7 @@ const Header: FC = () => {
 
   return (
     <>
-      {sessionExpired && loggedIn && (
+      {sessionExpired && (
         <div className="session-expired-banner">
           Your session has expired. Please{' '}
           <Link
@@ -145,7 +167,7 @@ const Header: FC = () => {
         </div>
       )}
 
-      <div style={{ paddingTop: sessionExpired && loggedIn ? 48 : 0 }} />
+      <div style={{ paddingTop: sessionExpired ? 48 : 0 }} />
 
       <header className="header" onMouseLeave={closeMenus}>
         <Link href="/" className="logo">

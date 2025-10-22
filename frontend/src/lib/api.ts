@@ -81,6 +81,12 @@ export async function apiFetch(
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("loggedIn");
+      try {
+        const bc = new BroadcastChannel("auth");
+        bc.postMessage({ type: "logout" });
+        bc.close();
+      } catch {}
+      window.dispatchEvent(new Event("storage"));
       throw new Error("Session expired");
     }
   }
