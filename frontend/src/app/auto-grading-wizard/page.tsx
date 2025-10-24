@@ -30,7 +30,7 @@ function CombinedAutoGradingWizard() {
   const [assignmentName, setAssignmentName] = useState<string>("");
   const [workflows, setWorkflows] = useState<string[]>([]);
   const [selectedWorkflow, setSelectedWorkflow] =
-    useState<string>("Assignment_grader");
+    useState<string>("auto_grade");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [gradingError, setGradingError] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
@@ -62,7 +62,13 @@ function CombinedAutoGradingWizard() {
     let alive = true;
 
     (async () => {
-      if (!localStorage.getItem("refreshToken")) return;
+      if (!localStorage.getItem("refreshToken")) {
+        // Provide default workflows even when not logged in
+        const defaultWorkflows = ["Assignment_grader", "auto_grade", "handwritten_ocr"];
+        setWorkflows(defaultWorkflows);
+        setSelectedWorkflow("Assignment_grader");
+        return;
+      }
 
       try {
         const resp = await apiFetch("/api/v1/workflow/list/grade");
@@ -87,7 +93,10 @@ function CombinedAutoGradingWizard() {
           }
         }
       } catch {
-        // ignore; StepOne can surface errors later if needed
+        // If API fails, provide default workflows
+        const defaultWorkflows = ["Assignment_grader", "auto_grade", "handwritten_ocr"];
+        setWorkflows(defaultWorkflows);
+        setSelectedWorkflow("Assignment_grader");
       }
     })();
 
@@ -348,7 +357,6 @@ function Header({ step }: { step: WizardStep }) {
   return (
     <header className="wizard-header">
       <h1>AutoGrade</h1>
-      <span className="wizard-step-count">Step {step} of 4</span>
     </header>
   );
 }

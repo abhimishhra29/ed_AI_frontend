@@ -48,7 +48,7 @@ const StepOne: FC<StepOneProps> = ({ WORKFLOW_LABELS }) => {
   };
 
   const handleContinue = () => {
-    if (!assignmentName) return;
+    if (!assignmentName || !selectedWorkflow) return;
     setStep(2);
   };
 
@@ -70,7 +70,7 @@ const StepOne: FC<StepOneProps> = ({ WORKFLOW_LABELS }) => {
                     setAssignmentName(e.target.value);
                     resetWizardState();
                   }}
-                  placeholder="e.g., Research Essay on Climate Change"
+                  placeholder="e.g., Research Essay on GenAI"
                   required
                   className="text-input"
                 />
@@ -103,7 +103,7 @@ const StepOne: FC<StepOneProps> = ({ WORKFLOW_LABELS }) => {
               <div className="form-field">
                 <button
                   onClick={handleContinue}
-                  disabled={!assignmentName || workflows.length === 0}
+                  disabled={!assignmentName || workflows.length === 0 || !selectedWorkflow}
                   className="step-one-continue-button"
                 >
                   Continue

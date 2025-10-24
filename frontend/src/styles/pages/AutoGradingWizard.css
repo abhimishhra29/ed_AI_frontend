@@ -82,8 +82,6 @@
 /*================================================================
   3. TOP NAVIGATION BUTTONS
 ================================================================*/
-*** End Patch
-
 @media (max-width: 1024px) {
   .click-info-panel {
     width: min(320px, 90vw);
@@ -132,6 +130,381 @@
   
   /* Padding */
   padding: 2rem;
+}
+
+/* Step 3 specific styling - remove box appearance */
+.wizard-step-three .assignment-details-box {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+}
+
+/* Step 3 vertical layout */
+.wizard-step-three .wizard-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+}
+
+.wizard-step-three .questions-section {
+  width: 100%;
+  max-width: 860px;
+}
+
+/* Step 3 button layout - horizontal buttons */
+.wizard-step-three .assignment-details-box .form-fields-container {
+  flex-direction: row;
+  gap: 1rem;
+}
+
+.wizard-step-three .assignment-details-box .form-field {
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Rubric Edit Section */
+.rubric-edit-section {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+}
+
+.rubric-edit-section h3 {
+  color: #213342;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  justify-content: flex-end;
+}
+
+/* Individual question edit button */
+.edit-question-rubric-btn {
+  font-size: 0.8rem;
+  padding: 4px 8px;
+  margin-left: 1rem;
+}
+
+/* Question Rubric Content */
+.question-rubric-content {
+  margin-top: 1rem;
+}
+
+.rubric-content {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 0.5rem;
+}
+
+.rubric-description {
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.rubric-criteria {
+  margin-bottom: 1rem;
+}
+
+.criteria-list {
+  margin-top: 0.5rem;
+}
+
+.criterion-item {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.criterion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.criterion-level {
+  font-weight: 700;
+  color: #213342;
+}
+
+.criterion-score {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.criterion-description {
+  color: #495057;
+  line-height: 1.4;
+}
+
+.rubric-max-score {
+  margin-top: 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #dee2e6;
+  font-weight: 600;
+  color: #213342;
+}
+
+.rubric-deductions {
+  margin-top: 1rem;
+}
+
+.deductions-list {
+  margin-top: 0.5rem;
+}
+
+.deduction-item {
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 6px;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.deduction-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.deduction-area {
+  font-weight: 700;
+  color: #856404;
+}
+
+.deduction-penalty {
+  color: #856404;
+  font-size: 0.9rem;
+}
+
+.deduction-description {
+  color: #856404;
+  line-height: 1.4;
+}
+
+/* Fallback raw data display */
+.rubric-raw-data {
+  margin-top: 1rem;
+}
+
+.json-display {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 1rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin-top: 0.5rem;
+  color: #495057;
+}
+
+.no-rubric-data {
+  color: #6c757d;
+  font-style: italic;
+  text-align: center;
+  padding: 2rem;
+}
+
+/* Plain text rubric styling */
+.plain-text-rubric {
+  line-height: 1.6;
+  color: #495057;
+  white-space: pre-line;
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+
+/* Structured rubric styling */
+.structured-rubric {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 0.5rem;
+}
+
+.rubric-metadata {
+  background: #e9ecef;
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.5rem;
+}
+
+.metadata-item {
+  font-size: 0.9rem;
+}
+
+.subsections, .criteria, .global-deductions {
+  margin-top: 1rem;
+}
+
+.subsection {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.subsection-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.subsection-id, .subsection-score {
+  font-size: 0.8rem;
+  color: #6c757d;
+  background: #f8f9fa;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.performance-levels {
+  margin-top: 0.75rem;
+}
+
+.performance-level {
+  background: #f8f9fa;
+  border-left: 3px solid #007bff;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  border-radius: 0 4px 4px 0;
+}
+
+.level-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.score-range, .threshold {
+  font-size: 0.8rem;
+  color: #495057;
+  background: #e9ecef;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.level-description {
+  color: #495057;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.deductions {
+  margin-top: 0.75rem;
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 4px;
+  padding: 0.75rem;
+}
+
+.deduction {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.penalty {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+.criterion {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.criterion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.criterion-description {
+  color: #495057;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.global-deductions {
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 6px;
+  padding: 1rem;
+}
+
+.deduction-description {
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+/* Inline editing styles */
+.inline-edit-rubric {
+  background: #f8f9fa;
+  border: 2px solid #007bff;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 0.5rem;
+}
+
+.rubric-edit-textarea.inline {
+  width: 100%;
+  min-height: 300px;
+  padding: 1rem;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  resize: vertical;
+  background: white;
+}
+
+.inline-edit-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  justify-content: flex-end;
 }
 
 .assignment-details-box h2 {
@@ -529,6 +902,27 @@
   box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.2);
 }
 
+.auto-grading-wizard .rubric-edit-textarea {
+  width: 100%;
+  min-height: 400px;
+  padding: 1rem;
+  border: 2px solid #4E6F8A;
+  border-radius: 0.5rem;
+  background: #0f172a;
+  color: #e2e8f0;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  resize: vertical;
+  outline: none;
+  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.2);
+}
+
+.auto-grading-wizard .rubric-edit-textarea:focus {
+  border-color: #213342;
+  box-shadow: 0 0 0 2px rgba(33, 51, 66, 0.1), inset 0 0 0 1px rgba(148, 163, 184, 0.2);
+}
+
 .auto-grading-wizard .loading-indicator {
   padding: 1rem;
   border-radius: 0.75rem;
@@ -557,6 +951,231 @@
   gap: 0.35rem;
   color: var(--text-dark);
   font-size: 0.95rem;
+}
+
+/* Expandable Questions Container */
+.auto-grading-wizard .questions-container {
+  max-height: 400px;
+  overflow-y: auto;
+  border-radius: 0.5rem;
+  background: white;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.auto-grading-wizard .question-item {
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.auto-grading-wizard .question-item:last-child {
+  border-bottom: none;
+}
+
+.auto-grading-wizard .question-header {
+  padding: 1rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.2s ease;
+}
+
+.auto-grading-wizard .question-header:hover {
+  background-color: rgba(78, 111, 138, 0.05);
+}
+
+.auto-grading-wizard .question-header.expanded {
+  background-color: rgba(78, 111, 138, 0.1);
+}
+
+.auto-grading-wizard .question-title {
+  flex: 1;
+  color: var(--text-dark);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.auto-grading-wizard .expand-icon {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--primary-highlight);
+  margin-left: 1rem;
+  min-width: 20px;
+  text-align: center;
+}
+
+.auto-grading-wizard .question-rubric {
+  padding: 1rem;
+  background-color: rgba(78, 111, 138, 0.05);
+  border-top: 1px solid rgba(148, 163, 184, 0.2);
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 500px;
+  }
+}
+
+.auto-grading-wizard .rubric-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.auto-grading-wizard .rubric-header h4 {
+  margin: 0;
+  color: var(--primary-dark);
+  font-size: 1rem;
+}
+
+.auto-grading-wizard .max-score {
+  background: var(--primary-highlight);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.auto-grading-wizard .rubric-description {
+  margin-bottom: 0.75rem;
+  padding: 0.5rem;
+  background: white;
+  border-radius: 0.25rem;
+  border-left: 3px solid var(--primary-highlight);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.auto-grading-wizard .rubric-score-ranges {
+  margin-bottom: 0.5rem;
+}
+
+.auto-grading-wizard .rubric-score-ranges strong {
+  display: block;
+  margin-bottom: 0.75rem;
+  color: var(--primary-dark);
+  font-size: 0.9rem;
+}
+
+.auto-grading-wizard .score-ranges-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.auto-grading-wizard .score-range-item {
+  background: white;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  border-left: 4px solid var(--primary-highlight);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.auto-grading-wizard .score-range-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.auto-grading-wizard .score-range-label {
+  font-weight: 700;
+  color: var(--primary-dark);
+  font-size: 0.9rem;
+  background: var(--primary-highlight);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.auto-grading-wizard .score-range-points {
+  font-size: 0.8rem;
+  color: var(--primary-highlight);
+  font-weight: 600;
+}
+
+.auto-grading-wizard .score-range-description {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: var(--text-dark);
+  margin-top: 0.25rem;
+}
+
+.auto-grading-wizard .rubric-deductions {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.auto-grading-wizard .rubric-deductions strong {
+  display: block;
+  margin-bottom: 0.75rem;
+  color: var(--primary-dark);
+  font-size: 0.9rem;
+}
+
+.auto-grading-wizard .deductions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.auto-grading-wizard .deduction-item {
+  background: rgba(255, 193, 7, 0.1);
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  border-left: 4px solid #ffc107;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.auto-grading-wizard .deduction-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.auto-grading-wizard .deduction-area {
+  font-weight: 700;
+  color: var(--primary-dark);
+  font-size: 0.9rem;
+  background: #ffc107;
+  color: #000;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.auto-grading-wizard .deduction-penalty {
+  font-size: 0.8rem;
+  color: #dc3545;
+  font-weight: 600;
+  background: rgba(220, 53, 69, 0.1);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.auto-grading-wizard .deduction-description {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: var(--text-dark);
+  margin-bottom: 0.25rem;
+}
+
+.auto-grading-wizard .deduction-examples {
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-style: italic;
+  margin-top: 0.25rem;
+  padding: 0.25rem;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 0.25rem;
 }
 
 .auto-grading-wizard .template-dropdown[open] .dropdown-icon {
@@ -1206,4 +1825,28 @@
   background: rgba(253, 252, 251, 0.85);
   box-shadow: 0 0 0 4px rgba(253, 252, 251, 0.18);
   margin-top: 0.45rem;
+}
+
+/*================================================================
+  RUBRIC EDIT TEXTAREA
+================================================================*/
+.rubric-edit-textarea {
+  width: 100%;
+  min-height: 400px;
+  padding: 1rem;
+  border: 2px solid #4E6F8A;
+  border-radius: 5px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  background: #FFFFFF;
+  color: #213342;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.rubric-edit-textarea:focus {
+  outline: none;
+  border-color: var(--primary-highlight);
+  box-shadow: 0 0 0 2px rgba(78, 111, 138, 0.2);
 }
