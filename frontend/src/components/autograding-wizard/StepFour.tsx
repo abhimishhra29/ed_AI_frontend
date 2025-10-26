@@ -1,6 +1,6 @@
 'use client';
 
-import { ChangeEvent, FC, Fragment, useState } from "react";
+import { ChangeEvent, FC, useState } from "react";
 import { PDFDocument } from "pdf-lib";
 import { useAutoGradingWizard } from '../../app/auto-grading-wizard/useAutoGradingWizard';
 
@@ -63,37 +63,110 @@ const StepFour: FC = () => {
   const exportToCSV = () => {
     if (!rawOutputs.length) return;
 
-    const allQuestions = Array.from(
-      new Set(
-        rawOutputs.flatMap(({ data }) => {
-          try {
-            const tasks = JSON.parse(data.rationale).tasks || {};
-            return Object.keys(tasks);
-          } catch {
-            return [];
-          }
-        })
-      )
-    );
+    const columnLabels: string[] = [];
 
-    const header = ["Filename", "Student ID", "Total Score", ...allQuestions];
+    rawOutputs.forEach(({ data }) => {
+      try {
+        const parsed = JSON.parse(data.rationale);
+
+        if (parsed?.tasks && typeof parsed.tasks === "object") {
+          Object.keys(parsed.tasks).forEach((label) => {
+            if (!columnLabels.includes(label)) {
+              columnLabels.push(label);
+            }
+          });
+        }
+
+        if (Array.isArray(parsed?.sections)) {
+          parsed.sections.forEach((section: any, idx: number) => {
+            const label =
+              section?.section_label ||
+              section?.section_id ||
+              `Section ${idx + 1}`;
+
+            if (label && !columnLabels.includes(label)) {
+              columnLabels.push(String(label));
+            }
+          });
+        }
+      } catch {
+        /* ignore malformed rationale */
+      }
+    });
+
+    const header = ["Filename", "Student ID", "Total Score", ...columnLabels];
 
     const rows = rawOutputs.map(({ filename, data }) => {
-      let tasksMap: Record<string, [number, number, string]> = {};
+      const columnMap: Record<string, string> = {};
+
+      const toScoreString = (value: unknown) => {
+        if (value === null || value === undefined) return "-";
+        const stringValue = String(value).trim();
+        return stringValue.length ? stringValue : "-";
+      };
+
+      const sanitizeComment = (value: unknown) =>
+        String(value ?? "")
+          .replace(/\n+/g, " ")
+          .trim();
+
       try {
-        tasksMap = JSON.parse(data.rationale).tasks || {};
-      } catch {}
+        const parsed = JSON.parse(data.rationale);
+
+        if (parsed?.tasks && typeof parsed.tasks === "object") {
+          Object.entries(parsed.tasks).forEach(
+            ([label, rawValue]: [string, any]) => {
+              const values = Array.isArray(rawValue) ? rawValue : [];
+              const max = toScoreString(values[0]);
+              const earned = toScoreString(values[1]);
+              const commentText = sanitizeComment(values[2]);
+              columnMap[label] = commentText
+                ? `${earned}/${max} – ${commentText}`
+                : `${earned}/${max}`;
+            }
+          );
+        }
+
+        if (Array.isArray(parsed?.sections)) {
+          parsed.sections.forEach((section: any, idx: number) => {
+            const labelRaw =
+              section?.section_label ||
+              section?.section_id ||
+              `Section ${idx + 1}`;
+            const label = String(labelRaw);
+            const max = toScoreString(
+              section?.max_score ?? section?.total_points ?? section?.possible_score
+            );
+            const earned = toScoreString(
+              section?.awarded_score ?? section?.score ?? section?.earned_score
+            );
+            const feedbackItems = Array.isArray(section?.feedback)
+              ? section.feedback
+              : section?.feedback !== undefined
+              ? [section.feedback]
+              : section?.comments !== undefined
+              ? [section.comments]
+              : [];
+            const feedback = feedbackItems
+              .filter((item: any) => item !== null && item !== undefined)
+              .map((item: any) => sanitizeComment(item))
+              .filter(Boolean)
+              .join(" | ");
+
+            columnMap[label] = feedback
+              ? `${earned}/${max} – ${feedback}`
+              : `${earned}/${max}`;
+          });
+        }
+      } catch {
+        /* ignore malformed rationale */
+      }
 
       return [
         filename,
         data.student_id,
         data.total_score ?? data.grade,
-        ...allQuestions.map((q) => {
-          const entry = tasksMap[q];
-          if (!entry) return "";
-          const [max, got, comment] = entry;
-          return `${got}/${max} – ${comment.replace(/\n/g, " ")}`;
-        }),
+        ...columnLabels.map((label) => columnMap[label] ?? ""),
       ];
     });
 
@@ -122,8 +195,10 @@ const StepFour: FC = () => {
       <div className="wizard-content">
         {/* ─────────────────── Left column – form ─────────────────── */}
         <div className="assignment-details-box">
-          <h2>Grade Submissions</h2>
-          <div className="step-indicator">Step 4/4</div>
+          <div className="assignment-details-box__header">
+            <h2>Grade Submissions</h2>
+            <div className="step-indicator">Step 4/4</div>
+          </div>
           <form
             onSubmit={handleGrade}
             encType="multipart/form-data"
@@ -209,32 +284,161 @@ const StepFour: FC = () => {
                 /* ignore */
               }
 
+              const toScorePart = (value: unknown) => {
+                if (value === null || value === undefined) return "-";
+                const stringValue = String(value).trim();
+                return stringValue.length ? stringValue : "-";
+              };
+
+              const toCommentList = (value: unknown) => {
+                if (value === null || value === undefined) return [] as string[];
+                const parts = Array.isArray(value) ? value : [value];
+                return parts
+                  .filter((part) => part !== null && part !== undefined)
+                  .flatMap((part) =>
+                    String(part)
+                      .split(/\n+/)
+                      .map((line) => line.trim())
+                      .filter(Boolean)
+                  );
+              };
+
+              const sections = Array.isArray(rationaleObj?.sections)
+                ? rationaleObj.sections
+                : null;
+              const taskEntries =
+                rationaleObj?.tasks && typeof rationaleObj.tasks === "object"
+                  ? Object.entries(rationaleObj.tasks)
+                  : null;
+
+              const breakdownRows = sections
+                ? sections
+                    .map((section: any, idx: number) => {
+                      const labelRaw =
+                        section?.section_label ||
+                        section?.title ||
+                        section?.name ||
+                        section?.section_id ||
+                        `Section ${idx + 1}`;
+                      const label = String(labelRaw).trim();
+                      const earned = toScorePart(
+                        section?.awarded_score ??
+                          section?.score ??
+                          section?.earned_score
+                      );
+                      const max = toScorePart(
+                        section?.max_score ??
+                          section?.total_points ??
+                          section?.possible_score
+                      );
+                      const comments = toCommentList(
+                        section?.feedback ?? section?.comments
+                      );
+
+                      return {
+                        key: String(section?.section_id ?? `${idx}-${label}`),
+                        label,
+                        earned,
+                        max,
+                        comments,
+                      };
+                    })
+                    .filter((row: any) => row.label)
+                : taskEntries
+                ? taskEntries.map(([label, rawVal]: [string, any], idx) => {
+                    const values = Array.isArray(rawVal) ? rawVal : [];
+                    return {
+                      key: `${label}-${idx}`,
+                      label,
+                      earned: toScorePart(values[1]),
+                      max: toScorePart(values[0]),
+                      comments: toCommentList(values[2]),
+                    };
+                  })
+                : [];
+
+              const hasBreakdown = breakdownRows.length > 0;
+              const breakdownTitle = sections
+                ? "Section Breakdown"
+                : "Question Breakdown";
+              const primaryColumnLabel = sections ? "Section" : "Question";
+
               return (
                 <div key={i} className="grading-result-card">
-                  <h3 className="grading-result-filename">{filename}</h3>
-                  <hr />
-                  <div className="total-score">
-                    Total Score: {data.grade}
+                  <div className="grading-result-card__header">
+                    <div>
+                      <h3 className="grading-result-filename">{filename}</h3>
+                      {data.student_id && (
+                        <div className="grading-result-meta">
+                          Student ID: {data.student_id}
+                        </div>
+                      )}
+                    </div>
+                    <div className="grading-result-score">
+                      <span className="score-value">
+                        {data.total_score ?? data.grade}
+                      </span>
+                      <span className="score-label">Total Score</span>
+                    </div>
                   </div>
 
-                  {rationaleObj?.tasks ? (
+                  {hasBreakdown ? (
                     <div className="rationale">
-                      <h4>Comments and Section Marks</h4>
-                      {Object.entries(rationaleObj.tasks).map(
-                        ([q, val]: any) => (
-                          <div key={q} className="rationale-item">
-                            <strong>{q}</strong>: {val[1]}/{val[0]} –{" "}
-                            {val[2].split("\n").map(
-                              (line: string, idx: number) => (
-                                <Fragment key={idx}>
-                                  {line}
-                                  <br />
-                                </Fragment>
-                              )
-                            )}
+                      <div className="rationale-title">{breakdownTitle}</div>
+                      <div className="rationale-table" role="table">
+                        <div className="rationale-row rationale-row--head" role="row">
+                          <div className="rationale-cell" role="columnheader">
+                            {primaryColumnLabel}
                           </div>
-                        )
-                      )}
+                          <div
+                            className="rationale-cell rationale-cell--score"
+                            role="columnheader"
+                          >
+                            Score
+                          </div>
+                          <div className="rationale-cell" role="columnheader">
+                            Comments
+                          </div>
+                        </div>
+
+                        {breakdownRows.map((row) => (
+                          <div key={row.key} className="rationale-row" role="row">
+                            <div
+                              className="rationale-cell"
+                              role="cell"
+                              data-label={primaryColumnLabel}
+                            >
+                              {row.label}
+                            </div>
+                            <div
+                              className="rationale-cell rationale-cell--score"
+                              role="cell"
+                              data-label="Score"
+                            >
+                              <span className="score-pill">
+                                {row.earned}
+                                <span className="score-pill__divider">/</span>
+                                {row.max}
+                              </span>
+                            </div>
+                            <div
+                              className="rationale-cell"
+                              role="cell"
+                              data-label="Comments"
+                            >
+                              {row.comments.length ? (
+                                row.comments.map((line, idx) => (
+                                  <div key={`${row.key}-comment-${idx}`} className="comment-line">
+                                    {line}
+                                  </div>
+                                ))
+                              ) : (
+                                <span className="no-comment">No comments</span>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   ) : (
                     <div className="rationale-raw">
