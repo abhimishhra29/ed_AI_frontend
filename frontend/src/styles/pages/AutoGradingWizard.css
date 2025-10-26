@@ -28,13 +28,16 @@
 }
 
 .auto-grading-wizard {
-  max-width: 960px;
+  max-width: 1600px;
+  width: 98vw;
+  min-height: 92vh;
   margin: 0 auto;
-  padding: 32px 24px 72px;
+  padding: 2vw 1.5vw 4vw;
   position: relative;
   display: flex;
   flex-direction: column;
   gap: 24px;
+  box-sizing: border-box;
 }
 
 /*================================================================
@@ -132,38 +135,317 @@
   padding: 2rem;
 }
 
-/* Step 3 specific styling - remove box appearance */
-.wizard-step-three .assignment-details-box {
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  box-shadow: none;
-  padding: 0;
+/*================================================================
+  STEP 3 - CLEAN REDESIGN
+================================================================*/
+
+/* Step 3 - Simple, clean layout matching other steps */
+.wizard-step-three {
+  max-width: 100vw;
+  overflow-x: hidden;
+  margin-top: -24px; /* Override wizard-stage gap */
 }
 
-/* Step 3 vertical layout */
+/* Step 3 - Override main wizard container width constraint */
+.wizard-step-three .auto-grading-wizard {
+  max-width: none !important;
+  width: 100vw !important;
+  min-height: auto !important;
+}
+
 .wizard-step-three .wizard-content {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
   align-items: center;
-}
-
-.wizard-step-three .questions-section {
+  justify-content: flex-start;
+  padding: 1vw 2vw 2vw;
   width: 100%;
-  max-width: 860px;
+  max-width: 100vw;
+  margin: 0;
+  box-sizing: border-box;
+  flex: 1;
+  min-height: 0;
 }
 
-/* Step 3 button layout - horizontal buttons */
-.wizard-step-three .assignment-details-box .form-fields-container {
-  flex-direction: row;
+.wizard-step-three .question-preview {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  align-self: stretch;
+}
+
+/* Step 3 - Assignment details box (plain text, no wizard box effect) */
+.wizard-step-three .assignment-details-box {
+  width: 90vw;
+  max-width: 100%;
+  background: transparent; /* Removed white background */
+  border: none; /* Removed border */
+  border-radius: 0; /* Removed rounded corners */
+  box-shadow: none; /* Removed shadow */
+  margin: 0;
+  margin-top: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Step 3 - Questions section (full width, no white space) */
+.wizard-step-three .questions-section {
+  width: 95vw !important;
+  max-width: 100%;
+  height: 92vh !important;
+  background: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+  padding: 1.5vw 2vw 2vw;
+  margin: 0;
+  margin-top: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* Step 3 - Questions container */
+.wizard-step-three .questions-container {
+  flex: 1;
+  min-height: 80vh;
+  height: 80vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Step 3 - Question items */
+.wizard-step-three .question-item {
+  flex: 0 0 auto;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.wizard-step-three .question-header {
+  padding: 1rem 1.5rem;
+  min-height: auto;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
   gap: 1rem;
+  transition: background-color 0.2s ease;
 }
 
-.wizard-step-three .assignment-details-box .form-field {
-  flex-direction: row;
+.wizard-step-three .question-header:hover {
+  background-color: rgba(78, 111, 138, 0.05);
+}
+
+.wizard-step-three .question-header.expanded {
+  background-color: rgba(78, 111, 138, 0.1);
+}
+
+.wizard-step-three .question-title,
+.wizard-step-three .question-title *,
+.wizard-step-three .question-title strong {
+  font-size: 1.2rem !important;
+}
+
+.wizard-step-three .question-title {
+  line-height: 1.6;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: calc(100% - 2rem);
+  box-sizing: border-box;
+  flex: 1;
+}
+
+.wizard-step-three .expand-icon {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--primary-highlight);
+  margin-left: 1rem;
+  min-width: 20px;
+  text-align: center;
+}
+
+/* Step 3 - Question rubric content */
+.wizard-step-three .question-rubric {
+  padding: 0 1rem 1rem 1rem;
+  background-color: rgba(78, 111, 138, 0.05);
+  border-top: 1px solid rgba(148, 163, 184, 0.2);
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 500px;
+  }
+}
+
+/* Step 3 - Loading indicator */
+.wizard-step-three .loading-indicator {
+  display: flex;
+  justify-content: center;
   align-items: center;
+  min-height: 80vh;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #213342;
+  text-align: center;
+}
+
+/* Step 3 - Questions header with Edit button inline */
+.wizard-step-three .questions-header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
   gap: 1rem;
+  margin: 0;
+  margin-bottom: 1rem;
+  flex-shrink: 0;
+}
+
+.wizard-step-three .questions-header-row h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  flex: 1;
+}
+
+/* Step 3 - Edit button */
+.wizard-step-three .edit-rubric-button {
+  padding: 0.5rem 1rem;
+  background-color: #213342;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.wizard-step-three .edit-rubric-button:hover {
+  background-color: #1a2a35;
+}
+
+/* Step 3 - Responsive design (full width on all screens) */
+@media (max-width: 1366px) {
+  .wizard-step-three .questions-section,
+  .wizard-step-three .assignment-details-box {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 1200px) {
+  .wizard-step-three .questions-section,
+  .wizard-step-three .assignment-details-box {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 1024px) {
+  .wizard-step-three .questions-section,
+  .wizard-step-three .assignment-details-box {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+/* Step 3 - Continue button styled like Back button */
+.wizard-step-three .assignment-details-box .form-field .btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 0.65rem 1.5rem !important;
+  border: none !important;
+  border-radius: 999px !important;
+  font-family: 'Mulish', sans-serif !important;
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+  color: var(--warm-white) !important;
+  background-color: #213342 !important;
+  cursor: pointer !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease !important;
+  min-height: 40px !important;
+  box-shadow: 0 12px 24px rgba(33, 51, 66, 0.16) !important;
+}
+
+.wizard-step-three .assignment-details-box .form-field .btn:hover {
+  background-color: #1a2a35 !important;
+  box-shadow: 0 16px 28px rgba(33, 51, 66, 0.24) !important;
+  transform: translateY(-1px) !important;
+}
+
+.wizard-step-three .assignment-details-box .form-field .btn:active {
+  transform: translateY(0) !important;
+  box-shadow: 0 10px 22px rgba(33, 51, 66, 0.18) !important;
+}
+
+.wizard-step-three .assignment-details-box .form-field .btn:focus-visible {
+  outline: 2px solid var(--primary-highlight) !important;
+  outline-offset: 3px !important;
+}
+
+/* Step 3 - Position Continue button next to Back button horizontally */
+.wizard-step-three .assignment-details-box .form-fields-container {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 12px !important; /* Same spacing as Back button */
+  align-items: center !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Style the Continue button the same as Back button */
+.wizard-step-three ~ .wizard-top-buttons .continue-button,
+.wizard-step-three .form-field .btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 0.65rem 1.5rem !important;
+  border: none !important;
+  border-radius: 999px !important;
+  font-family: 'Mulish', sans-serif !important;
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+  color: var(--warm-white) !important;
+  cursor: pointer !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease !important;
+  min-height: 40px !important;
+  box-shadow: 0 12px 24px rgba(33, 51, 66, 0.16) !important;
+  background-color: #213342 !important;
+}
+
+.wizard-step-three ~ .wizard-top-buttons .continue-button:hover,
+.wizard-step-three .form-field .btn:hover {
+  background-color: #1a2a35 !important;
+  box-shadow: 0 16px 28px rgba(33, 51, 66, 0.24) !important;
+  transform: translateY(-1px) !important;
+}
+
+.wizard-step-three ~ .wizard-top-buttons .continue-button:active,
+.wizard-step-three .form-field .btn:active {
+  transform: translateY(0) !important;
+  box-shadow: 0 10px 22px rgba(33, 51, 66, 0.18) !important;
+}
+
+.wizard-step-three ~ .wizard-top-buttons svg {
+  flex-shrink: 0 !important;
 }
 
 /* Rubric Edit Section */
@@ -340,26 +622,35 @@
 .structured-rubric {
   background: #f8f9fa;
   border-radius: 8px;
-  padding: 1rem;
-  margin-top: 0.5rem;
-}
-
-.rubric-metadata {
-  background: #e9ecef;
-  padding: 0.75rem;
-  border-radius: 6px;
-  margin-bottom: 1rem;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 0.5rem;
-}
-
-.metadata-item {
-  font-size: 0.9rem;
+  padding: 0 1rem 1rem 1rem;
+  margin-top: 0;
 }
 
 .subsections, .criteria, .global-deductions {
-  margin-top: 1rem;
+  margin-top: 0.5rem;
+}
+
+.subsections h4,
+.global-deductions h4,
+.deductions h4,
+.wizard-step-three .global-deductions h4,
+.wizard-step-three .deductions h4 {
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+  color: #213342 !important;
+}
+
+.performance-levels h5,
+.deductions h5,
+.deductions h4,
+.subsections h4 {
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+  color: #213342 !important;
+}
+
+h4, h5 {
+  font-size: 1.5rem !important;
 }
 
 .subsection {
@@ -379,8 +670,14 @@
   border-bottom: 1px solid #e9ecef;
 }
 
+.subsection-header strong {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #213342;
+}
+
 .subsection-id, .subsection-score {
-  font-size: 0.8rem;
+  font-size: 1.5rem;
   color: #6c757d;
   background: #f8f9fa;
   padding: 0.25rem 0.5rem;
@@ -406,8 +703,14 @@
   margin-bottom: 0.5rem;
 }
 
+.level-header strong {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #213342;
+}
+
 .score-range, .threshold {
-  font-size: 0.8rem;
+  font-size: 1.5rem;
   color: #495057;
   background: #e9ecef;
   padding: 0.25rem 0.5rem;
@@ -416,7 +719,7 @@
 
 .level-description {
   color: #495057;
-  font-size: 0.9rem;
+  font-size: 1.5rem;
   line-height: 1.5;
 }
 
@@ -428,12 +731,19 @@
   padding: 0.75rem;
 }
 
+.deductions h5,
+.deductions h4 {
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+  color: #213342 !important;
+}
+
 .deduction {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 0.5rem;
-  font-size: 0.9rem;
+  font-size: 1.5rem;
 }
 
 .penalty {
@@ -441,7 +751,7 @@
   color: #721c24;
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
-  font-size: 0.8rem;
+  font-size: 1.5rem;
 }
 
 .criterion {
@@ -474,7 +784,7 @@
 
 .deduction-description {
   margin-top: 0.25rem;
-  font-size: 0.8rem;
+  font-size: 1.5rem;
   color: #6c757d;
 }
 
@@ -511,7 +821,8 @@
   color: #213342;
   font-size: 1.5rem;
   font-weight: 700;
-  margin: 0 0 0.5rem 0;
+  margin: 0;
+  padding: 0;
   text-align: left;
 }
 
@@ -889,6 +1200,35 @@
   font-size: 0.95rem;
 }
 
+/* Step 3 - No top margin on elements */
+.wizard-step-three .assignment-details-box h2 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.wizard-step-three .step-indicator {
+  margin-top: 0;
+}
+
+/* Step 3 - Display step info and assignment name side by side */
+.wizard-step-three .step-info-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.wizard-step-three .step-info-row .step-indicator {
+  margin: 0;
+  white-space: nowrap;
+}
+
+.wizard-step-three .step-info-row .rubric-summary {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
 .auto-grading-wizard .rubric-json-preview {
   padding: 1.25rem;
   border-radius: 0.75rem;
@@ -929,18 +1269,25 @@
   background: var(--warm-white-light);
   color: var(--primary-dark);
   font-weight: 600;
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .auto-grading-wizard .question-preview {
-  padding: 1rem;
-  border-radius: 0.75rem;
-  background: var(--warm-white);
-  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.25);
+  padding: 0;
+}
+
+.wizard-step-three .question-preview {
+  padding: 0;
 }
 
 .auto-grading-wizard .question-preview h3 {
   margin: 0 0 0.5rem 0;
   color: var(--primary-dark);
+  font-size: 1.5rem;
+  font-weight: 700;
 }
 
 .auto-grading-wizard .question-preview ol {
@@ -1034,15 +1381,6 @@
   font-size: 1rem;
 }
 
-.auto-grading-wizard .max-score {
-  background: var(--primary-highlight);
-  color: white;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-
 .auto-grading-wizard .rubric-description {
   margin-bottom: 0.75rem;
   padding: 0.5rem;
@@ -1088,7 +1426,7 @@
 .auto-grading-wizard .score-range-label {
   font-weight: 700;
   color: var(--primary-dark);
-  font-size: 0.9rem;
+  font-size: 1.5rem;
   background: var(--primary-highlight);
   color: white;
   padding: 0.25rem 0.5rem;
@@ -1096,13 +1434,13 @@
 }
 
 .auto-grading-wizard .score-range-points {
-  font-size: 0.8rem;
+  font-size: 1.5rem;
   color: var(--primary-highlight);
   font-weight: 600;
 }
 
 .auto-grading-wizard .score-range-description {
-  font-size: 0.85rem;
+  font-size: 1.5rem;
   line-height: 1.4;
   color: var(--text-dark);
   margin-top: 0.25rem;
@@ -1145,7 +1483,7 @@
 .auto-grading-wizard .deduction-area {
   font-weight: 700;
   color: var(--primary-dark);
-  font-size: 0.9rem;
+  font-size: 1.5rem;
   background: #ffc107;
   color: #000;
   padding: 0.25rem 0.5rem;
@@ -1153,7 +1491,7 @@
 }
 
 .auto-grading-wizard .deduction-penalty {
-  font-size: 0.8rem;
+  font-size: 1.5rem;
   color: #dc3545;
   font-weight: 600;
   background: rgba(220, 53, 69, 0.1);
@@ -1162,7 +1500,7 @@
 }
 
 .auto-grading-wizard .deduction-description {
-  font-size: 0.85rem;
+  font-size: 1.5rem;
   line-height: 1.4;
   color: var(--text-dark);
   margin-bottom: 0.25rem;

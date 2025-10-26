@@ -1,6 +1,7 @@
 'use client';
 
 import { FC, useEffect, useState } from "react";
+import { ChevronRight } from "lucide-react";
 import { useAutoGradingWizard } from '../../app/auto-grading-wizard/useAutoGradingWizard';
 
 const StepThree: FC = () => {
@@ -554,12 +555,14 @@ const StepThree: FC = () => {
       <div className="wizard-content">
         <div className="assignment-details-box">
           <h2>AI Generated Rubric</h2>
-          <div className="step-indicator">Step 3/4</div>
-          <p className="rubric-summary">
-            {assignmentFile
-              ? `Using assignment: ${assignmentFile.name}`
-              : "Upload an assignment in the previous step to generate a rubric."}
-          </p>
+          <div className="step-info-row">
+            <div className="step-indicator">Step 3/4</div>
+            <p className="rubric-summary">
+              {assignmentFile
+                ? `Using assignment: ${assignmentFile.name}`
+                : "Upload an assignment in the previous step to generate a rubric."}
+            </p>
+          </div>
 
           <div className="form-fields-container">
             <div className="form-field">
@@ -570,6 +573,7 @@ const StepThree: FC = () => {
                 disabled={!generatedRubric || isGeneratingRubric}
               >
                 Continue
+                <ChevronRight size={18} />
               </button>
             </div>
           </div>
@@ -587,7 +591,22 @@ const StepThree: FC = () => {
 
           {!isGeneratingRubric && extractedQuestions && (
             <div className="question-preview">
-              <h3>Detected Questions</h3>
+              <div className="questions-header-row">
+                <h3>Detected Questions</h3>
+                <button 
+                  type="button" 
+                  className="edit-rubric-button"
+                  onClick={() => {
+                    // Open editing for the first question as an example
+                    // You can modify this to open a general rubric editor
+                    if (extractedQuestions && extractedQuestions.length > 0) {
+                      handleEditRubric(extractedQuestions[0].question_id);
+                    }
+                  }}
+                >
+                  Edit Rubric
+                </button>
+              </div>
               <div className="questions-container">
                 {extractedQuestions.map((q: any) => {
                   console.log(`Processing question:`, q);
@@ -611,26 +630,8 @@ const StepThree: FC = () => {
                       
                       {isExpanded && formattedRubric && (
                         <div className="question-rubric">
-                          <div className="rubric-header">
-                            <h4>Rubric for {formattedRubric.title}</h4>
-                            <div className="max-score">Max Score: {formattedRubric.maxScore}</div>
-                            <button
-                              type="button"
-                              className="btn primary edit-question-rubric-btn"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleEditRubric(q.question_id);
-                              }}
-                            >
-                              Edit
-                            </button>
-                          </div>
-                          
-                          <div className="question-rubric-content">
-                            <strong>Question Rubric:</strong>
-                            <div className="rubric-content">
-                              {rubricItem ? (
-                                isEditingRubric && editingQuestionId === q.question_id ? (
+                          {rubricItem ? (
+                            isEditingRubric && editingQuestionId === q.question_id ? (
                                   <div className="inline-edit-rubric">
                                     <textarea
                                       className="rubric-edit-textarea inline"
@@ -659,21 +660,6 @@ const StepThree: FC = () => {
                                   </div>
                                 ) : (
                                   <div className="structured-rubric">
-                                    <div className="rubric-metadata">
-                                      <div className="metadata-item">
-                                        <strong>Canonical ID:</strong> {rubricItem.canonical_id || 'N/A'}
-                                      </div>
-                                      <div className="metadata-item">
-                                        <strong>Question ID:</strong> {rubricItem.question_id || 'N/A'}
-                                      </div>
-                                      <div className="metadata-item">
-                                        <strong>Title:</strong> {rubricItem.title || 'N/A'}
-                                      </div>
-                                      <div className="metadata-item">
-                                        <strong>Max Score:</strong> {rubricItem.max_score || 'N/A'} points
-                                      </div>
-                                    </div>
-                                    
                                     {rubricItem.subsections && rubricItem.subsections.length > 0 && (
                                       <div className="subsections">
                                         <h4>Subsections:</h4>
@@ -741,8 +727,6 @@ const StepThree: FC = () => {
                                   <em>No rubric data available for this question.</em>
                                 </div>
                               )}
-                            </div>
-                          </div>
                         </div>
                       )}
                     </div>
