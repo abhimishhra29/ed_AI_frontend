@@ -135,6 +135,53 @@
   padding: 2rem;
 }
 
+.workflow-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 14px;
+  color: var(--text-dark);
+}
+
+.workflow-toggle {
+  display: inline-flex;
+  border: 1px solid var(--primary-dark);
+  border-radius: 999px;
+  overflow: hidden;
+  background: #ffffff;
+  min-width: 280px;
+  box-shadow: 0 10px 24px rgba(33, 51, 66, 0.1);
+}
+
+.workflow-toggle__option {
+  flex: 1 1 140px;
+  padding: 14px 28px;
+  border: none;
+  background: transparent;
+  color: var(--primary-dark);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.workflow-toggle__option:not(:last-child) {
+  border-right: 1px solid rgba(33, 51, 66, 0.18);
+}
+
+.workflow-toggle__option:hover {
+  background: rgba(78, 111, 138, 0.1);
+}
+
+.workflow-toggle__option--active {
+  background: var(--primary-dark);
+  color: var(--text-light);
+}
+
+.workflow-toggle__option:focus-visible {
+  outline: 2px solid var(--primary-highlight);
+  outline-offset: 2px;
+}
+
 /*================================================================
   STEP 3 - CLEAN REDESIGN
 ================================================================*/

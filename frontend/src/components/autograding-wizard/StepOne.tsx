@@ -2,11 +2,14 @@
 
 import { FC, FormEvent } from "react";
 import { ChevronRight } from "lucide-react";
-import { useAutoGradingWizard } from '../../app/auto-grading-wizard/useAutoGradingWizard';
+import {
+  useAutoGradingWizard,
+  WorkflowOption,
+} from "../../app/auto-grading-wizard/useAutoGradingWizard";
 
 interface StepOneProps {
   /** Human-readable labels for workflow slugs */
-  WORKFLOW_LABELS: Record<string, string>;
+  WORKFLOW_LABELS: Record<WorkflowOption, string>;
 }
 
 const StepOne: FC<StepOneProps> = ({ WORKFLOW_LABELS }) => {
@@ -22,8 +25,10 @@ const StepOne: FC<StepOneProps> = ({ WORKFLOW_LABELS }) => {
     setExtractedQuestions,
   } = useAutoGradingWizard();
 
-  const workflowOptions =
-    workflows.length > 0 ? workflows : Object.keys(WORKFLOW_LABELS);
+  const workflowOptions: WorkflowOption[] =
+    workflows.length > 0
+      ? workflows
+      : (Object.keys(WORKFLOW_LABELS) as WorkflowOption[]);
 
   const resetWizardState = () => {
     setGeneratedRubric(null);
@@ -31,7 +36,7 @@ const StepOne: FC<StepOneProps> = ({ WORKFLOW_LABELS }) => {
     setExtractedQuestions(null);
   };
 
-  const handleWorkflowChange = (value: string) => {
+  const handleWorkflowChange = (value: WorkflowOption) => {
     setSelectedWorkflow(value);
     resetWizardState();
   };
@@ -40,11 +45,6 @@ const StepOne: FC<StepOneProps> = ({ WORKFLOW_LABELS }) => {
     event.preventDefault();
     if (!assignmentName) return;
     setStep(2);
-  };
-
-  const handleBack = () => {
-    // Go back to home page
-    window.location.href = '/';
   };
 
   const handleContinue = () => {
@@ -77,36 +77,48 @@ const StepOne: FC<StepOneProps> = ({ WORKFLOW_LABELS }) => {
               </div>
 
               <div className="form-field">
-                <label htmlFor="workflow-select">Assignment Type:</label>
-                <select
-                  id="workflow-select"
-                  value={selectedWorkflow}
-                  onChange={(e) => handleWorkflowChange(e.target.value)}
-                  disabled={workflowOptions.length === 0}
-                  className="workflow-select"
+                <span className="workflow-label">Assignment Type:</span>
+                <div
+                  className="workflow-toggle"
+                  role="radiogroup"
+                  aria-label="Assignment Type"
                 >
-                  {workflowOptions.map((w) => (
-                    <option key={w} value={w}>
-                      {WORKFLOW_LABELS[w] || w}
-                    </option>
-                  ))}
-                </select>
-
+                  {workflowOptions.map((workflow) => {
+                    const label = WORKFLOW_LABELS[workflow] ?? workflow;
+                    const isActive = workflow === selectedWorkflow;
+                    return (
+                      <button
+                        type="button"
+                        key={workflow}
+                        className={`workflow-toggle__option${
+                          isActive ? " workflow-toggle__option--active" : ""
+                        }`}
+                        onClick={() => handleWorkflowChange(workflow)}
+                        aria-pressed={isActive}
+                      >
+                        {label}
+                      </button>
+                    );
+                  })}
+                </div>
                 {workflowOptions.length === 0 && (
                   <div className="validation-error">
                     Sign in to load available assignment types.
                   </div>
                 )}
               </div>
-              
-              {/* Continue button below assignment type */}
+
               <div className="form-field">
                 <button
                   onClick={handleContinue}
-                  disabled={!assignmentName || workflows.length === 0 || !selectedWorkflow}
+                  disabled={
+                    !assignmentName ||
+                    workflowOptions.length === 0 ||
+                    !selectedWorkflow
+                  }
                   className="step-one-continue-button"
                 >
-                  Continue
+                  Continue <ChevronRight size={16} />
                 </button>
               </div>
             </div>
