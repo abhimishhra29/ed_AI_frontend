@@ -1743,7 +1743,57 @@ h4, h5 {
 }
 
 /*================================================================
-  9. FILE INPUT & HELP COMPONENTS
+  9. STEP FOUR SUBMIT BUTTON
+================================================================*/
+.step-four-submit-button {
+  width: 100% !important;
+  max-width: 360px !important;
+  padding: 0.85rem 1.5rem !important;
+  border: none !important;
+  border-radius: 999px !important;
+  font-family: 'Mulish', sans-serif !important;
+  font-size: 1.05rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.02em !important;
+  color: var(--warm-white) !important;
+  background: linear-gradient(135deg, #213342 0%, #2f4f66 100%) !important;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 16px 28px rgba(33, 51, 66, 0.26);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  align-self: center !important;
+  cursor: pointer;
+}
+
+.step-four-submit-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 20px 32px rgba(33, 51, 66, 0.3);
+  opacity: 0.95;
+}
+
+.step-four-submit-button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 12px 20px rgba(33, 51, 66, 0.2);
+  opacity: 1;
+}
+
+.step-four-submit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+  background: linear-gradient(135deg, #213342 0%, #2f4f66 100%) !important;
+}
+
+.step-four-submit-button:focus-visible {
+  outline: 2px solid var(--primary-highlight);
+  outline-offset: 3px;
+}
+
+/*================================================================
+  10. FILE INPUT & HELP COMPONENTS
 ================================================================*/
 
 /* Help overlay */

@@ -174,16 +174,8 @@ const StepFour: FC = () => {
 
               <div className="form-field">
                 <button
-                  type="button"
-                  className="btn primary"
-                  onClick={() => setStep(3)}
-                  disabled={isSubmitting}
-                >
-                  ← Back
-                </button>
-                <button
                   type="submit"
-                  className="btn primary"
+                  className="step-four-submit-button"
                   disabled={isSubmitting || !!pageError}
                 >
                   {isSubmitting ? "Grading…" : "Submit"}
