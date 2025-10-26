@@ -1,7 +1,6 @@
 'use client';
 
 import { FC, useEffect, useState } from "react";
-import { ChevronRight } from "lucide-react";
 import { useAutoGradingWizard } from '../../app/auto-grading-wizard/useAutoGradingWizard';
 
 const StepThree: FC = () => {
@@ -554,30 +553,6 @@ const StepThree: FC = () => {
     <div className="wizard-step wizard-step-three">
       <div className="wizard-content">
         <div className="assignment-details-box">
-          <h2>AI Generated Rubric</h2>
-          <div className="step-info-row">
-            <div className="step-indicator">Step 3/4</div>
-            <p className="rubric-summary">
-              {assignmentFile
-                ? `Using assignment: ${assignmentFile.name}`
-                : "Upload an assignment in the previous step to generate a rubric."}
-            </p>
-          </div>
-
-          <div className="form-fields-container">
-            <div className="form-field">
-              <button
-                type="button"
-                className="btn primary"
-                onClick={() => setStep(4)}
-                disabled={!generatedRubric || isGeneratingRubric}
-              >
-                Continue
-                <ChevronRight size={18} />
-              </button>
-            </div>
-          </div>
-
         </div>
 
         <div className="questions-section">

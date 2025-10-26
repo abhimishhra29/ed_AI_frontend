@@ -338,6 +338,30 @@ function CombinedAutoGradingWizard() {
             <ChevronLeft size={18} />
             Back
           </button>
+          {step === 3 && (
+            <>
+              <div className="wizard-step-title-container">
+                <h2 className="wizard-step-title">AI Generated Rubric</h2>
+                <div className="wizard-step-info">
+                  <span className="step-indicator">Step 3/4</span>
+                  <span className="assignment-info">
+                    {assignmentFile
+                      ? `Using assignment: ${assignmentFile.name}`
+                      : "Upload an assignment in the previous step to generate a rubric."}
+                  </span>
+                </div>
+              </div>
+              <button
+                type="button"
+                className="continue-button"
+                onClick={() => setStep(4)}
+                disabled={!generatedRubric || isGeneratingRubric}
+              >
+                Continue
+                <ChevronRight size={18} />
+              </button>
+            </>
+          )}
         </div>
 
         <main className="wizard-stage" aria-live="polite">

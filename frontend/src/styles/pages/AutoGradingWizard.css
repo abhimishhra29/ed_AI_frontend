@@ -159,7 +159,7 @@
   gap: 1rem;
   align-items: center;
   justify-content: flex-start;
-  padding: 1vw 2vw 2vw;
+  padding: 0.5vw 2vw 2vw;
   width: 100%;
   max-width: 100vw;
   margin: 0;
@@ -1920,13 +1920,84 @@ h4, h5 {
 }
 .wizard-top-buttons {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  justify-content: space-between;
   gap: 12px;
   padding: 0;
   margin: 0;
+  margin-bottom: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  min-height: 80px;
 }
 
-.back-button {
+/* Reduce spacing for step 3 */
+.wizard-stage:has(.wizard-step-three) {
+  gap: 0;
+  margin-top: 0;
+}
+
+/* Reduce bottom margin of wizard-top-buttons when step 3 is active */
+.wizard-top-buttons:has(+ .wizard-stage .wizard-step-three) {
+  margin-bottom: 0.25rem;
+}
+
+.wizard-step-title-container {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.wizard-step-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #000000;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.wizard-step-info {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.95rem;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.wizard-step-info .step-indicator {
+  color: #213342;
+  font-size: 1rem;
+  font-weight: 400;
+  margin: 0;
+}
+
+.wizard-step-info .assignment-info {
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .wizard-step-title {
+    font-size: 1.2rem;
+  }
+  
+  .wizard-step-info {
+    font-size: 0.8rem;
+  }
+}
+
+.back-button,
+.continue-button {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -1942,26 +2013,37 @@ h4, h5 {
   min-height: 40px;
   box-shadow: 0 12px 24px rgba(33, 51, 66, 0.16);
   background-color: #213342;
+  position: relative;
+  z-index: 2;
 }
 
-.back-button svg {
+.back-button svg,
+.continue-button svg {
   flex-shrink: 0;
 }
 
-.back-button:hover {
+.back-button:hover,
+.continue-button:hover:not(:disabled) {
   background-color: #1a2a35;
   box-shadow: 0 16px 28px rgba(33, 51, 66, 0.24);
   transform: translateY(-1px);
 }
 
-.back-button:active {
+.back-button:active,
+.continue-button:active:not(:disabled) {
   transform: translateY(0);
   box-shadow: 0 10px 22px rgba(33, 51, 66, 0.18);
 }
 
-.back-button:focus-visible {
+.back-button:focus-visible,
+.continue-button:focus-visible {
   outline: 2px solid var(--primary-highlight);
   outline-offset: 3px;
+}
+
+.continue-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .wizard-stage {
