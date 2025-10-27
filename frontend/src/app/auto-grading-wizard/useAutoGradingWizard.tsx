@@ -8,6 +8,8 @@ import {
   FormEvent,
 } from 'react';
 
+export type WorkflowOption = 'Assignment_grader' | 'handwritten_ocr';
+
 export interface AutoGradingWizardContextType {
   /* navigation */
   step: 1 | 2 | 3 | 4;
@@ -20,9 +22,9 @@ export interface AutoGradingWizardContextType {
   /* grading‑stage state */
   assignmentName: string;
   setAssignmentName: Dispatch<SetStateAction<string>>;
-  workflows: string[];
-  selectedWorkflow: string;
-  setSelectedWorkflow: Dispatch<SetStateAction<string>>;
+  workflows: WorkflowOption[];
+  selectedWorkflow: WorkflowOption;
+  setSelectedWorkflow: Dispatch<SetStateAction<WorkflowOption>>;
   isSubmitting: boolean;
   gradingError: string | null;
   timeLeft: number | null;

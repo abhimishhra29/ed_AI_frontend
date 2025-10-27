@@ -25,6 +25,11 @@ export const metadata: Metadata = {
   title: 'EdGenAI',
   description:
     'EdGenAI delivers AI-powered grading, planning, and consultancy tools that help educators transform learning experiences.',
+  icons: {
+    icon: '/favicon.png',
+    shortcut: '/favicon.png',
+    apple: '/favicon.png',
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

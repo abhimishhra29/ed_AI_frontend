@@ -15,9 +15,15 @@ import { apiFetch } from "../../lib/api"; // adjust to "@/lib/api" if you use pa
 import {
   AutoGradingWizardContext,
   AutoGradingWizardContextType,
+  WorkflowOption,
 } from "./useAutoGradingWizard";
 
 const TIMEOUT_SECONDS = 600;
+const ALLOWED_WORKFLOWS: WorkflowOption[] = [
+  "Assignment_grader",
+  "handwritten_ocr",
+];
+const DEFAULT_WORKFLOW: WorkflowOption = ALLOWED_WORKFLOWS[0];
 
 type WizardStep = 1 | 2 | 3 | 4;
 
@@ -28,9 +34,11 @@ function CombinedAutoGradingWizard() {
   const [assignmentFile, setAssignmentFile] = useState<File | null>(null);
 
   const [assignmentName, setAssignmentName] = useState<string>("");
-  const [workflows, setWorkflows] = useState<string[]>([]);
+  const [workflows, setWorkflows] = useState<WorkflowOption[]>([
+    ...ALLOWED_WORKFLOWS,
+  ]);
   const [selectedWorkflow, setSelectedWorkflow] =
-    useState<string>("auto_grade");
+    useState<WorkflowOption>(DEFAULT_WORKFLOW);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [gradingError, setGradingError] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
@@ -50,53 +58,53 @@ function CombinedAutoGradingWizard() {
     string | null
   >(null);
 
-  const WORKFLOW_LABELS: Record<string, string> = {
-    Assignment_grader: "Report/Essay/General Assignment",
-    auto_grade: "Q/A Assignment (Formatted)",
-    handwritten_ocr: "Handwritten Exam",
-    test_view: "Test Workflow",
-    rubric_generation: "Rubric Generation",
+  const WORKFLOW_LABELS: Record<WorkflowOption, string> = {
+    Assignment_grader: "Digital Assignment",
+    handwritten_ocr: "Handwritten Assignment",
   };
 
   useEffect(() => {
     let alive = true;
 
     (async () => {
+      const applyDefaultWorkflows = () => {
+        setWorkflows([...ALLOWED_WORKFLOWS]);
+        setSelectedWorkflow(DEFAULT_WORKFLOW);
+      };
+
       if (!localStorage.getItem("refreshToken")) {
-        // Provide default workflows even when not logged in
-        const defaultWorkflows = ["Assignment_grader", "auto_grade", "handwritten_ocr"];
-        setWorkflows(defaultWorkflows);
-        setSelectedWorkflow("Assignment_grader");
+        applyDefaultWorkflows();
         return;
       }
 
       try {
         const resp = await apiFetch("/api/v1/workflow/list/grade");
-        if (!resp.ok) return;
+        if (!resp.ok) {
+          applyDefaultWorkflows();
+          return;
+        }
 
         const data = await resp.json();
-        if (alive && Array.isArray(data.workflows)) {
-          setWorkflows(data.workflows);
+        if (!alive) {
+          return;
+        }
 
-          const preferredOrder = [
-            "Assignment_grader",
-            "auto_grade",
-            "handwritten_ocr",
-          ];
-
-          const nextWorkflow =
-            preferredOrder.find((wf) => data.workflows.includes(wf)) ??
-            data.workflows[0];
-
-          if (nextWorkflow) {
-            setSelectedWorkflow(nextWorkflow);
-          }
+        if (Array.isArray(data.workflows)) {
+          const filtered = data.workflows.filter((wf: string): wf is WorkflowOption =>
+            ALLOWED_WORKFLOWS.includes(wf as WorkflowOption)
+          );
+          const nextWorkflows = filtered.length
+            ? filtered
+            : [...ALLOWED_WORKFLOWS];
+          setWorkflows(nextWorkflows);
+          setSelectedWorkflow((current) =>
+            nextWorkflows.includes(current) ? current : DEFAULT_WORKFLOW
+          );
+        } else {
+          applyDefaultWorkflows();
         }
       } catch {
-        // If API fails, provide default workflows
-        const defaultWorkflows = ["Assignment_grader", "auto_grade", "handwritten_ocr"];
-        setWorkflows(defaultWorkflows);
-        setSelectedWorkflow("Assignment_grader");
+        applyDefaultWorkflows();
       }
     })();
 
