@@ -19,6 +19,8 @@ const StepThree: FC = () => {
   const [isEditingRubric, setIsEditingRubric] = useState(false);
   const [editedRubric, setEditedRubric] = useState<any>(null);
   const [editingQuestionId, setEditingQuestionId] = useState<string | null>(null);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editedRubrics, setEditedRubrics] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (!assignmentFile) {
@@ -41,6 +43,87 @@ const StepThree: FC = () => {
     const questionRubric = getQuestionRubric(questionId);
     const plainTextRubric = formatRubricToPlainText(questionRubric);
     setEditedRubric(plainTextRubric);
+  };
+
+  const handleEditRubrics = () => {
+    // Initialize all rubrics for editing
+    if (extractedQuestions && generatedRubric && generatedRubric.rubric) {
+      const rubricsMap: Record<string, string> = {};
+      extractedQuestions.forEach((q: any) => {
+        const questionRubric = getQuestionRubric(q.question_id);
+        const plainText = formatRubricToPlainText(questionRubric);
+        console.log('Plain text for edit:', plainText);
+        console.log('Original rubric structure:', questionRubric);
+        rubricsMap[q.question_id] = plainText;
+      });
+      setEditedRubrics(rubricsMap);
+      setIsEditMode(true);
+    }
+  };
+
+  const handleSaveAllRubrics = () => {
+    if (!generatedRubric || !generatedRubric.rubric) return;
+    
+    const updatedRubric = { ...generatedRubric };
+    
+    // Update each rubric
+    Object.keys(editedRubrics).forEach((questionId) => {
+      const editedText = editedRubrics[questionId];
+      const originalRubric = getQuestionRubric(questionId);
+      
+      if (originalRubric && editedText) {
+        const parsedRubric = parsePlainTextToRubricImproved(editedText);
+        console.log('Parsed rubric back:', parsedRubric);
+        console.log('Original rubric:', originalRubric);
+        
+        // Deep merge subsections to preserve structure while updating content
+        const updatedSubsections = parsedRubric.subsections || [];
+        const originalSubsections = originalRubric.subsections || [];
+        
+        // Create a map of original subsections by canonical_id for matching
+        const originalSubsectionsMap = new Map();
+        originalSubsections.forEach((sub: any) => {
+          const key = sub.canonical_id || sub.subquestion_id || sub.label || sub.title;
+          if (key) originalSubsectionsMap.set(key, sub);
+        });
+        
+        // Merge subsections: use parsed data but keep original canonical_id/max_score if not in parsed
+        const mergedSubsections = updatedSubsections.map((parsedSub: any, index: number) => {
+          const originalSub = originalSubsections[index] || Array.from(originalSubsectionsMap.values())[index];
+          return {
+            ...originalSub,  // Keep all original fields
+            ...parsedSub,   // Override with parsed content
+            // Ensure these fields are preserved
+            canonical_id: parsedSub.canonical_id || originalSub?.canonical_id,
+            subquestion_id: parsedSub.subquestion_id || originalSub?.subquestion_id,
+            max_score: parsedSub.max_score !== undefined ? parsedSub.max_score : (originalSub?.max_score)
+          };
+        });
+        
+        const updatedRubricItem = {
+          ...originalRubric,
+          ...parsedRubric,
+          question_id: questionId,
+          subsections: mergedSubsections.length > 0 ? mergedSubsections : parsedRubric.subsections
+        };
+        
+        console.log('Updated rubric item:', updatedRubricItem);
+        
+        const rubricIndex = updatedRubric.rubric.findIndex((item: any) => item.question_id === questionId);
+        if (rubricIndex !== -1) {
+          updatedRubric.rubric[rubricIndex] = updatedRubricItem;
+        }
+      }
+    });
+    
+    setGeneratedRubric(updatedRubric);
+    setIsEditMode(false);
+    setEditedRubrics({});
+  };
+
+  const handleCancelAllEditing = () => {
+    setIsEditMode(false);
+    setEditedRubrics({});
   };
 
   const handleSaveRubric = () => {
@@ -106,13 +189,34 @@ const StepThree: FC = () => {
           text += `\n${subsectionName}:\n`;
         }
         
+        // Add subsection ID and max score
+        const subsectionId = subsection.canonical_id || subsection.subquestion_id || 'N/A';
+        const subsectionMaxScore = subsection.max_score || 'N/A';
+        if (subsectionId !== 'N/A' || subsectionMaxScore !== 'N/A') {
+          text += `Subsection ID: ${subsectionId}, Max Score: ${subsectionMaxScore}\n`;
+        }
+        
         if (subsection.performance_levels && Array.isArray(subsection.performance_levels)) {
           subsection.performance_levels.forEach((level: any, levelIndex: number) => {
             const levelName = level.level || level.name || level.title || `Level ${levelIndex + 1}`;
             const score = level.score_range || level.score || level.points || level.value;
+            const threshold = level.threshold || level.percentage || 'N/A';
             const description = level.description || level.criteria || level.text || 'No description provided';
             const scoreText = score ? ` (${score} points)` : '';
-            text += `• ${levelName}${scoreText}: ${description}\n`;
+            const thresholdText = threshold && threshold !== 'N/A' ? ` [Threshold: ${threshold}]` : '';
+            text += `• ${levelName}${scoreText}${thresholdText}: ${description}\n`;
+          });
+        }
+        
+        // Add subsection-level deductions/penalties
+        const subsectionDeductions = subsection.deductions || subsection.penalties;
+        if (subsectionDeductions && Array.isArray(subsectionDeductions) && subsectionDeductions.length > 0) {
+          text += `\n  Deductions:\n`;
+          subsectionDeductions.forEach((deduction: any) => {
+            const area = deduction.reason || deduction.area || deduction.category || 'Deduction';
+            const penalty = deduction.penalty || deduction.amount || deduction.score || '-1 point';
+            const description = deduction.description || deduction.text || 'No description provided';
+            text += `  • ${area} (${penalty}): ${description}\n`;
           });
         }
       });
@@ -226,7 +330,8 @@ const StepThree: FC = () => {
           rubric.max_score = parseInt(scoreMatch[1]);
         }
         currentSection = '';
-      } else if (trimmedLine.startsWith('Deductions:')) {
+      } else if (trimmedLine.startsWith('Deductions:') && currentSection !== 'subsection' && currentSection !== 'subsection-deductions') {
+        // Global deductions (not within a subsection)
         currentSection = 'deductions';
         deductions = [];
       } else if (trimmedLine.startsWith('•') && currentSection === 'criteria') {
@@ -259,7 +364,21 @@ const StepThree: FC = () => {
             description: description
           });
         }
-      } else if (trimmedLine.endsWith(':') && !trimmedLine.startsWith('•') && !trimmedLine.includes(':')) {
+      } else if (trimmedLine.toLowerCase().startsWith('deductions:') && currentSection === 'subsection' && currentSubsection) {
+        // Handle subsection Deductions: header
+        if (!currentSubsection.deductions) {
+          currentSubsection.deductions = [];
+        }
+        currentSection = 'subsection-deductions';
+      } else if (trimmedLine.toLowerCase().startsWith('subsection id:') && currentSection === 'subsection' && currentSubsection) {
+        // Parse Subsection ID and Max Score line
+        const idMatch = trimmedLine.match(/subsection id:\s*([^,]+)/i);
+        const scoreMatch = trimmedLine.match(/max score:\s*([^,]+)/i);
+        if (idMatch) currentSubsection.canonical_id = idMatch[1].trim();
+        if (scoreMatch && scoreMatch[1].trim() !== 'N/A') {
+          currentSubsection.max_score = parseFloat(scoreMatch[1].trim());
+        }
+      } else if (trimmedLine.endsWith(':') && !trimmedLine.startsWith('•') && trimmedLine.split(':').length === 2 && !trimmedLine.toLowerCase().includes('deductions')) {
         // This is likely a subsection title
         if (currentSubsection) {
           subsections.push(currentSubsection);
@@ -273,18 +392,65 @@ const StepThree: FC = () => {
         currentSection = 'subsection';
       } else if (trimmedLine.startsWith('•') && currentSection === 'subsection' && currentSubsection) {
         const criterionText = trimmedLine.replace('•', '').trim();
-        const scoreMatch = criterionText.match(/\((\d+(?:\.\d+)?)\s*points?\)/);
+        // Updated regex to handle both single numbers and ranges (e.g., "5", "3-4", "1.5-2.5")
+        const scoreMatch = criterionText.match(/\(([^)]+)\s*points?\)/);
         const levelMatch = criterionText.match(/^([^(]+)/);
         
         if (levelMatch) {
           const level = levelMatch[1].trim();
-          const description = criterionText.replace(/^[^(]+\([^)]*\):\s*/, '').trim();
+          
+          // Extract threshold if present [Threshold: 90% - 100%]
+          const thresholdMatch = criterionText.match(/\[threshold:\s*([^\]]+)\]/i);
+          const threshold = thresholdMatch ? thresholdMatch[1].trim() : null;
+          
+          // Extract description (everything after the last ] or after points)
+          let description = criterionText;
+          if (thresholdMatch) {
+            // Remove threshold part to get description
+            description = criterionText.replace(/\[threshold:[^\]]+\]/i, '').replace(/^[^(]+\([^)]*\):/, '').trim();
+          } else {
+            description = criterionText.replace(/^[^(]+\([^)]*\):\s*/, '').trim();
+          }
+          
+          // Extract score range (could be "5", "3-4", etc.)
+          let scoreValue = null;
+          let scoreRange = null;
+          
+          if (scoreMatch) {
+            const scoreText = scoreMatch[1].trim();
+            scoreRange = scoreText;
+            // Try to parse as single number first
+            const singleNum = scoreText.match(/^(\d+(?:\.\d+)?)$/);
+            if (singleNum) {
+              scoreValue = parseFloat(singleNum[1]);
+            } else {
+              // For ranges like "3-4", use null as score (range representation)
+              scoreValue = null;
+            }
+          }
           
           currentSubsection.performance_levels.push({
             level: level,
             name: level,
-            score_range: scoreMatch ? scoreMatch[1] : null,
-            score: scoreMatch ? parseFloat(scoreMatch[1]) : null,
+            score_range: scoreRange,
+            score: scoreValue,
+            threshold: threshold,
+            description: description
+          });
+        }
+      } else if (trimmedLine.startsWith('•') && currentSection === 'subsection-deductions' && currentSubsection) {
+        const deductionText = trimmedLine.replace('•', '').trim();
+        const penaltyMatch = deductionText.match(/\(([^)]+)\)/);
+        const areaMatch = deductionText.match(/^([^(]+)/);
+        
+        if (areaMatch && penaltyMatch && currentSubsection.deductions) {
+          const area = areaMatch[1].trim();
+          const description = deductionText.replace(/^[^(]+\([^)]*\):\s*/, '').trim();
+          
+          currentSubsection.deductions.push({
+            reason: area,
+            area: area,
+            penalty: penaltyMatch[1],
             description: description
           });
         }
@@ -568,19 +734,32 @@ const StepThree: FC = () => {
             <div className="question-preview">
               <div className="questions-header-row">
                 <h3>Detected Questions</h3>
-                <button 
-                  type="button" 
-                  className="edit-rubric-button"
-                  onClick={() => {
-                    // Open editing for the first question as an example
-                    // You can modify this to open a general rubric editor
-                    if (extractedQuestions && extractedQuestions.length > 0) {
-                      handleEditRubric(extractedQuestions[0].question_id);
-                    }
-                  }}
-                >
-                  Edit Rubric
-                </button>
+                {isEditMode ? (
+                  <div style={{ display: 'flex', gap: '1rem' }}>
+                    <button 
+                      type="button" 
+                      className="edit-rubric-button"
+                      onClick={handleSaveAllRubrics}
+                    >
+                      Save All Changes
+                    </button>
+                    <button 
+                      type="button" 
+                      className="edit-rubric-button"
+                      onClick={handleCancelAllEditing}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                ) : (
+                  <button 
+                    type="button" 
+                    className="edit-rubric-button"
+                    onClick={handleEditRubrics}
+                  >
+                    Edit Rubrics
+                  </button>
+                )}
               </div>
               <div className="questions-container">
                 {extractedQuestions.map((q: any) => {
@@ -606,102 +785,126 @@ const StepThree: FC = () => {
                       {isExpanded && formattedRubric && (
                         <div className="question-rubric">
                           {rubricItem ? (
-                            isEditingRubric && editingQuestionId === q.question_id ? (
-                                  <div className="inline-edit-rubric">
-                                    <textarea
-                                      className="rubric-edit-textarea inline"
-                                      value={editedRubric || ''}
-                                      onChange={(e) => {
-                                        setEditedRubric(e.target.value);
-                                      }}
-                                      placeholder="Edit the rubric text here..."
-                                    />
-                                    <div className="inline-edit-actions">
-                                      <button
-                                        type="button"
-                                        className="btn primary"
-                                        onClick={handleSaveRubric}
-                                      >
-                                        Save Changes
-                                      </button>
-                                      <button
-                                        type="button"
-                                        className="btn"
-                                        onClick={handleCancelEdit}
-                                      >
-                                        Cancel
-                                      </button>
-                                    </div>
-                                  </div>
-                                ) : (
-                                  <div className="structured-rubric">
-                                    {rubricItem.subsections && rubricItem.subsections.length > 0 && (
-                                      <div className="subsections">
-                                        <h4>Subsections:</h4>
-                                        {rubricItem.subsections.map((subsection: any, index: number) => (
-                                          <div key={index} className="subsection">
-                                            <div className="subsection-header">
-                                              <strong>{subsection.label || subsection.title || `Subsection ${index + 1}`}</strong>
-                                              <span className="subsection-id">ID: {subsection.canonical_id || subsection.subquestion_id || 'N/A'}</span>
-                                              <span className="subsection-score">Max Score: {subsection.max_score || 'N/A'}</span>
-                                            </div>
-                                            
-                                            {subsection.performance_levels && subsection.performance_levels.length > 0 && (
-                                              <div className="performance-levels">
-                                                <h5>Performance Levels:</h5>
-                                                {subsection.performance_levels.map((level: any, levelIndex: number) => (
-                                                  <div key={levelIndex} className="performance-level">
-                                                    <div className="level-header">
-                                                      <strong>{level.level || level.name || `Level ${levelIndex + 1}`}</strong>
-                                                      <span className="score-range">{level.score_range || 'N/A'}</span>
-                                                      <span className="threshold">{level.threshold || 'N/A'}</span>
-                                                    </div>
-                                                    <div className="level-description">
-                                                      {level.description || 'No description provided'}
-                                                    </div>
-                                                  </div>
-                                                ))}
-                                              </div>
-                                            )}
-                                            
-                                            {subsection.deductions && subsection.deductions.length > 0 && (
-                                              <div className="deductions">
-                                                <h5>Deductions:</h5>
-                                                {subsection.deductions.map((deduction: any, deductionIndex: number) => (
-                                                  <div key={deductionIndex} className="deduction">
-                                                    <strong>{deduction.reason || deduction.area || 'Deduction'}:</strong>
-                                                    <span className="penalty">Penalty: {deduction.penalty || 'N/A'}</span>
-                                                  </div>
-                                                ))}
-                                              </div>
-                                            )}
-                                          </div>
-                                        ))}
-                                      </div>
-                                    )}
-                                    
-                                    
-                                    {rubricItem.deductions && rubricItem.deductions.length > 0 && (
-                                      <div className="global-deductions">
-                                        <h4>Global Deductions:</h4>
-                                        {rubricItem.deductions.map((deduction: any, index: number) => (
-                                          <div key={index} className="deduction">
-                                            <strong>{deduction.area || deduction.reason || 'Deduction'}:</strong>
-                                            <span className="penalty">Penalty: {deduction.penalty || 'N/A'}</span>
-                                            <div className="deduction-description">
-                                              {deduction.description || 'No description provided'}
-                                            </div>
-                                          </div>
-                                        ))}
-                                      </div>
-                                    )}
-                                  </div>
-                                )
-                              ) : (
-                                <div className="no-rubric-data">
-                                  <em>No rubric data available for this question.</em>
+                            <>
+                              {/* Show editing interface when in global edit mode */}
+                              {isEditMode ? (
+                                <div className="inline-edit-rubric">
+                                  <textarea
+                                    className="rubric-edit-textarea inline"
+                                    value={editedRubrics[q.question_id] || ''}
+                                    onChange={(e) => {
+                                      setEditedRubrics({
+                                        ...editedRubrics,
+                                        [q.question_id]: e.target.value
+                                      });
+                                    }}
+                                    placeholder="Edit the rubric text here..."
+                                  />
                                 </div>
+                              ) : (
+                                <>
+                                  {/* Show editing interface when this specific question is being edited (single edit mode) */}
+                                  {isEditingRubric && editingQuestionId === q.question_id ? (
+                                    <div className="inline-edit-rubric">
+                                      <textarea
+                                        className="rubric-edit-textarea inline"
+                                        value={editedRubric || ''}
+                                        onChange={(e) => {
+                                          setEditedRubric(e.target.value);
+                                        }}
+                                        placeholder="Edit the rubric text here..."
+                                      />
+                                      <div className="inline-edit-actions">
+                                        <button
+                                          type="button"
+                                          className="btn primary"
+                                          onClick={handleSaveRubric}
+                                        >
+                                          Save Changes
+                                        </button>
+                                        <button
+                                          type="button"
+                                          className="btn"
+                                          onClick={handleCancelEdit}
+                                        >
+                                          Cancel
+                                        </button>
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    <>
+                                      {/* Show structured rubric when not editing */}
+                                      <div className="structured-rubric">
+                                        {rubricItem.subsections && rubricItem.subsections.length > 0 && (
+                                          <div className="subsections">
+                                            <h4>Subsections:</h4>
+                                            {rubricItem.subsections.map((subsection: any, index: number) => (
+                                              <div key={index} className="subsection">
+                                                <div className="subsection-header">
+                                                  <strong>{subsection.label || subsection.title || `Subsection ${index + 1}`}</strong>
+                                                  <span className="subsection-id">ID: {subsection.canonical_id || subsection.subquestion_id || 'N/A'}</span>
+                                                  <span className="subsection-score">Max Score: {subsection.max_score || 'N/A'}</span>
+                                                </div>
+                                                
+                                                {subsection.performance_levels && subsection.performance_levels.length > 0 && (
+                                                  <div className="performance-levels">
+                                                    <h5>Performance Levels:</h5>
+                                                    {subsection.performance_levels.map((level: any, levelIndex: number) => (
+                                                      <div key={levelIndex} className="performance-level">
+                                                        <div className="level-header">
+                                                          <strong>{level.level || level.name || `Level ${levelIndex + 1}`}</strong>
+                                                          <span className="score-range">{level.score_range || 'N/A'}</span>
+                                                          <span className="threshold">{level.threshold || 'N/A'}</span>
+                                                        </div>
+                                                        <div className="level-description">
+                                                          {level.description || 'No description provided'}
+                                                        </div>
+                                                      </div>
+                                                    ))}
+                                                  </div>
+                                                )}
+                                                
+                                                {subsection.deductions && subsection.deductions.length > 0 && (
+                                                  <div className="deductions">
+                                                    <h5>Deductions:</h5>
+                                                    {subsection.deductions.map((deduction: any, deductionIndex: number) => (
+                                                      <div key={deductionIndex} className="deduction">
+                                                        <strong>{deduction.reason || deduction.area || 'Deduction'}:</strong>
+                                                        <span className="penalty">Penalty: {deduction.penalty || 'N/A'}</span>
+                                                      </div>
+                                                    ))}
+                                                  </div>
+                                                )}
+                                              </div>
+                                            ))}
+                                          </div>
+                                        )}
+                                        
+                                        {rubricItem.deductions && rubricItem.deductions.length > 0 && (
+                                          <div className="global-deductions">
+                                            <h4>Global Deductions:</h4>
+                                            {rubricItem.deductions.map((deduction: any, index: number) => (
+                                              <div key={index} className="deduction">
+                                                <strong>{deduction.area || deduction.reason || 'Deduction'}:</strong>
+                                                <span className="penalty">Penalty: {deduction.penalty || 'N/A'}</span>
+                                                <div className="deduction-description">
+                                                  {deduction.description || 'No description provided'}
+                                                </div>
+                                              </div>
+                                            ))}
+                                          </div>
+                                        )}
+                                      </div>
+                                    </>
+                                  )}
+                                </>
                               )}
+                            </>
+                          ) : (
+                            <div className="no-rubric-data">
+                              <em>No rubric data available for this question.</em>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
