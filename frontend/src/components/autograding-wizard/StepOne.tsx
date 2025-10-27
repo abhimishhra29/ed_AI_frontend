@@ -61,7 +61,7 @@ const StepOne: FC<StepOneProps> = ({ WORKFLOW_LABELS }) => {
           <form className="validation-form" onSubmit={handleNext}>
             <div className="form-fields-container">
               <div className="form-field">
-                <label htmlFor="assignment-name">Assignment Name:</label>
+                <label htmlFor="assignment-name" className="workflow-label">Assignment Name:</label>
                 <input
                   id="assignment-name"
                   type="text"
