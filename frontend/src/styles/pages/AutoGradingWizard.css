@@ -32,11 +32,11 @@
   width: 98vw;
   min-height: 92vh;
   margin: 0 auto;
-  padding: 2vw 1.5vw 4vw;
+  padding: 0.5vw 1.5vw 4vw;
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 0;
   box-sizing: border-box;
 }
 
@@ -129,7 +129,7 @@
   
   /* Centering */
   margin: 0 auto;  /* Centers horizontally */
-  margin-top: 20px;  /* Reduced space from top */
+  margin-top: 0;  /* No space from top */
   
   /* Padding */
   padding: 2rem;
@@ -1035,7 +1035,7 @@ h4, h5 {
 .auto-grading-wizard .wizard-content {
   display: flex;
   justify-content: center;
-  margin-top: 1.5rem;
+  margin-top: 0;
 }
 
 .auto-grading-wizard .form-column {
@@ -1975,22 +1975,25 @@ h4, h5 {
   gap: 12px;
   padding: 0;
   margin: 0;
-  margin-bottom: 1rem;
+  margin-bottom: 0.25rem;
   width: 100%;
   box-sizing: border-box;
   position: relative;
   min-height: 80px;
 }
 
-/* Reduce spacing for step 3 */
-.wizard-stage:has(.wizard-step-three) {
+/* Reduce spacing for steps 1, 2, and 4 (not step 3 which has special layout) */
+.wizard-stage:has(.wizard-step-one),
+.wizard-stage:has(.wizard-step-two),
+.wizard-stage:has(.wizard-step-four) {
   gap: 0;
   margin-top: 0;
 }
 
-/* Reduce bottom margin of wizard-top-buttons when step 3 is active */
-.wizard-top-buttons:has(+ .wizard-stage .wizard-step-three) {
-  margin-bottom: 0.25rem;
+/* Step 3 special spacing */
+.wizard-stage:has(.wizard-step-three) {
+  gap: 0;
+  margin-top: 0;
 }
 
 .wizard-step-title-container {
@@ -2099,7 +2102,7 @@ h4, h5 {
 .wizard-stage {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 0;
 }
 
 .info-button {
