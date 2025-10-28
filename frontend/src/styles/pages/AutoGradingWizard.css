@@ -728,13 +728,13 @@ h4, h5 {
 }
 
 .subsection-header strong {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: #213342;
 }
 
 .subsection-id, .subsection-score {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   color: #6c757d;
   background: #f8f9fa;
   padding: 0.25rem 0.5rem;
@@ -746,11 +746,12 @@ h4, h5 {
 }
 
 .performance-level {
-  background: #f8f9fa;
+  background: white;
   border-left: 3px solid #007bff;
   padding: 0.75rem;
   margin-bottom: 0.5rem;
   border-radius: 0 4px 4px 0;
+  border: 1px solid rgba(33, 51, 66, 0.08);
 }
 
 .level-header {
@@ -761,22 +762,22 @@ h4, h5 {
 }
 
 .level-header strong {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: #213342;
 }
 
 .score-range, .threshold {
-  font-size: 1.5rem;
-  color: #495057;
-  background: #e9ecef;
+  font-size: 1.3rem;
+  color: #6c757d;
+  background: #f8f9fa;
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
 }
 
 .level-description {
-  color: #495057;
-  font-size: 1.5rem;
+  color: #213342;
+  font-size: 1.3rem;
   line-height: 1.5;
 }
 
@@ -847,11 +848,12 @@ h4, h5 {
 
 /* Inline editing styles */
 .inline-edit-rubric {
-  background: #f8f9fa;
-  border: 2px solid #007bff;
-  border-radius: 8px;
-  padding: 1rem;
+  background: white;
+  border: 1px solid rgba(33, 51, 66, 0.08);
+  border-radius: 14px;
+  padding: 1.5rem;
   margin-top: 0.5rem;
+  box-shadow: 0 1px 4px rgba(33, 51, 66, 0.08);
 }
 
 .rubric-edit-textarea.inline {
@@ -1311,8 +1313,8 @@ h4, h5 {
   padding: 1rem;
   border: 2px solid #4E6F8A;
   border-radius: 0.5rem;
-  background: #0f172a;
-  color: #e2e8f0;
+  background: white;
+  color: #213342;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
   font-size: 0.85rem;
   line-height: 1.5;
@@ -1322,8 +1324,8 @@ h4, h5 {
 }
 
 .auto-grading-wizard .rubric-edit-textarea:focus {
-  border-color: #213342;
-  box-shadow: 0 0 0 2px rgba(33, 51, 66, 0.1), inset 0 0 0 1px rgba(148, 163, 184, 0.2);
+  border-color: rgba(33, 51, 66, 0.3);
+  box-shadow: 0 0 0 2px rgba(33, 51, 66, 0.08);
 }
 
 .auto-grading-wizard .loading-indicator {
@@ -2460,8 +2462,8 @@ h4, h5 {
   padding: 1rem;
   border-radius: 12px;
   border: 1px solid rgba(33, 51, 66, 0.18);
-  background: #0f172a;
-  color: #e2e8f0;
+  background: white;
+  color: #213342;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
   font-size: 0.85rem;
   line-height: 1.5;
@@ -2470,14 +2472,152 @@ h4, h5 {
 
 .rubric-edit-textarea:focus {
   outline: none;
-  border-color: var(--primary-dark);
-  box-shadow: 0 0 0 2px rgba(33, 51, 66, 0.18);
+  border-color: rgba(33, 51, 66, 0.3);
+  box-shadow: 0 0 0 2px rgba(33, 51, 66, 0.08);
 }
 
 .rubric-edit-help {
   margin: 0.5rem 0 0 0;
   font-size: 0.85rem;
   color: var(--muted);
+}
+
+/* Editable fields styling - make them look like the read-only display but remain editable */
+.structured-rubric.edit-mode .editable-field {
+  border: 1px solid transparent;
+  background: transparent;
+  padding: 0.2rem 0.3rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.structured-rubric.edit-mode .editable-field:focus {
+  border-color: rgba(33, 51, 66, 0.2);
+  background: rgba(255, 255, 255, 0.8);
+  outline: none;
+}
+
+.structured-rubric.edit-mode .subsection {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.structured-rubric.edit-mode .subsection-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.structured-rubric.edit-mode .subsection-label {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #213342;
+  flex: 1;
+}
+
+.structured-rubric.edit-mode .subsection-id,
+.structured-rubric.edit-mode .subsection-score {
+  font-size: 1.3rem;
+  color: #6c757d;
+  background: #f8f9fa;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid rgba(33, 51, 66, 0.1);
+}
+
+.structured-rubric.edit-mode .subsection-id:focus,
+.structured-rubric.edit-mode .subsection-score:focus {
+  border-color: rgba(33, 51, 66, 0.3);
+  background: white;
+}
+
+.structured-rubric.edit-mode .performance-level {
+  background: white;
+  border-left: 3px solid #007bff;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  border-radius: 0 4px 4px 0;
+}
+
+.structured-rubric.edit-mode .level-header {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.structured-rubric.edit-mode .level-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #213342;
+  flex: 1;
+}
+
+.structured-rubric.edit-mode .score-range,
+.structured-rubric.edit-mode .threshold {
+  font-size: 1.3rem;
+  color: #6c757d;
+  background: #f8f9fa;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid rgba(33, 51, 66, 0.1);
+}
+
+.structured-rubric.edit-mode .score-range:focus,
+.structured-rubric.edit-mode .threshold:focus {
+  border-color: rgba(33, 51, 66, 0.3);
+  background: white;
+}
+
+.structured-rubric.edit-mode .level-description {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid rgba(33, 51, 66, 0.1);
+  border-radius: 4px;
+  background: white;
+  color: #213342;
+  font-family: inherit;
+  font-size: 1.3rem;
+  line-height: 1.5;
+  resize: vertical;
+  min-height: 60px;
+}
+
+.structured-rubric.edit-mode .level-description:focus {
+  border-color: rgba(33, 51, 66, 0.3);
+  outline: none;
+}
+
+.structured-rubric.edit-mode .deduction {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.structured-rubric.edit-mode .deduction-name {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #213342;
+  flex: 1;
+}
+
+.structured-rubric.edit-mode .penalty {
+  font-size: 1.3rem;
+  color: #6c757d;
+  background: #f8f9fa;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid rgba(33, 51, 66, 0.1);
+}
+
+.structured-rubric.edit-mode .penalty:focus {
+  border-color: rgba(33, 51, 66, 0.3);
+  background: white;
 }
 
 .penalty-editor {
@@ -2759,7 +2899,7 @@ h4, h5 {
 .level-description {
   margin: 0;
   color: var(--text-dark);
-  font-size: 0.9rem;
+  font-size: 1.3rem;
 }
 
 .rubric-raw-details {
@@ -3440,8 +3580,8 @@ h4, h5 {
   width: 100%;
   min-height: 400px;
   padding: 1rem;
-  border: 2px solid #4E6F8A;
-  border-radius: 5px;
+  border: 1px solid rgba(33, 51, 66, 0.18);
+  border-radius: 8px;
   font-family: 'Courier New', monospace;
   font-size: 0.9rem;
   line-height: 1.4;
@@ -3453,6 +3593,6 @@ h4, h5 {
 
 .rubric-edit-textarea:focus {
   outline: none;
-  border-color: var(--primary-highlight);
-  box-shadow: 0 0 0 2px rgba(78, 111, 138, 0.2);
+  border-color: rgba(33, 51, 66, 0.3);
+  box-shadow: 0 0 0 2px rgba(33, 51, 66, 0.08);
 }

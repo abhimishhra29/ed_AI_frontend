@@ -21,6 +21,7 @@ const StepThree: FC = () => {
   const [editingQuestionId, setEditingQuestionId] = useState<string | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editedRubrics, setEditedRubrics] = useState<Record<string, string>>({});
+  const [originalRubricBackup, setOriginalRubricBackup] = useState<any>(null);
 
   useEffect(() => {
     if (!assignmentFile) {
@@ -46,84 +47,30 @@ const StepThree: FC = () => {
   };
 
   const handleEditRubrics = () => {
-    // Initialize all rubrics for editing
+    // Save a backup of the original rubric before editing
     if (extractedQuestions && generatedRubric && generatedRubric.rubric) {
-      const rubricsMap: Record<string, string> = {};
-      extractedQuestions.forEach((q: any) => {
-        const questionRubric = getQuestionRubric(q.question_id);
-        const plainText = formatRubricToPlainText(questionRubric);
-        console.log('Plain text for edit:', plainText);
-        console.log('Original rubric structure:', questionRubric);
-        rubricsMap[q.question_id] = plainText;
-      });
-      setEditedRubrics(rubricsMap);
+      // Create a deep copy of the current rubric
+      setOriginalRubricBackup(JSON.parse(JSON.stringify(generatedRubric)));
       setIsEditMode(true);
     }
   };
 
   const handleSaveAllRubrics = () => {
-    if (!generatedRubric || !generatedRubric.rubric) return;
-    
-    const updatedRubric = { ...generatedRubric };
-    
-    // Update each rubric
-    Object.keys(editedRubrics).forEach((questionId) => {
-      const editedText = editedRubrics[questionId];
-      const originalRubric = getQuestionRubric(questionId);
-      
-      if (originalRubric && editedText) {
-        const parsedRubric = parsePlainTextToRubricImproved(editedText);
-        console.log('Parsed rubric back:', parsedRubric);
-        console.log('Original rubric:', originalRubric);
-        
-        // Deep merge subsections to preserve structure while updating content
-        const updatedSubsections = parsedRubric.subsections || [];
-        const originalSubsections = originalRubric.subsections || [];
-        
-        // Create a map of original subsections by canonical_id for matching
-        const originalSubsectionsMap = new Map();
-        originalSubsections.forEach((sub: any) => {
-          const key = sub.canonical_id || sub.subquestion_id || sub.label || sub.title;
-          if (key) originalSubsectionsMap.set(key, sub);
-        });
-        
-        // Merge subsections: use parsed data but keep original canonical_id/max_score if not in parsed
-        const mergedSubsections = updatedSubsections.map((parsedSub: any, index: number) => {
-          const originalSub = originalSubsections[index] || Array.from(originalSubsectionsMap.values())[index];
-          return {
-            ...originalSub,  // Keep all original fields
-            ...parsedSub,   // Override with parsed content
-            // Ensure these fields are preserved
-            canonical_id: parsedSub.canonical_id || originalSub?.canonical_id,
-            subquestion_id: parsedSub.subquestion_id || originalSub?.subquestion_id,
-            max_score: parsedSub.max_score !== undefined ? parsedSub.max_score : (originalSub?.max_score)
-          };
-        });
-        
-        const updatedRubricItem = {
-          ...originalRubric,
-          ...parsedRubric,
-          question_id: questionId,
-          subsections: mergedSubsections.length > 0 ? mergedSubsections : parsedRubric.subsections
-        };
-        
-        console.log('Updated rubric item:', updatedRubricItem);
-        
-        const rubricIndex = updatedRubric.rubric.findIndex((item: any) => item.question_id === questionId);
-        if (rubricIndex !== -1) {
-          updatedRubric.rubric[rubricIndex] = updatedRubricItem;
-        }
-      }
-    });
-    
-    setGeneratedRubric(updatedRubric);
+    // Since we're directly updating generatedRubric in the new edit mode,
+    // we just need to exit edit mode. The changes are already saved in state.
     setIsEditMode(false);
     setEditedRubrics({});
+    setOriginalRubricBackup(null);
   };
 
   const handleCancelAllEditing = () => {
+    // Restore the original rubric from backup
+    if (originalRubricBackup) {
+      setGeneratedRubric(JSON.parse(JSON.stringify(originalRubricBackup)));
+    }
     setIsEditMode(false);
     setEditedRubrics({});
+    setOriginalRubricBackup(null);
   };
 
   const handleSaveRubric = () => {
@@ -788,18 +735,177 @@ const StepThree: FC = () => {
                             <>
                               {/* Show editing interface when in global edit mode */}
                               {isEditMode ? (
-                                <div className="inline-edit-rubric">
-                                  <textarea
-                                    className="rubric-edit-textarea inline"
-                                    value={editedRubrics[q.question_id] || ''}
-                                    onChange={(e) => {
-                                      setEditedRubrics({
-                                        ...editedRubrics,
-                                        [q.question_id]: e.target.value
-                                      });
-                                    }}
-                                    placeholder="Edit the rubric text here..."
-                                  />
+                                <div className="structured-rubric edit-mode">
+                                  {rubricItem.subsections && rubricItem.subsections.length > 0 && (
+                                    <div className="subsections">
+                                      <h4>Subsections:</h4>
+                                      {rubricItem.subsections.map((subsection: any, index: number) => (
+                                        <div key={index} className="subsection">
+                                          <div className="subsection-header">
+                                            <input
+                                              type="text"
+                                              className="editable-field subsection-label"
+                                              value={subsection.label || subsection.title || `Subsection ${index + 1}`}
+                                              onChange={(e) => {
+                                                const updatedRubric = JSON.parse(JSON.stringify(generatedRubric));
+                                                const rubricIndex = updatedRubric.rubric.findIndex((item: any) => item.question_id === q.question_id);
+                                                if (rubricIndex !== -1) {
+                                                  updatedRubric.rubric[rubricIndex].subsections[index].label = e.target.value;
+                                                  updatedRubric.rubric[rubricIndex].subsections[index].title = e.target.value;
+                                                  setGeneratedRubric(updatedRubric);
+                                                }
+                                              }}
+                                            />
+                                            <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                              <input
+                                                type="text"
+                                                className="editable-field subsection-id"
+                                                value={subsection.canonical_id || subsection.subquestion_id || 'N/A'}
+                                                onChange={(e) => {
+                                                  const updatedRubric = JSON.parse(JSON.stringify(generatedRubric));
+                                                  const rubricIndex = updatedRubric.rubric.findIndex((item: any) => item.question_id === q.question_id);
+                                                  if (rubricIndex !== -1) {
+                                                    updatedRubric.rubric[rubricIndex].subsections[index].canonical_id = e.target.value;
+                                                    updatedRubric.rubric[rubricIndex].subsections[index].subquestion_id = e.target.value;
+                                                    setGeneratedRubric(updatedRubric);
+                                                  }
+                                                }}
+                                              />
+                                              <input
+                                                type="text"
+                                                className="editable-field subsection-score"
+                                                value={subsection.max_score || 'N/A'}
+                                                onChange={(e) => {
+                                                  const updatedRubric = JSON.parse(JSON.stringify(generatedRubric));
+                                                  const rubricIndex = updatedRubric.rubric.findIndex((item: any) => item.question_id === q.question_id);
+                                                  if (rubricIndex !== -1) {
+                                                    updatedRubric.rubric[rubricIndex].subsections[index].max_score = e.target.value;
+                                                    setGeneratedRubric(updatedRubric);
+                                                  }
+                                                }}
+                                              />
+                                            </div>
+                                          </div>
+                                          
+                                          {subsection.performance_levels && subsection.performance_levels.length > 0 && (
+                                            <div className="performance-levels">
+                                              <h5>Performance Levels:</h5>
+                                              {subsection.performance_levels.map((level: any, levelIndex: number) => (
+                                                <div key={levelIndex} className="performance-level">
+                                                  <div className="level-header">
+                                                    <input
+                                                      type="text"
+                                                      className="editable-field level-name"
+                                                      value={level.level || level.name || `Level ${levelIndex + 1}`}
+                                                      onChange={(e) => {
+                                                        const updatedRubric = JSON.parse(JSON.stringify(generatedRubric));
+                                                        const rubricIndex = updatedRubric.rubric.findIndex((item: any) => item.question_id === q.question_id);
+                                                        if (rubricIndex !== -1) {
+                                                          updatedRubric.rubric[rubricIndex].subsections[index].performance_levels[levelIndex].level = e.target.value;
+                                                          updatedRubric.rubric[rubricIndex].subsections[index].performance_levels[levelIndex].name = e.target.value;
+                                                          setGeneratedRubric(updatedRubric);
+                                                        }
+                                                      }}
+                                                    />
+                                                    <input
+                                                      type="text"
+                                                      className="editable-field score-range"
+                                                      value={level.score_range || 'N/A'}
+                                                      onChange={(e) => {
+                                                        const updatedRubric = JSON.parse(JSON.stringify(generatedRubric));
+                                                        const rubricIndex = updatedRubric.rubric.findIndex((item: any) => item.question_id === q.question_id);
+                                                        if (rubricIndex !== -1) {
+                                                          updatedRubric.rubric[rubricIndex].subsections[index].performance_levels[levelIndex].score_range = e.target.value;
+                                                          setGeneratedRubric(updatedRubric);
+                                                        }
+                                                      }}
+                                                    />
+                                                    <input
+                                                      type="text"
+                                                      className="editable-field threshold"
+                                                      value={level.threshold || 'N/A'}
+                                                      onChange={(e) => {
+                                                        const updatedRubric = JSON.parse(JSON.stringify(generatedRubric));
+                                                        const rubricIndex = updatedRubric.rubric.findIndex((item: any) => item.question_id === q.question_id);
+                                                        if (rubricIndex !== -1) {
+                                                          updatedRubric.rubric[rubricIndex].subsections[index].performance_levels[levelIndex].threshold = e.target.value;
+                                                          setGeneratedRubric(updatedRubric);
+                                                        }
+                                                      }}
+                                                    />
+                                                  </div>
+                                                  <textarea
+                                                    className="editable-field level-description"
+                                                    value={(() => {
+                                                      let desc = level.description || 'No description provided';
+                                                      // Clean up repeated level names at the start
+                                                      const levelName = level.level || level.name || '';
+                                                      const scoreRange = level.score_range || '';
+                                                      const pattern = new RegExp(`^${levelName}\\s*\\([^)]+\\)\\s*:\\s*`, 'gi');
+                                                      let cleaned = desc;
+                                                      // Remove repeated prefix multiple times
+                                                      while (cleaned.match(pattern)) {
+                                                        const before = cleaned;
+                                                        cleaned = cleaned.replace(pattern, '');
+                                                        if (before === cleaned) break;
+                                                      }
+                                                      return cleaned;
+                                                    })()}
+                                                    onChange={(e) => {
+                                                      const updatedRubric = JSON.parse(JSON.stringify(generatedRubric));
+                                                      const rubricIndex = updatedRubric.rubric.findIndex((item: any) => item.question_id === q.question_id);
+                                                      if (rubricIndex !== -1) {
+                                                        updatedRubric.rubric[rubricIndex].subsections[index].performance_levels[levelIndex].description = e.target.value;
+                                                        setGeneratedRubric(updatedRubric);
+                                                      }
+                                                    }}
+                                                  />
+                                                </div>
+                                              ))}
+                                            </div>
+                                          )}
+                                          
+                                          {subsection.deductions && subsection.deductions.length > 0 && (
+                                            <div className="deductions">
+                                              <h5>Deductions:</h5>
+                                              {subsection.deductions.map((deduction: any, deductionIndex: number) => (
+                                                <div key={deductionIndex} className="deduction">
+                                                  <input
+                                                    type="text"
+                                                    className="editable-field deduction-name"
+                                                    value={deduction.reason || deduction.area || 'Deduction'}
+                                                    onChange={(e) => {
+                                                      const updatedRubric = JSON.parse(JSON.stringify(generatedRubric));
+                                                      const rubricIndex = updatedRubric.rubric.findIndex((item: any) => item.question_id === q.question_id);
+                                                      if (rubricIndex !== -1) {
+                                                        updatedRubric.rubric[rubricIndex].subsections[index].deductions[deductionIndex].reason = e.target.value;
+                                                        updatedRubric.rubric[rubricIndex].subsections[index].deductions[deductionIndex].area = e.target.value;
+                                                        setGeneratedRubric(updatedRubric);
+                                                      }
+                                                    }}
+                                                  />
+                                                  <input
+                                                    type="text"
+                                                    className="editable-field penalty"
+                                                    value={`Penalty: ${deduction.penalty || 'N/A'}`}
+                                                    onChange={(e) => {
+                                                      const updatedRubric = JSON.parse(JSON.stringify(generatedRubric));
+                                                      const rubricIndex = updatedRubric.rubric.findIndex((item: any) => item.question_id === q.question_id);
+                                                      if (rubricIndex !== -1) {
+                                                        const penaltyValue = e.target.value.replace('Penalty: ', '');
+                                                        updatedRubric.rubric[rubricIndex].subsections[index].deductions[deductionIndex].penalty = penaltyValue;
+                                                        setGeneratedRubric(updatedRubric);
+                                                      }
+                                                    }}
+                                                  />
+                                                </div>
+                                              ))}
+                                            </div>
+                                          )}
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
                                 </div>
                               ) : (
                                 <>
@@ -857,7 +963,20 @@ const StepThree: FC = () => {
                                                           <span className="threshold">{level.threshold || 'N/A'}</span>
                                                         </div>
                                                         <div className="level-description">
-                                                          {level.description || 'No description provided'}
+                                                          {(() => {
+                                                            let desc = level.description || 'No description provided';
+                                                            // Clean up repeated level names at the start
+                                                            const levelName = level.level || level.name || '';
+                                                            const pattern = new RegExp(`^${levelName}\\s*\\([^)]+\\)\\s*:\\s*`, 'gi');
+                                                            let cleaned = desc;
+                                                            // Remove repeated prefix multiple times
+                                                            while (cleaned.match(pattern)) {
+                                                              const before = cleaned;
+                                                              cleaned = cleaned.replace(pattern, '');
+                                                              if (before === cleaned) break;
+                                                            }
+                                                            return cleaned;
+                                                          })()}
                                                         </div>
                                                       </div>
                                                     ))}
