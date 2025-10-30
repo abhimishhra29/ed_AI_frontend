@@ -18,6 +18,7 @@ const StepTwo: FC = () => {
 
   const [showHelp, setShowHelp] = useState(false);
   const overlayRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const helpContent = {
     title: "Assignment Question Help",
     description:
@@ -84,20 +85,25 @@ const StepTwo: FC = () => {
                     assignmentFile ? "has-file" : ""
                   }`}
                 >
-                  <label htmlFor="assignmentInput" className="file-input-button">
-                    {assignmentFile ? "Change PDF" : "Choose PDF"}
-                  </label>
                   <span className="file-input-filename">
-                    {assignmentFile?.name || "No file selected"}
+                    {assignmentFile?.name || "No file selected - Click on Choose PDF button"}
                   </span>
                   <input
                     id="assignmentInput"
+                    ref={fileInputRef}
                     type="file"
                     accept="application/pdf"
                     className="file-input-input"
                     onChange={handleAssignmentChange}
                   />
                 </div>
+                <button
+                  type="button"
+                  className="step-one-continue-button choose-pdf-button"
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  {assignmentFile ? "Change PDF" : "Choose PDF"}
+                </button>
               </div>
 
               <div className="form-field">

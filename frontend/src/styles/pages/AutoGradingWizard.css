@@ -179,12 +179,18 @@
 }
 
 .workflow-toggle__option:hover {
-  background: rgba(78, 111, 138, 0.1);
+  background: var(--primary-dark);
+  color: var(--text-light);
 }
 
 .workflow-toggle__option--active {
   background: var(--primary-dark);
   color: var(--text-light);
+}
+
+.workflow-toggle__option--active:hover {
+  background: #ffffff;
+  color: #000000;
 }
 
 .workflow-toggle__option:focus-visible {
@@ -2476,6 +2482,7 @@ h4, h5 {
   box-shadow: 0 0 0 2px rgba(33, 51, 66, 0.08);
 }
 
+
 .rubric-edit-help {
   margin: 0.5rem 0 0 0;
   font-size: 0.85rem;
@@ -3012,6 +3019,14 @@ h4, h5 {
 .step-one-continue-button:focus-visible {
   outline: 2px solid var(--primary-highlight);
   outline-offset: 3px;
+}
+
+/* Choose PDF button placed below file name (styled like Continue but narrower) */
+.step-one-continue-button.choose-pdf-button {
+  width: auto !important;
+  max-width: 250px !important;
+  margin-top: 1rem !important;
+  padding: 0.85rem 2rem !important;
 }
 
 /*================================================================

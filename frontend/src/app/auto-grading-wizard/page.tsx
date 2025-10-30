@@ -342,10 +342,12 @@ function CombinedAutoGradingWizard() {
         <Header step={step} />
 
         <div className="wizard-top-buttons">
-          <button type="button" onClick={handleBack} className="back-button">
-            <ChevronLeft size={18} />
-            Back
-          </button>
+          {step !== 1 && (
+            <button type="button" onClick={handleBack} className="back-button">
+              <ChevronLeft size={18} />
+              Back
+            </button>
+          )}
           {step === 3 && (
             <>
               <div className="wizard-step-title-container">
