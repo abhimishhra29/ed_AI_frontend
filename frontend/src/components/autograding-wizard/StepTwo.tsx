@@ -81,13 +81,30 @@ const StepTwo: FC = () => {
               <div className="form-field">
                 <label>Assignment Question:</label>
                 <div
-                  className={`file-input-wrapper ${
-                    assignmentFile ? "has-file" : ""
-                  }`}
+                  className={`upload-pdf-box ${assignmentFile ? "has-file" : ""}`}
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => fileInputRef.current?.click()}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      fileInputRef.current?.click();
+                    }
+                  }}
+                  aria-label={assignmentFile ? `Selected file ${assignmentFile.name}` : 'Upload PDF'}
                 >
-                  <span className="file-input-filename">
-                    {assignmentFile?.name || "No file selected - Click on Choose PDF button"}
-                  </span>
+                  <div className="upload-pdf-icon" aria-hidden="true">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M6 2h7l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" stroke="#111827" strokeWidth="1.5"/>
+                      <path d="M13 2v5h5" stroke="#111827" strokeWidth="1.5"/>
+                      <circle cx="18" cy="18" r="4.5" fill="#ef4444"/>
+                      <path d="M18 15v4" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round"/>
+                      <path d="M16.5 17H19.5" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round"/>
+                    </svg>
+                  </div>
+                  <div className="upload-pdf-text">
+                    {assignmentFile?.name || 'Upload PDF'}
+                  </div>
                   <input
                     id="assignmentInput"
                     ref={fileInputRef}
@@ -97,13 +114,6 @@ const StepTwo: FC = () => {
                     onChange={handleAssignmentChange}
                   />
                 </div>
-                <button
-                  type="button"
-                  className="step-one-continue-button choose-pdf-button"
-                  onClick={() => fileInputRef.current?.click()}
-                >
-                  {assignmentFile ? "Change PDF" : "Choose PDF"}
-                </button>
               </div>
 
               <div className="form-field">

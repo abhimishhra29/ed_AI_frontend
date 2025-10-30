@@ -38,6 +38,53 @@ const StepThree: FC = () => {
     setExpandedQuestion(expandedQuestion === questionId ? null : questionId);
   };
 
+  // Calculate percentage from marks based on max_score
+  const calculatePercentageFromMarks = (scoreRange: string, maxScore: string | number): string => {
+    if (!scoreRange || scoreRange === 'N/A' || !maxScore || maxScore === 'N/A') {
+      return 'N/A';
+    }
+
+    const max = typeof maxScore === 'string' ? parseFloat(maxScore) : maxScore;
+    if (isNaN(max) || max <= 0) return 'N/A';
+
+    // Handle range format like "3-4" or single number like "5"
+    const rangeMatch = scoreRange.match(/(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)/);
+    
+    if (rangeMatch) {
+      // It's a range
+      const minScore = parseFloat(rangeMatch[1]);
+      const maxScoreValue = parseFloat(rangeMatch[2]);
+      if (isNaN(minScore) || isNaN(maxScoreValue)) return 'N/A';
+      
+      const minPercent = Math.round((minScore / max) * 100);
+      const maxPercent = Math.round((maxScoreValue / max) * 100);
+      
+      return `${minPercent}% - ${maxPercent}%`;
+    } else {
+      // Single number
+      const score = parseFloat(scoreRange);
+      if (isNaN(score)) return 'N/A';
+      
+      if (score === 0) {
+        return 'Below 40%';
+      }
+      
+      const percent = Math.round((score / max) * 100);
+      
+      // For single scores, we typically show a range
+      // Higher scores get narrower ranges, lower scores get wider
+      if (percent >= 90) {
+        return `${percent}% - 100%`;
+      } else if (percent >= 70) {
+        return `${Math.max(70, percent - 19)}% - ${percent + 19}%`;
+      } else if (percent >= 40) {
+        return `${Math.max(40, percent - 29)}% - ${Math.min(69, percent + 29)}%`;
+      } else {
+        return `Below 40%`;
+      }
+    }
+  };
+
   const handleEditRubric = (questionId: string) => {
     setIsEditingRubric(true);
     setEditingQuestionId(questionId);
@@ -742,20 +789,9 @@ const StepThree: FC = () => {
                                       {rubricItem.subsections.map((subsection: any, index: number) => (
                                         <div key={index} className="subsection">
                                           <div className="subsection-header">
-                                            <input
-                                              type="text"
-                                              className="editable-field subsection-label"
-                                              value={subsection.label || subsection.title || `Subsection ${index + 1}`}
-                                              onChange={(e) => {
-                                                const updatedRubric = JSON.parse(JSON.stringify(generatedRubric));
-                                                const rubricIndex = updatedRubric.rubric.findIndex((item: any) => item.question_id === q.question_id);
-                                                if (rubricIndex !== -1) {
-                                                  updatedRubric.rubric[rubricIndex].subsections[index].label = e.target.value;
-                                                  updatedRubric.rubric[rubricIndex].subsections[index].title = e.target.value;
-                                                  setGeneratedRubric(updatedRubric);
-                                                }
-                                              }}
-                                            />
+                                            <strong className="subsection-label">
+                                              {subsection.label || subsection.title || `Subsection ${index + 1}`}
+                                            </strong>
                                             <div style={{ display: 'flex', gap: '0.5rem' }}>
                                               <input
                                                 type="text"
@@ -779,7 +815,20 @@ const StepThree: FC = () => {
                                                   const updatedRubric = JSON.parse(JSON.stringify(generatedRubric));
                                                   const rubricIndex = updatedRubric.rubric.findIndex((item: any) => item.question_id === q.question_id);
                                                   if (rubricIndex !== -1) {
+                                                    // Update the max_score
                                                     updatedRubric.rubric[rubricIndex].subsections[index].max_score = e.target.value;
+                                                    
+                                                    // Recalculate percentages for all performance levels in this subsection
+                                                    const newMaxScore = e.target.value;
+                                                    if (updatedRubric.rubric[rubricIndex].subsections[index].performance_levels) {
+                                                      updatedRubric.rubric[rubricIndex].subsections[index].performance_levels.forEach((level: any) => {
+                                                        if (level.score_range) {
+                                                          const calculatedPercentage = calculatePercentageFromMarks(level.score_range, newMaxScore);
+                                                          level.threshold = calculatedPercentage;
+                                                        }
+                                                      });
+                                                    }
+                                                    
                                                     setGeneratedRubric(updatedRubric);
                                                   }
                                                 }}
@@ -793,20 +842,9 @@ const StepThree: FC = () => {
                                               {subsection.performance_levels.map((level: any, levelIndex: number) => (
                                                 <div key={levelIndex} className="performance-level">
                                                   <div className="level-header">
-                                                    <input
-                                                      type="text"
-                                                      className="editable-field level-name"
-                                                      value={level.level || level.name || `Level ${levelIndex + 1}`}
-                                                      onChange={(e) => {
-                                                        const updatedRubric = JSON.parse(JSON.stringify(generatedRubric));
-                                                        const rubricIndex = updatedRubric.rubric.findIndex((item: any) => item.question_id === q.question_id);
-                                                        if (rubricIndex !== -1) {
-                                                          updatedRubric.rubric[rubricIndex].subsections[index].performance_levels[levelIndex].level = e.target.value;
-                                                          updatedRubric.rubric[rubricIndex].subsections[index].performance_levels[levelIndex].name = e.target.value;
-                                                          setGeneratedRubric(updatedRubric);
-                                                        }
-                                                      }}
-                                                    />
+                                                    <strong className="level-name">
+                                                      {level.level || level.name || `Level ${levelIndex + 1}`}
+                                                    </strong>
                                                     <input
                                                       type="text"
                                                       className="editable-field score-range"
@@ -815,7 +853,14 @@ const StepThree: FC = () => {
                                                         const updatedRubric = JSON.parse(JSON.stringify(generatedRubric));
                                                         const rubricIndex = updatedRubric.rubric.findIndex((item: any) => item.question_id === q.question_id);
                                                         if (rubricIndex !== -1) {
+                                                          // Update the score range
                                                           updatedRubric.rubric[rubricIndex].subsections[index].performance_levels[levelIndex].score_range = e.target.value;
+                                                          
+                                                          // Automatically calculate and update percentage (threshold)
+                                                          const maxScore = subsection.max_score;
+                                                          const calculatedPercentage = calculatePercentageFromMarks(e.target.value, maxScore);
+                                                          updatedRubric.rubric[rubricIndex].subsections[index].performance_levels[levelIndex].threshold = calculatedPercentage;
+                                                          
                                                           setGeneratedRubric(updatedRubric);
                                                         }
                                                       }}
@@ -955,6 +1000,12 @@ const StepThree: FC = () => {
                                                 {subsection.performance_levels && subsection.performance_levels.length > 0 && (
                                                   <div className="performance-levels">
                                                     <h5>Performance Levels:</h5>
+                                                    <div className="performance-levels-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0', marginBottom: '0.5rem', gap: '1rem' }}>
+                                                      <span style={{ flex: 1 }}></span>
+                                                      <span style={{ fontSize: '1.5rem', fontWeight: 700, color: '#213342', width: '80px', textAlign: 'center', flexShrink: 0 }}>Marks</span>
+                                                      <span style={{ fontSize: '1.5rem', fontWeight: 700, color: '#213342', width: '120px', minWidth: '120px', textAlign: 'center', flexShrink: 0 }}>Percentage</span>
+                                                      <span></span>
+                                                    </div>
                                                     {subsection.performance_levels.map((level: any, levelIndex: number) => (
                                                       <div key={levelIndex} className="performance-level">
                                                         <div className="level-header">
