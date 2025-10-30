@@ -360,12 +360,13 @@
 .wizard-step-three .loading-indicator {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   min-height: 80vh;
+  background: transparent;
   font-size: 2rem;
   font-weight: 600;
   color: #213342;
-  text-align: center;
+  text-align: left;
 }
 
 /* Step 3 - Questions header with Edit button inline */
@@ -1337,13 +1338,13 @@ h4, h5 {
 .auto-grading-wizard .loading-indicator {
   padding: 1rem;
   border-radius: 0.75rem;
-  background: var(--warm-white-light);
+  background: transparent;
   color: var(--primary-dark);
   font-weight: 600;
   min-height: 80vh;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .auto-grading-wizard .question-preview {

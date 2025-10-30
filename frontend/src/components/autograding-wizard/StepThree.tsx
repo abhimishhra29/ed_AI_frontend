@@ -722,7 +722,7 @@ const StepThree: FC = () => {
                         onClick={() => handleQuestionClick(q.question_id)}
                       >
                         <div className="question-title">
-                          <strong>{q.question_id}:</strong> {q.title || q.prompt}
+                          <strong>{q.question_id.endsWith(':') ? q.question_id : `${q.question_id}:`}</strong> {(q.title || q.prompt)?.replace(/^:\s*/, '')}
                         </div>
                         <div className="expand-icon">
                           {isExpanded ? '−' : '+'}
