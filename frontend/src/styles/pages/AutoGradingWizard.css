@@ -3247,6 +3247,7 @@ h4, h5 {
   gap: 12px;
   padding: 0;
   margin: 0;
+  margin-top: 2rem;
   margin-bottom: 0.25rem;
   width: 100%;
   box-sizing: border-box;
@@ -3595,4 +3596,55 @@ h4, h5 {
   outline: none;
   border-color: rgba(33, 51, 66, 0.3);
   box-shadow: 0 0 0 2px rgba(33, 51, 66, 0.08);
+}
+
+/*================================================================
+  11. STEP ONE AND STEP TWO - PERFECT CENTERING
+  ================================================================*/
+
+/* Center Step 1 and Step 2 containers both horizontally and vertically */
+.wizard-step-one .wizard-content,
+.wizard-step-two .wizard-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: auto;
+  width: 100%;
+  padding: 2rem 1rem;
+  box-sizing: border-box;
+}
+
+.wizard-step-one .assignment-details-box,
+.wizard-step-two .assignment-details-box {
+  width: 860px;
+  max-width: 96vw;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+}
+
+/* Ensure responsive behavior on smaller screens */
+@media (max-width: 1024px) {
+  .wizard-step-one .wizard-content,
+  .wizard-step-two .wizard-content {
+    min-height: calc(100vh - 100px);
+    padding: 1.5rem 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .wizard-step-one .wizard-content,
+  .wizard-step-two .wizard-content {
+    min-height: calc(100vh - 80px);
+    padding: 1rem 0.5rem;
+  }
+  
+  .wizard-step-one .assignment-details-box,
+  .wizard-step-two .assignment-details-box {
+    margin: 1rem;
+    padding: 1.5rem;
+    max-width: calc(100vw - 2rem);
+  }
 }
