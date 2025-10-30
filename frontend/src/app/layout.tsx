@@ -26,9 +26,9 @@ export const metadata: Metadata = {
   description:
     'EdGenAI delivers AI-powered grading, planning, and consultancy tools that help educators transform learning experiences.',
   icons: {
-    icon: '/favicon.png',
-    shortcut: '/favicon.png',
-    apple: '/favicon.png',
+    icon: '/logoicon.png',
+    shortcut: '/logoicon.png',
+    apple: '/logoicon.png',
   },
 };
 
