@@ -336,6 +336,25 @@ function CombinedAutoGradingWizard() {
     setIsInfoPanelOpen((open) => !open);
   }, []);
 
+  const handleContinueFromStep3 = useCallback(() => {
+    // Validate that no subsection has max_score <= 0 or missing
+    if (generatedRubric && Array.isArray((generatedRubric as any).rubric)) {
+      const hasZero = (generatedRubric as any).rubric.some((q: any) =>
+        Array.isArray(q.subsections) && q.subsections.some((s: any) => {
+          const raw = s?.max_score;
+          const val = typeof raw === 'string' ? parseFloat(raw) : raw;
+          return val === 0 || isNaN(val) || val === null || val === undefined;
+        })
+      );
+      if (hasZero) {
+        setRubricGenerationError?.('Max Score cannot be 0 or empty. Please update all subsections before continuing.');
+        return;
+      }
+    }
+    setRubricGenerationError?.(null);
+    setStep(4);
+  }, [generatedRubric, setRubricGenerationError, setStep]);
+
   return (
     <AutoGradingWizardContext.Provider value={ctx}>
       <div className="auto-grading-wizard">
@@ -364,7 +383,7 @@ function CombinedAutoGradingWizard() {
               <button
                 type="button"
                 className="continue-button"
-                onClick={() => setStep(4)}
+                onClick={handleContinueFromStep3}
                 disabled={!generatedRubric || isGeneratingRubric}
               >
                 Continue

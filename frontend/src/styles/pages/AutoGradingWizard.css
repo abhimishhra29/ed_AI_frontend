@@ -1,3 +1,142 @@
+.wizard-step-three .structured-rubric .deductions .deduction,
+.wizard-step-three .structured-rubric .global-deductions .deduction {
+  font-weight: 400; /* normal weight for content */
+  font-size: 1.3rem; /* match level-description */
+  color: #213342; /* match body text color */
+}
+
+.wizard-step-three .structured-rubric .deductions .deduction .deduction-label,
+.wizard-step-three .structured-rubric .global-deductions .deduction .deduction-label {
+  font-weight: 400; /* same styling as body text */
+}
+
+.wizard-step-three .structured-rubric .deductions h5,
+.wizard-step-three .structured-rubric .global-deductions h4 {
+  font-weight: 700; /* keep only headings bold */
+}
+/* --- Side Navigation inside Step Three Questions Container --- */
+.wizard-step-three .question-preview {
+  display: flex;
+  flex-direction: column;
+  /* Ensure the card is tall so the sidebar can stretch fully */
+  min-height: 85vh;
+}
+
+.wizard-step-three .question-preview > .questions-container {
+  display: flex !important; /* ensure side-by-side */
+  flex-direction: row;
+  align-items: stretch;
+  gap: 1.5rem;
+  flex: 1 1 auto; /* occupy remaining card height */
+}
+
+.wizard-step-three .side-nav {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch; /* stretch within flex line */
+  width: 240px;
+  min-width: 240px;
+  background: #213342; /* match Edit Rubrics button */
+  color: #ffffff;
+  border-radius: 8px;
+  height: 100%; /* fill the full height of the container */
+  overflow: auto; /* scroll if question list exceeds height */
+  border-right: 1px solid #e6ebf1; /* vertical separator */
+}
+
+/* header removed by design for edge-to-edge vertical look */
+
+.wizard-step-three .side-nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 8px 8px 12px 8px;
+}
+
+.wizard-step-three .side-nav-item {
+  padding: 12px 12px 12px 14px;
+  margin: 6px 0;
+  border-radius: 0;
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  outline: none;
+  color: rgba(255,255,255,0.85);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.wizard-step-three .side-nav-item:hover {
+  background: transparent;
+  color: #ffffff;
+}
+
+.wizard-step-three .side-nav .side-nav-item.active {
+  background: var(--primary-highlight) !important;
+  color: #ffffff;
+  font-weight: 700;
+  border-left: none;
+  border-radius: 8px;
+  padding-left: 14px;
+}
+
+.wizard-step-three .side-nav .side-nav-item.active:hover {
+  background: var(--primary-highlight) !important;
+  color: #ffffff !important;
+}
+
+.wizard-step-three .side-nav-content {
+  flex: 1;
+  min-height: auto;
+  background: transparent;
+  padding-left: 16px; /* space from divider */
+  overflow-y: auto; /* vertical scroll for long rubrics */
+  overflow-x: hidden;
+}
+
+/* Ensure rubric content respects available width */
+.wizard-step-three .side-nav-content .structured-rubric {
+  max-width: 100%;
+  padding-right: 8px; /* keep content clear of scrollbar */
+}
+
+/* Tighter spacing in rubric content */
+.wizard-step-three .structured-rubric h3 {
+  margin: 0 0 8px;
+}
+
+.wizard-step-three .structured-rubric h4 {
+  margin: 8px 0 6px;
+}
+
+.wizard-step-three .structured-rubric .subsections {
+  margin-top: 8px;
+}
+
+.wizard-step-three .structured-rubric .subsections .subsection {
+  margin-bottom: 12px;
+}
+
+.wizard-step-three .structured-rubric .subsections .subsection .subsection-header {
+  margin-bottom: 6px;
+}
+
+.wizard-step-three .structured-rubric .performance-levels {
+  margin-top: 6px;
+}
+
+.wizard-step-three .structured-rubric .performance-levels h5 {
+  margin: 0 0 6px;
+}
+
+.wizard-step-three .structured-rubric .performance-levels .performance-levels-header {
+  padding: 4px 0 !important;
+  margin-bottom: 6px !important;
+}
+
+.wizard-step-three .structured-rubric .performance-levels .performance-level {
+  margin-bottom: 8px;
+}
 /*================================================================
   1. GLOBAL STYLES
 ================================================================*/
@@ -399,6 +538,19 @@
   cursor: pointer;
   transition: background-color 0.2s ease;
   white-space: nowrap;
+}
+
+/* Smaller, non-bold variant for penalty action buttons */
+.wizard-step-three .penalty-action {
+  font-size: 1.3rem !important;
+  font-weight: 400 !important;
+  background-color: #ffffff !important;
+  color: #213342 !important;
+  border: 1px solid #e6ebf1 !important;
+}
+
+.wizard-step-three .penalty-action:hover {
+  background-color: #f3f6fb !important;
 }
 
 .wizard-step-three .edit-rubric-button:hover {
@@ -828,6 +980,8 @@ h4, h5 {
   font-size: 1.5rem !important;
   font-weight: 700 !important;
   color: #213342 !important;
+  margin: 0 0 6px !important; /* remove extra top/bottom space */
+  line-height: 1.2 !important;
 }
 
 .deduction {
