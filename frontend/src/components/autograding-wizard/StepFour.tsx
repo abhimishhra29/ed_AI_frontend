@@ -1,6 +1,6 @@
 'use client';
 
-import { ChangeEvent, FC, useState } from "react";
+import { ChangeEvent, FC, useState, useRef } from "react";
 import { PDFDocument } from "pdf-lib";
 import { useAutoGradingWizard } from '../../app/auto-grading-wizard/useAutoGradingWizard';
 
@@ -24,6 +24,7 @@ const StepFour: FC = () => {
   } = useAutoGradingWizard();
 
   const [pageError, setPageError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   /**
    * Validate each PDF’s page count before accepting.
@@ -193,75 +194,95 @@ const StepFour: FC = () => {
   return (
     <div className="wizard-step-four">
       <div className="wizard-content">
-        {/* ─────────────────── Left column – form ─────────────────── */}
-        <div className="assignment-details-box">
-          <div className="assignment-details-box__header">
-            <h2>Grade Submissions</h2>
-            <div className="step-indicator">Step 4/4</div>
+        {/* ─────────────────── Unified Container with Divider ─────────────────── */}
+        <div className="step-four-unified-container">
+          {/* ─────────────────── Left side – Grade Submissions ─────────────────── */}
+          <div className="step-four-left-section">
+            <div className="assignment-details-box">
+              <h2>Grade Submissions</h2>
+              <div className="step-indicator">Step 4/4</div>
+              <form
+                onSubmit={handleGrade}
+                encType="multipart/form-data"
+                className="grading-form"
+              >
+                <div className="form-fields-container">
+                  <div className="form-field">
+                    <label>Attach Submission:</label>
+                    <div
+                      className={`upload-pdf-box ${solutionFilesSelected.length > 0 ? "has-file" : ""}`}
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => fileInputRef.current?.click()}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          fileInputRef.current?.click();
+                        }
+                      }}
+                      aria-label={solutionFilesSelected.length > 0 ? `${solutionFilesSelected.length} file(s) selected` : 'Upload PDF'}
+                    >
+                      <div className="upload-pdf-icon" aria-hidden="true">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M6 2h7l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" stroke="#111827" strokeWidth="1.5"/>
+                          <path d="M13 2v5h5" stroke="#111827" strokeWidth="1.5"/>
+                          <circle cx="18" cy="18" r="4.5" fill="#ef4444"/>
+                          <path d="M18 15v4" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round"/>
+                          <path d="M16.5 17H19.5" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round"/>
+                        </svg>
+                      </div>
+                      <div className="upload-pdf-text">
+                        {solutionFilesSelected.length > 0
+                          ? solutionFilesSelected.length === 1
+                            ? solutionFilesSelected[0].name
+                            : `${solutionFilesSelected.length} file(s) selected`
+                          : 'Upload PDF'}
+                      </div>
+                      <input
+                        id="solutionInput"
+                        ref={fileInputRef}
+                        type="file"
+                        accept="application/pdf"
+                        multiple
+                        className="file-input-input"
+                        disabled={isSubmitting}
+                        onChange={handleFileChange}
+                      />
+                    </div>
+
+                {/* Page-limit error message */}
+                {pageError && (
+                  <div className="file-error">
+                    {pageError} Please upload PDFs of up to {MAX_PAGES} pages.
+                  </div>
+                )}
+
+                {/* Countdown timer */}
+                <div className="timer">
+                  Time left: {timeLeft !== null ? `${timeLeft}s` : "--"}
+                </div>
+                  </div>
+
+                  <div className="form-field">
+                    <button
+                      type="submit"
+                      className="step-four-submit-button"
+                      disabled={isSubmitting || !!pageError}
+                    >
+                      {isSubmitting ? "Grading…" : "Submit"}
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
           </div>
-          <form
-            onSubmit={handleGrade}
-            encType="multipart/form-data"
-            className="grading-form"
-          >
-            <div className="form-fields-container">
-              <div className="form-field">
-                <label>Attach Submission:</label>
-            <div
-              className={
-                "file-input-wrapper " +
-                (solutionFilesSelected.length > 0 ? "has-file" : "")
-              }
-            >
-              <label htmlFor="solutionInput" className="file-input-button">
-                {solutionFilesSelected.length > 0
-                  ? "Change Files…"
-                  : "Choose Files…"}
-              </label>
-              <span className="file-input-filename">
-                {solutionFilesSelected.length > 0
-                  ? solutionFilesSelected.map((f) => f.name).join(", ")
-                  : "No file selected"}
-              </span>
-              <input
-                id="solutionInput"
-                type="file"
-                accept="application/pdf"
-                multiple
-                className="file-input-input"
-                disabled={isSubmitting}
-                onChange={handleFileChange}
-              />
-            </div>
 
-            {/* Page-limit error message */}
-            {pageError && (
-              <div className="file-error">
-                {pageError} Please upload PDFs of up to {MAX_PAGES} pages.
-              </div>
-            )}
+          {/* ─────────────────── Vertical Divider ─────────────────── */}
+          <div className="step-four-divider"></div>
 
-            {/* Countdown timer */}
-            <div className="timer">
-              Time left: {timeLeft !== null ? `${timeLeft}s` : "--"}
-            </div>
-              </div>
-
-              <div className="form-field">
-                <button
-                  type="submit"
-                  className="step-four-submit-button"
-                  disabled={isSubmitting || !!pageError}
-                >
-                  {isSubmitting ? "Grading…" : "Submit"}
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
-
-        {/* ─────────────────── Right column – results ─────────────────── */}
-        <div className="results-column">
+          {/* ─────────────────── Right side – Grading Results ─────────────────── */}
+          <div className="step-four-right-section">
+            <div className="results-column">
           <div className="results-header">
             <h2>Grading Results</h2>
             {rawOutputs.length > 0 && (
@@ -451,6 +472,8 @@ const StepFour: FC = () => {
           ) : (
             <div className="no-results">No results yet</div>
           )}
+            </div>
+          </div>
         </div>
       </div>
     </div>
