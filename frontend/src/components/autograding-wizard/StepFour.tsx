@@ -356,24 +356,43 @@ const StepFour: FC = () => {
                         section?.feedback ?? section?.comments
                       );
 
+                      // Calculate percentage for color coding
+                      const earnedStr = String(earned).trim();
+                      const maxStr = String(max).trim();
+                      const earnedNum = (earnedStr === '-' || earnedStr === '') ? 0 : parseFloat(earnedStr) || 0;
+                      const maxNum = (maxStr === '-' || maxStr === '') ? 1 : parseFloat(maxStr) || 1;
+                      const percentage = maxNum > 0 ? (earnedNum / maxNum) * 100 : 0;
+
                       return {
                         key: String(section?.section_id ?? `${idx}-${label}`),
                         label,
                         earned,
                         max,
                         comments,
+                        percentage,
                       };
                     })
                     .filter((row: any) => row.label)
                 : taskEntries
                 ? taskEntries.map(([label, rawVal]: [string, any], idx) => {
                     const values = Array.isArray(rawVal) ? rawVal : [];
+                    const earned = toScorePart(values[1]);
+                    const max = toScorePart(values[0]);
+                    
+                    // Calculate percentage for color coding
+                    const earnedStr = String(earned).trim();
+                    const maxStr = String(max).trim();
+                    const earnedNum = (earnedStr === '-' || earnedStr === '') ? 0 : parseFloat(earnedStr) || 0;
+                    const maxNum = (maxStr === '-' || maxStr === '') ? 1 : parseFloat(maxStr) || 1;
+                    const percentage = maxNum > 0 ? (earnedNum / maxNum) * 100 : 0;
+                    
                     return {
                       key: `${label}-${idx}`,
                       label,
-                      earned: toScorePart(values[1]),
-                      max: toScorePart(values[0]),
+                      earned,
+                      max,
                       comments: toCommentList(values[2]),
+                      percentage,
                     };
                   })
                 : [];
@@ -422,7 +441,7 @@ const StepFour: FC = () => {
                           </div>
                         </div>
 
-                        {breakdownRows.map((row) => (
+                        {breakdownRows.map((row: { key: string; label: string; earned: string; max: string; comments: string[]; percentage: number }) => (
                           <div key={row.key} className="rationale-row" role="row">
                             <div
                               className="rationale-cell"
@@ -436,7 +455,14 @@ const StepFour: FC = () => {
                               role="cell"
                               data-label="Score"
                             >
-                              <span className="score-pill">
+                              <span 
+                                className={`score-pill score-pill--${
+                                  row.percentage >= 80 ? 'high' :
+                                  row.percentage >= 50 ? 'medium' :
+                                  row.percentage > 0 ? 'low' : 'neutral'
+                                }`}
+                                data-percentage={row.percentage}
+                              >
                                 {row.earned}
                                 <span className="score-pill__divider">/</span>
                                 {row.max}
@@ -448,11 +474,14 @@ const StepFour: FC = () => {
                               data-label="Comments"
                             >
                               {row.comments.length ? (
-                                row.comments.map((line, idx) => (
-                                  <div key={`${row.key}-comment-${idx}`} className="comment-line">
-                                    {line}
-                                  </div>
-                                ))
+                                <div className="comment-list">
+                                  {row.comments.map((line: string, idx: number) => (
+                                    <div key={`${row.key}-comment-${idx}`} className="comment-line">
+                                      <span className="comment-bullet" aria-hidden="true">•</span>
+                                      <span className="comment-text">{line}</span>
+                                    </div>
+                                  ))}
+                                </div>
                               ) : (
                                 <span className="no-comment">No comments</span>
                               )}

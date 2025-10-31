@@ -2229,10 +2229,16 @@ h4, h5 {
   border: none !important;
 }
 
-/* Vertical Divider between sections */
+/* Vertical Divider between sections - Gradient fade */
 .wizard-step-four .step-four-divider {
   width: 1px;
-  background: #e5e5e5;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.08) 20%,
+    rgba(0, 0, 0, 0.08) 80%,
+    transparent 100%
+  );
   flex-shrink: 0;
 }
 
@@ -2315,11 +2321,27 @@ h4, h5 {
 
 .wizard-step-four .grading-result-card {
   padding: 0;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
   border: none;
   border-radius: 0;
   background: transparent;
   box-shadow: none;
+}
+
+/* Section separators using spacing and subtle shadows */
+.wizard-step-four .grading-result-card:not(:last-child)::after {
+  content: '';
+  display: block;
+  margin-top: 2rem;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(0, 0, 0, 0.06) 20%,
+    rgba(0, 0, 0, 0.06) 80%,
+    transparent 100%
+  );
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
 }
 
 .wizard-step-four .grading-result-card__header {
@@ -2385,7 +2407,7 @@ h4, h5 {
 }
 
 .wizard-step-four .rationale-table {
-  border: 1px solid var(--warm-white-light);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 10px;
   background: var(--warm-white);
   overflow: hidden;
@@ -2398,10 +2420,22 @@ h4, h5 {
   padding: 0.9rem 1.15rem;
   align-items: start;
   color: var(--primary-dark);
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Zebra striping for alternate rows (very subtle) */
+.wizard-step-four .rationale-row:not(.rationale-row--head):nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.015);
+}
+
+/* Hover highlight on rows */
+.wizard-step-four .rationale-row:not(.rationale-row--head):hover {
+  background-color: rgba(33, 51, 66, 0.04);
+  box-shadow: inset 0 0 0 1px rgba(33, 51, 66, 0.06);
 }
 
 .wizard-step-four .rationale-row + .rationale-row {
-  border-top: 1px solid var(--warm-white-light);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .wizard-step-four .rationale-row--head {
@@ -2434,26 +2468,89 @@ h4, h5 {
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  padding: 0.3rem 0.75rem;
+  padding: 0.5rem 1rem;
   border-radius: 999px;
   background: rgba(33, 51, 66, 0.08);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   font-size: 1.1rem;
+  transition: all 0.2s ease;
+}
+
+/* Color-coded score pills based on percentage */
+.wizard-step-four .score-pill {
+  background: rgba(33, 51, 66, 0.08);
+  color: var(--primary-dark);
+}
+
+/* High score (80%+) - Green */
+.wizard-step-four .score-pill--high {
+  background: rgba(16, 185, 129, 0.12);
+  color: #059669;
+}
+
+/* Medium score (50-79%) - Amber */
+.wizard-step-four .score-pill--medium {
+  background: rgba(245, 158, 11, 0.12);
+  color: #d97706;
+}
+
+/* Low score (<50%) - Red */
+.wizard-step-four .score-pill--low {
+  background: rgba(239, 68, 68, 0.12);
+  color: #dc2626;
+}
+
+/* Neutral/fallback for "-" values or 0% */
+.wizard-step-four .score-pill--neutral {
+  background: rgba(33, 51, 66, 0.08);
+  color: var(--primary-dark);
 }
 
 .wizard-step-four .score-pill__divider {
   margin: 0 0.25rem;
-  color: rgba(33, 51, 66, 0.45);
+  opacity: 0.5;
 }
 
-.wizard-step-four .comment-line + .comment-line {
-  margin-top: 0.35rem;
+/* Comments list container */
+.wizard-step-four .comment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.wizard-step-four .comment-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  line-height: 1.5;
+  padding: 0.25rem 0;
+}
+
+.wizard-step-four .comment-bullet {
+  flex-shrink: 0;
+  color: rgba(33, 51, 66, 0.4);
+  font-size: 1.2rem;
+  line-height: 1.2;
+  margin-top: 0.1rem;
+}
+
+.wizard-step-four .comment-text {
+  flex: 1;
+  color: var(--primary-dark);
+  font-size: 1rem;
+}
+
+/* Subtle divider between multiple comments (alternative to bullets) */
+.wizard-step-four .comment-line:not(:last-child)::after {
+  content: '';
+  display: none; /* Using bullets instead, but keeping for potential future use */
 }
 
 .wizard-step-four .no-comment {
   font-style: italic;
   color: var(--muted);
+  font-size: 0.95rem;
 }
 
 .wizard-step-four .no-results {
@@ -2493,8 +2590,15 @@ h4, h5 {
   .wizard-step-four .step-four-divider {
     width: 100%;
     height: 1px;
-    background: #e5e5e5;
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(0, 0, 0, 0.08) 20%,
+      rgba(0, 0, 0, 0.08) 80%,
+      transparent 100%
+    );
     margin: 0;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
   }
 
   .wizard-step-four .step-four-left-section,
@@ -2539,7 +2643,15 @@ h4, h5 {
   }
 
   .wizard-step-four .score-pill {
-    padding: 0.3rem 0.9rem;
+    padding: 0.4rem 0.85rem;
+  }
+  
+  .wizard-step-four .comment-line {
+    gap: 0.5rem;
+  }
+  
+  .wizard-step-four .comment-bullet {
+    font-size: 1rem;
   }
 }
 
