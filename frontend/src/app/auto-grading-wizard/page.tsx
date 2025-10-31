@@ -360,7 +360,7 @@ function CombinedAutoGradingWizard() {
       <div className="auto-grading-wizard">
         <Header step={step} />
 
-        <div className="wizard-top-buttons">
+        <div className={`wizard-top-buttons ${step === 2 ? 'wizard-top-buttons-step-two' : ''}`}>
           {step !== 1 && (
             <button type="button" onClick={handleBack} className="back-button">
               <ChevronLeft size={18} />
@@ -408,7 +408,7 @@ function CombinedAutoGradingWizard() {
 
 function Header({ step }: { step: WizardStep }) {
   return (
-    <header className="wizard-header">
+    <header className={`wizard-header ${step === 1 || step === 2 ? 'wizard-header-step-one' : ''} ${step === 2 ? 'wizard-header-step-two' : ''}`}>
       <h1>AutoGrade</h1>
     </header>
   );

@@ -200,6 +200,46 @@
   text-align: left;
 }
 
+/* Step 1 & Step 2 - Position AutoGrade title to the left and slightly below */
+.wizard-header-step-one {
+  position: relative;
+}
+
+.wizard-header-step-one h1 {
+  position: absolute;
+  left: calc(50% - 500px); /* Position further to the left */
+  top: 80px; /* Slightly below the original position */
+  transform: translateX(0);
+}
+
+/* Step 2 - Move AutoGrade title higher */
+.wizard-header-step-two h1 {
+  top: 40px; /* Higher position for step 2 */
+}
+
+@media (max-width: 1024px) {
+  .wizard-header-step-one h1 {
+    left: calc(50% - min(55vw, 500px));
+    top: 70px;
+  }
+  
+  .wizard-header-step-two h1 {
+    top: 35px;
+  }
+}
+
+@media (max-width: 768px) {
+  .wizard-header-step-one h1 {
+    left: 1rem;
+    top: 60px;
+    font-size: 36px;
+  }
+  
+  .wizard-header-step-two h1 {
+    top: 30px;
+  }
+}
+
 .wizard-step-count {
   font-family: 'Mulish', sans-serif;
   font-size: 0.95rem;
@@ -3500,6 +3540,32 @@ h4, h5 {
   box-sizing: border-box;
   position: relative;
   min-height: 80px;
+}
+
+/* Step 2 - Position back button directly below AutoGrade heading */
+.wizard-top-buttons-step-two {
+  position: relative;
+}
+
+.wizard-top-buttons-step-two .back-button {
+  position: absolute;
+  left: calc(50% - 500px); /* Aligned with AutoGrade title */
+  top: 70px; /* Right below the AutoGrade title with reduced gap */
+  transform: translateX(0);
+}
+
+@media (max-width: 1024px) {
+  .wizard-top-buttons-step-two .back-button {
+    left: calc(50% - min(55vw, 500px));
+    top: 85px;
+  }
+}
+
+@media (max-width: 768px) {
+  .wizard-top-buttons-step-two .back-button {
+    left: 1rem;
+    top: 75px;
+  }
 }
 
 /* Reduce spacing for steps 1, 2, and 4 (not step 3 which has special layout) */
