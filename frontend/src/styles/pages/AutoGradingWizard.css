@@ -567,17 +567,47 @@
 }
 
 /* Step 3 - Edit button */
+/* Edit Rubrics Button - Updated to match Step 4 Edit button style */
 .wizard-step-three .edit-rubric-button {
-  padding: 0.5rem 1rem;
-  background-color: #213342;
-  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.85rem;
   border: none;
   border-radius: 6px;
-  font-size: 1.5rem;
-  font-weight: 600;
+  background: var(--primary-dark);
+  background-color: #213342;
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: capitalize;
+  font-family: 'Inter', sans-serif;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
   white-space: nowrap;
+}
+
+.wizard-step-three .edit-rubric-button:hover {
+  background: #1a2a35;
+  transform: translateY(-1px);
+}
+
+.wizard-step-three .edit-rubric-button:active {
+  transform: translateY(0);
+}
+
+.wizard-step-three .edit-rubric-button svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2;
+  flex-shrink: 0;
+  stroke: currentColor;
+}
+
+.wizard-step-three .edit-rubric-button span {
+  line-height: 1;
 }
 
 /* Smaller, non-bold variant for penalty action buttons */
@@ -591,10 +621,6 @@
 
 .wizard-step-three .penalty-action:hover {
   background-color: #f3f6fb !important;
-}
-
-.wizard-step-three .edit-rubric-button:hover {
-  background-color: #1a2a35;
 }
 
 /* Step 3 - Responsive design (full width on all screens) */
@@ -2415,7 +2441,7 @@ h4, h5 {
 
 .wizard-step-four .rationale-row {
   display: grid;
-  grid-template-columns: minmax(140px, 1fr) minmax(90px, auto) minmax(220px, 1.6fr);
+  grid-template-columns: minmax(140px, 1fr) minmax(90px, auto) minmax(220px, 1.6fr) auto;
   gap: 1rem;
   padding: 0.9rem 1.15rem;
   align-items: start;
@@ -2450,6 +2476,138 @@ h4, h5 {
 
 .wizard-step-four .rationale-row--head .rationale-cell {
   align-self: center;
+}
+
+/* Action cell for edit button */
+.wizard-step-four .rationale-cell--action {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-left: 0.5rem;
+}
+
+/* Edit Results Button */
+.wizard-step-four .edit-results-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.85rem;
+  border: none;
+  border-radius: 6px;
+  background: #ffffff;
+  color: var(--primary-dark);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: capitalize;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.wizard-step-four .edit-results-button:hover {
+  background: #f5f5f5;
+  transform: translateY(-1px);
+}
+
+.wizard-step-four .edit-results-button:active {
+  transform: translateY(0);
+}
+
+.wizard-step-four .edit-results-button svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2;
+  flex-shrink: 0;
+}
+
+.wizard-step-four .edit-results-button span {
+  line-height: 1;
+}
+
+/* Edit Mode Styles */
+.wizard-step-four .score-edit-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.wizard-step-four .score-input {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  width: 60px;
+  text-align: center;
+  background: #ffffff;
+  color: var(--primary-dark);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.wizard-step-four .score-input:focus {
+  outline: none;
+  border-color: var(--primary-dark);
+  box-shadow: 0 0 0 2px rgba(33, 51, 66, 0.1);
+}
+
+.wizard-step-four .score-input:invalid {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.1);
+}
+
+.wizard-step-four .score-input--earned:invalid:focus {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.2);
+}
+
+.wizard-step-four .score-input--earned {
+  font-weight: 600;
+}
+
+.wizard-step-four .score-input--max {
+  font-weight: 600;
+  background: rgba(0, 0, 0, 0.05);
+  cursor: not-allowed;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.wizard-step-four .score-input--max:disabled {
+  opacity: 0.7;
+}
+
+.wizard-step-four .comment-edit-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.wizard-step-four .comment-input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-family: 'Inter', sans-serif;
+  line-height: 1.5;
+  background: #ffffff;
+  color: var(--primary-dark);
+  resize: vertical;
+  min-height: 60px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.wizard-step-four .comment-input:focus {
+  outline: none;
+  border-color: var(--primary-dark);
+  box-shadow: 0 0 0 2px rgba(33, 51, 66, 0.1);
+}
+
+.wizard-step-four .comment-input::placeholder {
+  color: rgba(0, 0, 0, 0.4);
 }
 
 .wizard-step-four .rationale-cell {
@@ -2622,6 +2780,10 @@ h4, h5 {
   .wizard-step-four .rationale-row {
     grid-template-columns: 1fr;
     gap: 0.6rem;
+  }
+  
+  .wizard-step-four .rationale-cell--action {
+    display: none; /* Hide action column on mobile */
   }
 
   .wizard-step-four .rationale-row--head {

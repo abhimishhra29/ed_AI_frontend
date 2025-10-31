@@ -1,6 +1,6 @@
 'use client';
 
-import { ChangeEvent, FC, useState, useRef } from "react";
+import { ChangeEvent, FC, useState, useRef, useEffect } from "react";
 import { PDFDocument } from "pdf-lib";
 import { useAutoGradingWizard } from '../../app/auto-grading-wizard/useAutoGradingWizard';
 
@@ -25,6 +25,249 @@ const StepFour: FC = () => {
 
   const [pageError, setPageError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  // Edit mode state
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editedResults, setEditedResults] = useState<Record<string, {
+    sections?: Record<string, { earned?: string; max?: string; comments?: string[] }>;
+    tasks?: Record<string, { earned?: string; max?: string; comments?: string[] }>;
+    totalScore?: string;
+  }>>({});
+  
+  // Local state to store updated outputs that reflect edits
+  const [displayOutputs, setDisplayOutputs] = useState<typeof rawOutputs>([]);
+  
+  // Sync displayOutputs with rawOutputs when rawOutputs changes
+  useEffect(() => {
+    setDisplayOutputs(rawOutputs);
+  }, [rawOutputs]);
+  
+  // Toggle edit mode
+  const handleToggleEditMode = () => {
+    if (isEditMode) {
+      // Save changes - use displayOutputs (which has previous saves) not rawOutputs
+      const updatedOutputs = displayOutputs.map(({ filename, data }) => {
+        const edits = editedResults[filename];
+        if (!edits) return { filename, data };
+        
+        try {
+          const rationaleObj = JSON.parse(data.rationale);
+          let updatedRationale = { ...rationaleObj };
+          
+                  // Update sections if they exist
+          if (updatedRationale.sections && edits.sections !== undefined && edits.sections) {
+            updatedRationale.sections = updatedRationale.sections.map((section: any, idx: number) => {
+              const sectionLabel = section?.section_label || section?.title || section?.name || section?.section_id || `Section ${idx + 1}`;
+              const sectionKey = String(section?.section_id ?? `${idx}-${sectionLabel}`);
+              const sectionEdit = edits.sections?.[sectionKey];
+              if (sectionEdit) {
+                // Preserve existing comments if not all comments were edited
+                let commentsValue = section.feedback ?? section.comments;
+                if (sectionEdit.comments !== undefined) {
+                  // If comments were edited, use the edited array
+                  if (Array.isArray(sectionEdit.comments)) {
+                    commentsValue = sectionEdit.comments.join('\n');
+                  } else if (typeof sectionEdit.comments === 'string') {
+                    commentsValue = sectionEdit.comments;
+                  }
+                }
+                
+                return {
+                  ...section,
+                  awarded_score: sectionEdit.earned !== undefined ? sectionEdit.earned : section.awarded_score,
+                  score: sectionEdit.earned !== undefined ? sectionEdit.earned : section.score,
+                  earned_score: sectionEdit.earned !== undefined ? sectionEdit.earned : section.earned_score,
+                  max_score: sectionEdit.max !== undefined ? sectionEdit.max : section.max_score,
+                  total_points: sectionEdit.max !== undefined ? sectionEdit.max : section.total_points,
+                  possible_score: sectionEdit.max !== undefined ? sectionEdit.max : section.possible_score,
+                  feedback: commentsValue,
+                  comments: commentsValue,
+                };
+              }
+              return section;
+            });
+          }
+          
+          // Update tasks if they exist
+          if (updatedRationale.tasks && edits.tasks) {
+            Object.entries(edits.tasks).forEach(([taskKey, taskEdit]) => {
+              if (updatedRationale.tasks[taskKey] && Array.isArray(updatedRationale.tasks[taskKey])) {
+                const taskArray = [...updatedRationale.tasks[taskKey]];
+                if (taskEdit.earned !== undefined) taskArray[1] = taskEdit.earned;
+                if (taskEdit.max !== undefined) taskArray[0] = taskEdit.max;
+                if (taskEdit.comments !== undefined) taskArray[2] = taskEdit.comments.join('\n');
+                updatedRationale.tasks[taskKey] = taskArray;
+              }
+            });
+          }
+          
+          // Recalculate total score from updated sections/tasks
+          // This MUST happen after all sections/tasks are updated with edits
+          let totalScore = 0;
+          if (updatedRationale.sections && Array.isArray(updatedRationale.sections)) {
+            updatedRationale.sections.forEach((section: any) => {
+              // Try multiple fields to get the earned score
+              const earnedStr = section.awarded_score ?? section.score ?? section.earned_score ?? '0';
+              const earned = parseFloat(String(earnedStr));
+              if (!isNaN(earned) && isFinite(earned)) {
+                totalScore += earned;
+              }
+            });
+          } else if (updatedRationale.tasks && typeof updatedRationale.tasks === 'object') {
+            Object.values(updatedRationale.tasks).forEach((taskValue: any) => {
+              if (Array.isArray(taskValue) && taskValue.length > 1) {
+                const earnedStr = taskValue[1] ?? '0';
+                const earned = parseFloat(String(earnedStr));
+                if (!isNaN(earned) && isFinite(earned)) {
+                  totalScore += earned;
+                }
+              }
+            });
+          }
+          
+          // Always use calculated total score (from edited section scores)
+          // This ensures the total reflects all edited individual scores
+          data.total_score = totalScore;
+          data.grade = totalScore;
+          
+          return {
+            filename,
+            data: {
+              ...data,
+              rationale: JSON.stringify(updatedRationale),
+            }
+          };
+        } catch (e) {
+          return { filename, data };
+        }
+      });
+      
+      // Update the display outputs with the edited data
+      setDisplayOutputs([...updatedOutputs]); // Create new array to trigger re-render
+      setEditedResults({});
+      setIsEditMode(false);
+    } else {
+      // Enter edit mode
+      setIsEditMode(true);
+    }
+  };
+  
+  // Handle score change
+  const handleScoreChange = (filename: string, rowKey: string, type: 'sections' | 'tasks', field: 'earned' | 'max', value: string, maxScore?: string, index?: number) => {
+    // Validation: earned score should not exceed max score
+    if (field === 'earned' && maxScore) {
+      const earnedNum = parseFloat(value);
+      const maxNum = parseFloat(maxScore);
+      if (!isNaN(earnedNum) && !isNaN(maxNum) && earnedNum > maxNum) {
+        // Don't allow values greater than max
+        return;
+      }
+    }
+    
+    setEditedResults(prev => {
+      const fileEdits = prev[filename] || {};
+      const typeEdits = fileEdits[type] || {};
+      
+      if (type === 'sections') {
+        const sectionEdits = { ...typeEdits };
+        const sectionKey = rowKey;
+        sectionEdits[sectionKey] = {
+          ...sectionEdits[sectionKey],
+          [field]: value,
+        };
+        return {
+          ...prev,
+          [filename]: {
+            ...fileEdits,
+            sections: sectionEdits,
+          }
+        };
+      } else {
+        const taskEdits = { ...typeEdits };
+        taskEdits[rowKey] = {
+          ...taskEdits[rowKey],
+          [field]: value,
+        };
+        return {
+          ...prev,
+          [filename]: {
+            ...fileEdits,
+            tasks: taskEdits,
+          }
+        };
+      }
+    });
+  };
+  
+  // Handle comment change
+  const handleCommentChange = (filename: string, rowKey: string, type: 'sections' | 'tasks', commentIndex: number, value: string, originalComments?: string[]) => {
+    setEditedResults(prev => {
+      const fileEdits = prev[filename] || {};
+      const typeEdits = fileEdits[type] || {};
+      
+      if (type === 'sections') {
+        const sectionEdits = { ...typeEdits };
+        const sectionKey = rowKey;
+        
+        // Get current edited comments or start with original comments
+        let currentComments: string[] = sectionEdits[sectionKey]?.comments || [];
+        if (!currentComments || currentComments.length === 0) {
+          // If no edited comments exist, start with original comments
+          currentComments = originalComments ? [...originalComments] : [];
+        }
+        
+        // Ensure array is large enough
+        while (currentComments.length <= commentIndex) {
+          currentComments.push('');
+        }
+        
+        // Update the specific comment
+        const newComments = [...currentComments];
+        newComments[commentIndex] = value;
+        
+        sectionEdits[sectionKey] = {
+          ...sectionEdits[sectionKey],
+          comments: newComments,
+        };
+        return {
+          ...prev,
+          [filename]: {
+            ...fileEdits,
+            sections: sectionEdits,
+          }
+        };
+      } else {
+        const taskEdits = { ...typeEdits };
+        
+        // Get current edited comments or start with original comments
+        let currentComments: string[] = taskEdits[rowKey]?.comments || [];
+        if (!currentComments || currentComments.length === 0) {
+          currentComments = originalComments ? [...originalComments] : [];
+        }
+        
+        // Ensure array is large enough
+        while (currentComments.length <= commentIndex) {
+          currentComments.push('');
+        }
+        
+        // Update the specific comment
+        const newComments = [...currentComments];
+        newComments[commentIndex] = value;
+        
+        taskEdits[rowKey] = {
+          ...taskEdits[rowKey],
+          comments: newComments,
+        };
+        return {
+          ...prev,
+          [filename]: {
+            ...fileEdits,
+            tasks: taskEdits,
+          }
+        };
+      }
+    });
+  };
 
   /**
    * Validate each PDF’s page count before accepting.
@@ -62,11 +305,11 @@ const StepFour: FC = () => {
    * without similarity score.
    */
   const exportToCSV = () => {
-    if (!rawOutputs.length) return;
+    if (!displayOutputs.length) return;
 
     const columnLabels: string[] = [];
 
-    rawOutputs.forEach(({ data }) => {
+    displayOutputs.forEach(({ data }) => {
       try {
         const parsed = JSON.parse(data.rationale);
 
@@ -97,7 +340,7 @@ const StepFour: FC = () => {
 
     const header = ["Filename", "Student ID", "Total Score", ...columnLabels];
 
-    const rows = rawOutputs.map(({ filename, data }) => {
+    const rows = displayOutputs.map(({ filename, data }) => {
       const columnMap: Record<string, string> = {};
 
       const toScoreString = (value: unknown) => {
@@ -285,7 +528,7 @@ const StepFour: FC = () => {
             <div className="results-column">
           <div className="results-header">
             <h2>Grading Results</h2>
-            {rawOutputs.length > 0 && (
+            {displayOutputs.length > 0 && (
               <button className="btn primary" onClick={exportToCSV}>
                 Export CSV
               </button>
@@ -296,8 +539,8 @@ const StepFour: FC = () => {
             <div className="grading-error">{gradingError}</div>
           )}
 
-          {rawOutputs.length ? (
-            rawOutputs.map(({ filename, data }, i) => {
+          {displayOutputs.length ? (
+            displayOutputs.map(({ filename, data }, i) => {
               let rationaleObj: any = null;
               try {
                 rationaleObj = JSON.parse(data.rationale);
@@ -363,8 +606,9 @@ const StepFour: FC = () => {
                       const maxNum = (maxStr === '-' || maxStr === '') ? 1 : parseFloat(maxStr) || 1;
                       const percentage = maxNum > 0 ? (earnedNum / maxNum) * 100 : 0;
 
+                      const sectionKey = String(section?.section_id ?? `${idx}-${label}`);
                       return {
-                        key: String(section?.section_id ?? `${idx}-${label}`),
+                        key: sectionKey,
                         label,
                         earned,
                         max,
@@ -439,55 +683,157 @@ const StepFour: FC = () => {
                           <div className="rationale-cell" role="columnheader">
                             Comments
                           </div>
+                          <div className="rationale-cell rationale-cell--action" role="columnheader">
+                            <button 
+                              type="button"
+                              className="edit-results-button"
+                              onClick={handleToggleEditMode}
+                              aria-label={isEditMode ? "Save changes" : "Edit results"}
+                            >
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                              </svg>
+                              <span>{isEditMode ? 'Save' : 'Edit'}</span>
+                            </button>
+                          </div>
                         </div>
 
-                        {breakdownRows.map((row: { key: string; label: string; earned: string; max: string; comments: string[]; percentage: number }) => (
-                          <div key={row.key} className="rationale-row" role="row">
-                            <div
-                              className="rationale-cell"
-                              role="cell"
-                              data-label={primaryColumnLabel}
-                            >
-                              {row.label}
-                            </div>
-                            <div
-                              className="rationale-cell rationale-cell--score"
-                              role="cell"
-                              data-label="Score"
-                            >
-                              <span 
-                                className={`score-pill score-pill--${
-                                  row.percentage >= 80 ? 'high' :
-                                  row.percentage >= 50 ? 'medium' :
-                                  row.percentage > 0 ? 'low' : 'neutral'
-                                }`}
-                                data-percentage={row.percentage}
+                        {breakdownRows.map((row: { key: string; label: string; earned: string; max: string; comments: string[]; percentage: number }) => {
+                          // In edit mode, use editedResults; otherwise use row data (which comes from saved displayOutputs)
+                          let displayEarned = row.earned;
+                          let displayMax = row.max;
+                          let displayComments = row.comments;
+                          
+                          if (isEditMode) {
+                            // Get edited values from temporary edits
+                            const fileEdits = editedResults[filename] || {};
+                            const typeEdits = sections ? fileEdits.sections : fileEdits.tasks;
+                            const rowEdits = typeEdits?.[row.key] || {};
+                            
+                            displayEarned = rowEdits.earned !== undefined ? rowEdits.earned : row.earned;
+                            displayMax = rowEdits.max !== undefined ? rowEdits.max : row.max;
+                            displayComments = rowEdits.comments !== undefined && rowEdits.comments.length > 0 ? rowEdits.comments : row.comments;
+                          }
+                          
+                          // Recalculate percentage for color coding
+                          const earnedStr = String(displayEarned).trim();
+                          const maxStr = String(displayMax).trim();
+                          const earnedNum = (earnedStr === '-' || earnedStr === '') ? 0 : parseFloat(earnedStr) || 0;
+                          const maxNum = (maxStr === '-' || maxStr === '') ? 1 : parseFloat(maxStr) || 1;
+                          const displayPercentage = maxNum > 0 ? (earnedNum / maxNum) * 100 : 0;
+                          
+                          return (
+                            <div key={row.key} className="rationale-row" role="row">
+                              <div
+                                className="rationale-cell"
+                                role="cell"
+                                data-label={primaryColumnLabel}
                               >
-                                {row.earned}
-                                <span className="score-pill__divider">/</span>
-                                {row.max}
-                              </span>
-                            </div>
-                            <div
-                              className="rationale-cell"
-                              role="cell"
-                              data-label="Comments"
-                            >
-                              {row.comments.length ? (
-                                <div className="comment-list">
-                                  {row.comments.map((line: string, idx: number) => (
-                                    <div key={`${row.key}-comment-${idx}`} className="comment-line">
-                                      <span className="comment-bullet" aria-hidden="true">•</span>
-                                      <span className="comment-text">{line}</span>
+                                {row.label}
+                              </div>
+                              <div
+                                className="rationale-cell rationale-cell--score"
+                                role="cell"
+                                data-label="Score"
+                              >
+                                {isEditMode ? (
+                                  <div className="score-edit-container">
+                                    <input
+                                      type="number"
+                                      className="score-input score-input--earned"
+                                      value={displayEarned}
+                                      max={displayMax !== '-' && displayMax !== '' ? parseFloat(String(displayMax)) : undefined}
+                                      onChange={(e) => {
+                                        const value = e.target.value;
+                                        // Allow empty string for clearing, or validate numeric input
+                                        if (value === '' || (!isNaN(parseFloat(value)) && parseFloat(value) >= 0)) {
+                                          handleScoreChange(filename, row.key, sections ? 'sections' : 'tasks', 'earned', value, displayMax);
+                                        }
+                                      }}
+                                      placeholder="Earned"
+                                    />
+                                    <span className="score-pill__divider">/</span>
+                                    <input
+                                      type="text"
+                                      className="score-input score-input--max"
+                                      value={displayMax}
+                                      readOnly
+                                      disabled
+                                      placeholder="Max"
+                                    />
+                                  </div>
+                                ) : (
+                                  <span 
+                                    className={`score-pill score-pill--${
+                                      displayPercentage >= 80 ? 'high' :
+                                      displayPercentage >= 50 ? 'medium' :
+                                      displayPercentage > 0 ? 'low' : 'neutral'
+                                    }`}
+                                    data-percentage={displayPercentage}
+                                  >
+                                    {displayEarned}
+                                    <span className="score-pill__divider">/</span>
+                                    {displayMax}
+                                  </span>
+                                )}
+                              </div>
+                              <div
+                                className="rationale-cell"
+                                role="cell"
+                                data-label="Comments"
+                              >
+                                {isEditMode ? (
+                                  <div className="comment-edit-container">
+                                    {displayComments.length > 0 ? (
+                                      displayComments.map((line: string, idx: number) => (
+                                        <textarea
+                                          key={`${row.key}-comment-${idx}`}
+                                          className="comment-input"
+                                          value={line || ''}
+                                          onChange={(e) => handleCommentChange(filename, row.key, sections ? 'sections' : 'tasks', idx, e.target.value, row.comments)}
+                                          rows={2}
+                                          placeholder="Enter comment..."
+                                        />
+                                      ))
+                                    ) : (
+                                      <textarea
+                                        className="comment-input"
+                                        value={(() => {
+                                          const fileEdits = editedResults[filename] || {};
+                                          const typeEdits = sections ? fileEdits.sections : fileEdits.tasks;
+                                          const rowEdits = typeEdits?.[row.key];
+                                          return rowEdits?.comments?.[0] || '';
+                                        })()}
+                                        onChange={(e) => {
+                                          handleCommentChange(filename, row.key, sections ? 'sections' : 'tasks', 0, e.target.value, row.comments);
+                                        }}
+                                        rows={2}
+                                        placeholder="Add a comment..."
+                                      />
+                                    )}
+                                  </div>
+                                ) : (
+                                  displayComments.length ? (
+                                    <div className="comment-list">
+                                      {displayComments.map((line: string, idx: number) => (
+                                        <div key={`${row.key}-comment-${idx}`} className="comment-line">
+                                          <span className="comment-bullet" aria-hidden="true">•</span>
+                                          <span className="comment-text">{line}</span>
+                                        </div>
+                                      ))}
                                     </div>
-                                  ))}
-                                </div>
-                              ) : (
-                                <span className="no-comment">No comments</span>
-                              )}
+                                  ) : (
+                                    <span className="no-comment">No comments</span>
+                                  )
+                                )}
+                              </div>
+                              <div className="rationale-cell rationale-cell--action" role="cell">
+                                {/* Empty cell to match grid layout */}
+                              </div>
                             </div>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     </div>
                   ) : (
