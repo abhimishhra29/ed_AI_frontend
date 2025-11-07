@@ -218,25 +218,41 @@
 }
 
 @media (max-width: 1024px) {
+  .wizard-header-step-one {
+    position: relative;
+  }
+  
   .wizard-header-step-one h1 {
-    left: calc(50% - min(55vw, 500px));
-    top: 70px;
+    position: absolute;
+    left: max(1rem, calc(50% - 500px)); /* Same left position as desktop on larger screens, but ensures visibility on smaller screens */
+    top: 80px; /* Same top position as desktop - keeps heading in same place */
+    transform: translateX(0);
+    margin: 0;
+    padding: 0;
   }
   
   .wizard-header-step-two h1 {
-    top: 35px;
+    top: 40px; /* Same top position as desktop */
   }
 }
 
 @media (max-width: 768px) {
+  .wizard-header-step-one {
+    position: relative;
+  }
+  
   .wizard-header-step-one h1 {
-    left: 1rem;
-    top: 60px;
+    position: absolute;
+    left: max(1rem, calc(50% - 500px)); /* Same left position calculation as desktop, but ensures visibility on smaller screens */
+    top: 80px; /* Same top position as desktop - keeps heading in same place */
+    transform: translateX(0); /* Same transform as desktop */
+    margin: 0;
+    padding: 0;
     font-size: 36px;
   }
   
   .wizard-header-step-two h1 {
-    top: 30px;
+    top: 40px; /* Same top position as desktop */
   }
 }
 
@@ -268,19 +284,6 @@
   .click-info-panel {
     width: min(320px, 90vw);
     right: 16px;
-  }
-}
-
-@media (max-width: 768px) {
-  .click-info-panel {
-    top: 0;
-    bottom: 0;
-    height: 100vh;
-    border-radius: 0;
-  }
-
-  .info-panel-toggle {
-    padding: 1rem 0.75rem;
   }
 }
 
@@ -645,6 +648,466 @@
   .wizard-step-three .assignment-details-box {
     width: 100%;
     max-width: 100%;
+  }
+}
+
+/* Step 3 - Mobile Responsive Fixes (mobile only, desktop unchanged) */
+@media (max-width: 768px) {
+  /* Step 3 - Ensure heading is visible and positioned correctly */
+  .wizard-step-three .wizard-header {
+    margin-bottom: 1rem !important; /* Add space below heading */
+    position: relative;
+    z-index: 10; /* Ensure heading is above other elements */
+  }
+
+  .wizard-step-three .wizard-header h1 {
+    font-size: 42px; /* Keep same size as desktop */
+    position: relative; /* Ensure it's visible */
+    left: auto;
+    top: auto;
+    transform: none;
+    margin: 0 0 0.5rem 0; /* Add bottom margin */
+    padding: 0;
+    z-index: 10; /* Ensure heading is above other elements */
+  }
+
+  /* Step 3 - Fix "AI Generated Rubric" text positioning - prevent overlap with heading */
+  .wizard-step-three .wizard-step-title-container,
+  .wizard-top-buttons .wizard-step-title-container {
+    position: relative !important; /* Change from absolute to relative on mobile */
+    left: auto !important;
+    top: auto !important;
+    transform: none !important;
+    margin-bottom: 1rem !important;
+    margin-top: 0.5rem !important;
+    z-index: 5; /* Lower than heading but visible */
+    pointer-events: auto;
+    width: 100% !important;
+    order: 2 !important; /* Put between buttons */
+  }
+
+  /* Step 3 - Fix step info inside title container */
+  .wizard-step-three .wizard-step-title-container .wizard-step-info,
+  .wizard-top-buttons .wizard-step-title-container .wizard-step-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    white-space: normal !important;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    margin-top: 0.75rem !important;
+    margin-bottom: 0.75rem !important;
+    padding: 0.5rem 0 !important;
+    position: relative;
+    z-index: 5 !important;
+    display: flex !important;
+    width: 100% !important;
+  }
+
+  /* Step 3 - Navigation buttons layout on mobile */
+  .wizard-step-three .wizard-top-buttons,
+  .wizard-top-buttons {
+    flex-direction: row !important; /* Horizontal layout for buttons */
+    align-items: center !important;
+    justify-content: space-between !important; /* Space buttons apart */
+    gap: 0.75rem !important; /* Gap between buttons */
+    margin-top: 1.5rem !important; /* More space from elements above */
+    margin-bottom: 1rem !important; /* Space below buttons */
+    flex-wrap: wrap !important;
+    position: relative !important;
+    z-index: 1 !important;
+  }
+
+  .wizard-step-three .wizard-top-buttons .back-button,
+  .wizard-top-buttons .back-button {
+    order: 1 !important; /* Back button first */
+    width: auto !important; /* Reduced width - auto instead of 100% */
+    min-width: 120px !important; /* Minimum width for readability */
+    max-width: 200px !important; /* Maximum width */
+    justify-content: center !important;
+    flex: 0 0 auto !important; /* Don't grow or shrink */
+    align-self: center !important; /* Center align */
+    position: relative !important;
+    z-index: 1 !important; /* Lower z-index than step info */
+    margin-bottom: 0 !important; /* Remove bottom margin */
+  }
+
+  .wizard-step-three .wizard-top-buttons .continue-button,
+  .wizard-top-buttons .continue-button {
+    order: 2 !important; /* Continue button second (beside back button) */
+    width: auto !important; /* Reduced width - auto instead of 100% */
+    min-width: 120px !important; /* Minimum width for readability */
+    max-width: 200px !important; /* Maximum width */
+    justify-content: center !important;
+    flex: 0 0 auto !important; /* Don't grow or shrink */
+    align-self: center !important; /* Center align */
+    position: relative !important;
+    z-index: 1 !important; /* Lower z-index than step info */
+    margin-top: 0 !important; /* Remove top margin */
+  }
+
+  /* Ensure any middle text in navigation row wraps properly - place below buttons */
+  .wizard-step-three .wizard-top-buttons .wizard-step-title-container,
+  .wizard-top-buttons .wizard-step-title-container,
+  .wizard-step-three .wizard-top-buttons > *:not(.back-button):not(.continue-button),
+  .wizard-top-buttons > *:not(.back-button):not(.continue-button) {
+    order: 3 !important; /* Put text below buttons */
+    width: 100% !important;
+    flex: 1 1 100% !important;
+    white-space: normal !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    text-align: center !important;
+    position: relative !important;
+    z-index: 5 !important; /* Higher z-index than buttons to ensure visibility */
+    margin: 0.75rem 0 0 0 !important; /* Add top margin, remove bottom */
+    padding: 0.75rem 0 !important; /* Add padding for better visibility */
+    display: block !important; /* Ensure it's displayed */
+  }
+
+  /* Step 3 - Step indicator text wrapping */
+  .wizard-step-three .wizard-step-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    white-space: normal;
+    word-wrap: break-word;
+    margin-top: 1rem !important; /* More space from buttons above */
+    margin-bottom: 2rem !important; /* More space to prevent overlap with questions section */
+    position: relative;
+    z-index: 5 !important; /* Higher z-index than buttons to ensure visibility */
+    padding: 0.75rem 0; /* Add padding for visibility */
+    display: block !important; /* Ensure it's displayed */
+    width: 100%; /* Ensure full width */
+  }
+
+  .wizard-step-three .wizard-step-info .assignment-info {
+    word-break: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+    margin-top: 0.5rem; /* Space between step indicator and assignment name */
+  }
+
+  /* Step 3 - Ensure questions section has proper spacing from step info */
+  .wizard-step-three .questions-section {
+    margin-top: 1.5rem !important; /* More space from step info above */
+    padding-top: 1.5rem !important; /* Extra padding at top */
+  }
+
+  /* Step 3 - Add spacing to wizard content to prevent overlap */
+  .wizard-step-three .wizard-content {
+    gap: 2rem !important; /* Increased gap between elements */
+    padding-top: 1rem !important; /* Add top padding */
+  }
+
+  /* Step 3 - Questions header row on mobile */
+  .wizard-step-three .questions-header-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .wizard-step-three .questions-header-row h3 {
+    font-size: 1.1rem;
+  }
+
+  .wizard-step-three .edit-rubric-button {
+    width: 100%;
+    justify-content: center;
+    font-size: 1rem;
+    padding: 0.6rem 1rem;
+  }
+
+  /* Step 3 - Mobile: Make questions expandable/collapsible */
+  .wizard-step-three .question-item {
+    border: 1px solid rgba(148, 163, 184, 0.2) !important;
+    border-radius: 8px !important;
+    margin-bottom: 0.75rem !important;
+    background: white !important;
+    overflow: hidden !important;
+    transition: all 0.3s ease !important;
+  }
+
+  /* Hide side-nav container on mobile, but show questions as expandable items */
+  .wizard-step-three .question-preview > .questions-container {
+    display: flex !important;
+    flex-direction: column !important; /* Stack questions vertically on mobile */
+    gap: 0 !important;
+  }
+
+  .wizard-step-three .side-nav {
+    display: block !important; /* Show container but style differently */
+    width: 100% !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    border: none !important;
+    min-width: auto !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .wizard-step-three .side-nav-list {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Convert side-nav-items to expandable question items on mobile */
+  .wizard-step-three .side-nav-item {
+    display: block !important;
+    padding: 1rem !important;
+    margin: 0 !important;
+    border: 1px solid rgba(148, 163, 184, 0.2) !important;
+    border-radius: 8px !important;
+    background: white !important;
+    color: #213342 !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    position: relative !important;
+    user-select: none !important;
+  }
+
+  .wizard-step-three .side-nav-item:hover {
+    background-color: rgba(78, 111, 138, 0.08) !important;
+    color: #213342 !important;
+  }
+
+  .wizard-step-three .side-nav-item.active {
+    background-color: rgba(78, 111, 138, 0.12) !important;
+    color: #213342 !important;
+    border-color: rgba(78, 111, 138, 0.3) !important;
+  }
+
+  /* Add expand icon to side-nav-items */
+  .wizard-step-three .side-nav-item::after {
+    content: '▼' !important;
+    font-size: 0.875rem !important;
+    color: var(--primary-highlight) !important;
+    transition: transform 0.3s ease !important;
+    position: absolute !important;
+    right: 1rem !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+  }
+
+  .wizard-step-three .side-nav-item.active::after {
+    transform: translateY(-50%) rotate(180deg) !important;
+  }
+
+  /* Show rubric content below questions on mobile */
+  .wizard-step-three .side-nav-content {
+    display: block !important;
+    width: 100% !important;
+    padding: 1rem !important;
+    margin-top: 1rem !important;
+    background: rgba(78, 111, 138, 0.05) !important;
+    border: 1px solid rgba(148, 163, 184, 0.2) !important;
+    border-radius: 8px !important;
+    order: 999 !important; /* Ensure it appears after questions */
+  }
+
+  .wizard-step-three .question-header {
+    padding: 1rem !important;
+    cursor: pointer !important;
+    user-select: none !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    transition: background-color 0.2s ease !important;
+  }
+
+  .wizard-step-three .question-header:hover {
+    background-color: rgba(78, 111, 138, 0.08) !important;
+  }
+
+  .wizard-step-three .question-header.expanded {
+    background-color: rgba(78, 111, 138, 0.12) !important;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.2) !important;
+  }
+
+  .wizard-step-three .question-title {
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    color: #213342 !important;
+    flex: 1 !important;
+    line-height: 1.5 !important;
+  }
+
+  /* Expand icon for mobile */
+  .wizard-step-three .question-header::after {
+    content: '▼' !important;
+    font-size: 0.875rem !important;
+    color: var(--primary-highlight) !important;
+    transition: transform 0.3s ease !important;
+    flex-shrink: 0 !important;
+    margin-left: 0.5rem !important;
+  }
+
+  .wizard-step-three .question-header.expanded::after {
+    transform: rotate(180deg) !important;
+  }
+
+  /* Hide rubric by default on mobile, show when expanded */
+  .wizard-step-three .question-rubric {
+    max-height: 0 !important;
+    overflow: hidden !important;
+    opacity: 0 !important;
+    padding: 0 1rem !important;
+    margin: 0 !important;
+    transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease !important;
+  }
+
+  /* Show rubric when question header is expanded */
+  .wizard-step-three .question-item .question-header.expanded ~ .question-rubric,
+  .wizard-step-three .question-item:has(.question-header.expanded) .question-rubric {
+    max-height: 2000px !important;
+    opacity: 1 !important;
+    padding: 1rem !important;
+    margin-top: 0 !important;
+    background-color: rgba(78, 111, 138, 0.05) !important;
+    border-top: 1px solid rgba(148, 163, 184, 0.2) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Step 3 - Extra small mobile screens */
+  .wizard-step-three .wizard-header h1 {
+    font-size: 36px; /* Slightly smaller for very small screens */
+    margin-bottom: 0.75rem !important;
+    z-index: 10 !important;
+  }
+
+  .wizard-step-three .wizard-step-title-container {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    transform: none !important;
+    margin-bottom: 0.75rem !important;
+    z-index: 5 !important;
+  }
+
+  .wizard-step-three .wizard-top-buttons {
+    gap: 0.75rem; /* Maintain spacing even on small screens */
+    margin-top: 1.25rem;
+    margin-bottom: 1rem;
+    flex-direction: row !important; /* Horizontal layout */
+    justify-content: space-between !important;
+  }
+
+  .wizard-step-three .wizard-top-buttons .back-button {
+    margin-bottom: 0;
+    z-index: 1 !important;
+    width: auto !important;
+    min-width: 100px !important;
+    max-width: 180px !important;
+    align-self: center !important; /* Center align */
+    flex: 0 0 auto !important;
+  }
+
+  .wizard-step-three .wizard-top-buttons .continue-button {
+    margin-top: 0;
+    z-index: 1 !important;
+    width: auto !important;
+    min-width: 100px !important;
+    max-width: 180px !important;
+    align-self: center !important; /* Center align */
+    flex: 0 0 auto !important;
+  }
+
+  .wizard-step-three .wizard-top-buttons .wizard-step-info,
+  .wizard-step-three .wizard-top-buttons > *:not(.back-button):not(.continue-button) {
+    z-index: 5 !important;
+    margin: 0.75rem 0 0 0 !important; /* Top margin only */
+    padding: 0.5rem 0 !important;
+    order: 3 !important; /* Below buttons */
+  }
+
+  .wizard-step-three .wizard-top-buttons .back-button,
+  .wizard-step-three .wizard-top-buttons .continue-button {
+    font-size: 0.875rem;
+    padding: 0.55rem 1.25rem;
+  }
+
+  .wizard-step-three .wizard-step-info {
+    font-size: 0.75rem;
+    margin-top: 1rem !important;
+    margin-bottom: 1.5rem !important;
+    padding: 0.5rem 0;
+    z-index: 5 !important;
+    display: block !important;
+  }
+
+  .wizard-step-three .questions-section {
+    margin-top: 1.25rem !important;
+    padding-top: 1.25rem !important;
+  }
+
+  .wizard-step-three .questions-header-row h3 {
+    font-size: 1rem;
+  }
+
+  .wizard-step-three .edit-rubric-button {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.875rem;
+  }
+
+  /* Step 3 - Mobile: Ensure questions are expandable on extra small screens */
+  .wizard-step-three .question-header {
+    padding: 0.875rem !important;
+  }
+
+  .wizard-step-three .question-title {
+    font-size: 0.95rem !important;
+  }
+
+  .wizard-step-three .question-header::after {
+    font-size: 0.75rem !important;
+  }
+
+  .wizard-step-three .question-rubric {
+    padding: 0.875rem !important;
+  }
+
+  /* General fixes for extra small screens */
+  .wizard-step-info {
+    font-size: 0.75rem;
+  }
+
+  .wizard-top-buttons {
+    gap: 0.5rem;
+    flex-direction: row !important; /* Horizontal layout */
+    justify-content: space-between !important;
+  }
+
+  .wizard-top-buttons .back-button,
+  .wizard-top-buttons .continue-button {
+    font-size: 0.875rem;
+    padding: 0.55rem 1.25rem;
+    width: auto !important;
+    min-width: 100px !important;
+    max-width: 180px !important;
+    flex: 0 0 auto !important;
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
+  }
+
+  .wizard-top-buttons .back-button {
+    align-self: center !important;
+    order: 1 !important;
+  }
+
+  .wizard-top-buttons .continue-button {
+    align-self: center !important;
+    order: 2 !important;
+  }
+
+  .wizard-top-buttons .wizard-step-title-container {
+    order: 3 !important; /* Below buttons */
   }
 }
 
@@ -2762,10 +3225,59 @@ h4, h5 {
   .wizard-step-four .step-four-left-section,
   .wizard-step-four .step-four-right-section {
     padding: 1.5rem;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  .wizard-step-four .step-four-left-section {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
   }
 
   .wizard-step-four .step-four-right-section {
     max-height: none;
+  }
+
+  /* Step 4 - Fix upload box overflow on mobile */
+  .wizard-step-four .upload-pdf-box {
+    max-width: 100% !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  .wizard-step-four .upload-pdf-text {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    min-width: 0 !important;
+    flex: 1 1 auto !important;
+    max-width: 100% !important;
+  }
+
+  .wizard-step-four .form-field {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .wizard-step-four .form-fields-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .wizard-step-four .assignment-details-box {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
   }
 
   .wizard-step-four .grading-result-card__header {
@@ -2782,12 +3294,43 @@ h4, h5 {
     gap: 0.6rem;
   }
   
-  .wizard-step-four .rationale-cell--action {
-    display: none; /* Hide action column on mobile */
+  /* Show header row on mobile with edit button */
+  .wizard-step-four .rationale-row--head {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+    padding: 1rem !important;
+    background: var(--primary-dark) !important;
+    border-radius: 8px 8px 0 0 !important;
+    margin-bottom: 0.5rem !important;
   }
 
-  .wizard-step-four .rationale-row--head {
-    display: none;
+  .wizard-step-four .rationale-row--head .rationale-cell {
+    display: none !important;
+  }
+
+  .wizard-step-four .rationale-row--head .rationale-cell--action {
+    display: flex !important;
+    justify-content: center !important;
+    width: 100% !important;
+    padding: 0 !important;
+    order: 1 !important;
+  }
+
+  .wizard-step-four .edit-results-button {
+    display: inline-flex !important;
+    width: 100% !important;
+    justify-content: center !important;
+    padding: 0.75rem 1rem !important;
+    font-size: 1rem !important;
+    margin: 0 !important;
+    background: #ffffff !important;
+    color: var(--primary-dark) !important;
+  }
+
+  /* Hide action column in data rows on mobile */
+  .wizard-step-four .rationale-row:not(.rationale-row--head) .rationale-cell--action {
+    display: none !important;
   }
 
   .wizard-step-four .rationale-cell--score {
@@ -3997,6 +4540,107 @@ h4, h5 {
   
   .wizard-step-info {
     font-size: 0.8rem;
+    white-space: normal !important; /* Allow text to wrap on mobile */
+    flex-wrap: wrap; /* Allow items to wrap */
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    margin-bottom: 1.5rem !important; /* Add spacing to prevent overlap with container below */
+  }
+
+  .wizard-step-info .assignment-info {
+    word-break: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+  }
+
+  /* Step 3 - Add extra spacing for step info to prevent overlap */
+  .wizard-step-three .wizard-step-info {
+    margin-bottom: 1.5rem !important;
+  }
+
+  /* Step 3 - Ensure questions section has proper top margin */
+  .wizard-step-three .questions-section {
+    margin-top: 1rem !important;
+  }
+
+  /* General mobile fix for wizard-top-buttons - ensure proper layout */
+  .wizard-top-buttons {
+    flex-direction: row !important; /* Horizontal layout for buttons */
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 0.75rem !important;
+  }
+
+  .wizard-top-buttons .back-button {
+    order: 1 !important;
+    width: auto !important;
+    min-width: 120px !important;
+    max-width: 200px !important;
+    flex: 0 0 auto !important;
+    margin-bottom: 0 !important;
+  }
+
+  .wizard-top-buttons .continue-button {
+    order: 2 !important;
+    width: auto !important;
+    min-width: 120px !important;
+    max-width: 200px !important;
+    flex: 0 0 auto !important;
+    margin-top: 0 !important;
+  }
+
+  .wizard-top-buttons .wizard-step-title-container {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    transform: none !important;
+    order: 3 !important; /* Below buttons */
+    width: 100% !important;
+    margin: 0.75rem 0 0 0 !important;
+    z-index: 5 !important;
+  }
+
+  .wizard-top-buttons .wizard-step-title-container .wizard-step-info {
+    white-space: normal !important;
+    flex-wrap: wrap !important;
+    display: flex !important;
+    z-index: 5 !important;
+    position: relative !important;
+    width: 100% !important;
+    margin: 0.5rem 0 !important;
+    padding: 0.5rem 0 !important;
+  }
+
+  .wizard-top-buttons .wizard-step-title-container .wizard-step-info .step-indicator,
+  .wizard-top-buttons .wizard-step-title-container .wizard-step-info .assignment-info {
+    display: inline-block !important;
+    width: 100% !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+  }
+
+  .wizard-top-buttons > * {
+    flex: 1 1 auto;
+    min-width: 0; /* Allow flex items to shrink below content size */
+  }
+
+  /* Ensure middle text (like "Generated Rubric") can wrap */
+  .wizard-top-buttons .wizard-step-title-container,
+  .wizard-top-buttons .wizard-step-info {
+    flex: 1 1 100%;
+    order: 2; /* Put text in middle on mobile */
+    text-align: center;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .wizard-top-buttons .back-button {
+    order: 1; /* Back button first */
+  }
+
+  .wizard-top-buttons .continue-button {
+    order: 3; /* Continue button last */
   }
 }
 
@@ -4253,6 +4897,187 @@ h4, h5 {
 }
 
 /*================================================================
+  INFO PANEL - MOBILE RESPONSIVE STYLES
+================================================================*/
+
+@media (max-width: 768px) {
+  /* Add spacing to prevent container overlap with helper panel */
+  .auto-grading-wizard {
+    padding-right: calc(36px + 1rem) !important; /* Space for closed helper (36px) + gap */
+  }
+
+  .wizard-content {
+    padding-right: 0.5rem !important;
+  }
+
+  .assignment-details-box {
+    max-width: calc(96vw - 36px - 2rem) !important; /* Account for helper + margins */
+  }
+
+  .wizard-step-three .assignment-details-box {
+    max-width: calc(100vw - 36px - 2rem) !important;
+  }
+
+  .wizard-step-four .step-four-unified-container {
+    max-width: calc(100vw - 36px - 2rem) !important;
+  }
+
+  .click-info-panel {
+    width: min(180px, 65vw) !important;
+    min-width: 160px !important;
+    transform: translateX(calc(100% - 36px)) !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    height: 100vh !important;
+    border-radius: 0 !important;
+  }
+
+  .click-info-panel.open {
+    transform: translateX(0) !important;
+  }
+
+  .info-panel-toggle {
+    width: 36px !important;
+    padding: 0.5rem 0.3rem !important;
+    gap: 3px !important;
+  }
+
+  .toggle-icon {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  .toggle-label {
+    font-size: 0.5rem !important;
+    letter-spacing: 0.06em !important;
+  }
+
+  .info-panel-inner {
+    padding: 0.7rem 0.8rem !important;
+  }
+
+  .info-panel-header {
+    margin-bottom: 0.7rem !important;
+    gap: 0.15rem !important;
+  }
+
+  .info-panel-title {
+    font-size: 0.75rem !important;
+  }
+
+  .info-panel-subtitle {
+    font-size: 0.65rem !important;
+    line-height: 1.25 !important;
+  }
+
+  .info-panel-tips {
+    gap: 0.6rem !important;
+  }
+
+  .info-panel-tip {
+    gap: 0.5rem !important;
+  }
+
+  .info-panel-tip p {
+    font-size: 0.75rem !important;
+    line-height: 1.35 !important;
+  }
+
+  .info-panel-tip-dot {
+    width: 0.4rem !important;
+    height: 0.4rem !important;
+    margin-top: 0.25rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Add spacing to prevent container overlap with helper panel */
+  .auto-grading-wizard {
+    padding-right: calc(32px + 0.75rem) !important; /* Space for closed helper (32px) + gap */
+  }
+
+  .wizard-content {
+    padding-right: 0.5rem !important;
+  }
+
+  .assignment-details-box {
+    max-width: calc(96vw - 32px - 1.5rem) !important; /* Account for helper + margins */
+  }
+
+  .wizard-step-three .assignment-details-box {
+    max-width: calc(100vw - 32px - 1.5rem) !important;
+  }
+
+  .wizard-step-four .step-four-unified-container {
+    max-width: calc(100vw - 32px - 1.5rem) !important;
+  }
+
+  .click-info-panel {
+    width: min(160px, 60vw) !important;
+    min-width: 140px !important;
+    transform: translateX(calc(100% - 32px)) !important;
+  }
+
+  .click-info-panel.open {
+    transform: translateX(0) !important;
+  }
+
+  .info-panel-toggle {
+    width: 32px !important;
+    padding: 0.45rem 0.25rem !important;
+    gap: 2px !important;
+  }
+
+  .toggle-icon {
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  .toggle-label {
+    font-size: 0.45rem !important;
+    letter-spacing: 0.05em !important;
+  }
+
+  .info-panel-inner {
+    padding: 0.6rem 0.7rem !important;
+  }
+
+  .info-panel-header {
+    margin-bottom: 0.6rem !important;
+    gap: 0.1rem !important;
+  }
+
+  .info-panel-title {
+    font-size: 0.7rem !important;
+  }
+
+  .info-panel-subtitle {
+    font-size: 0.6rem !important;
+    line-height: 1.2 !important;
+  }
+
+  .info-panel-tips {
+    gap: 0.5rem !important;
+  }
+
+  .info-panel-tip {
+    gap: 0.45rem !important;
+  }
+
+  .info-panel-tip p {
+    font-size: 0.7rem !important;
+    line-height: 1.3 !important;
+  }
+
+  .info-panel-tip-dot {
+    width: 0.35rem !important;
+    height: 0.35rem !important;
+    margin-top: 0.2rem !important;
+    box-shadow: 0 0 0 2px rgba(253, 252, 251, 0.18) !important;
+  }
+}
+
+/*================================================================
   RUBRIC EDIT TEXTAREA
 ================================================================*/
 .rubric-edit-textarea {
@@ -4303,22 +5128,7 @@ h4, h5 {
   align-items: stretch;
 }
 
-/* Ensure responsive behavior on smaller screens */
-@media (max-width: 1024px) {
-  .wizard-step-one .wizard-content,
-  .wizard-step-two .wizard-content {
-    min-height: calc(100vh - 100px);
-    padding: 1.5rem 1rem;
-  }
-}
-
 @media (max-width: 768px) {
-  .wizard-step-one .wizard-content,
-  .wizard-step-two .wizard-content {
-    min-height: calc(100vh - 80px);
-    padding: 1rem 0.5rem;
-  }
-  
   .wizard-step-one .assignment-details-box,
   .wizard-step-two .assignment-details-box {
     margin: 1rem;
