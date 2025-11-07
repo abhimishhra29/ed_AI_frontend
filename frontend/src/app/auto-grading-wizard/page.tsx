@@ -400,7 +400,7 @@ function CombinedAutoGradingWizard() {
           {step === 4 && <StepFour />}
         </main>
 
-        <InfoPanel isOpen={isInfoPanelOpen} onToggle={toggleInfoPanel} />
+        <InfoPanel isOpen={isInfoPanelOpen} onToggle={toggleInfoPanel} step={step} />
       </div>
     </AutoGradingWizardContext.Provider>
   );
@@ -417,16 +417,53 @@ function Header({ step }: { step: WizardStep }) {
 type InfoPanelProps = {
   isOpen: boolean;
   onToggle: () => void;
+  step: WizardStep;
 };
 
-function InfoPanel({ isOpen, onToggle }: InfoPanelProps) {
+function InfoPanel({ isOpen, onToggle, step }: InfoPanelProps) {
   const titleId = "auto-grading-info-panel-title";
   const contentId = "auto-grading-info-panel-content";
-  const tips = [
+  
+  const stepOneTips = [
+    "Digital Assignment: For typed submissions or PDFs (e.g., essays, reports, code files).",
+    "Handwritten Assignment: For scanned or photographed handwritten work (e.g., math problems, written exams).",
+  ];
+  
+  const stepTwoTips = [
+    "Upload Question: You can upload any assignment question type (reports, essays, Q/A) in PDF format.",
+  ];
+  
+  const stepThreeTips = [
+    "Review and update the rubric: Click 'Rubrics' button to enter edit mode, then click 'Save All Changes' when done.",
+    "Edit criteria: Click on any performance level description text area to modify the grading criteria.",
+    "Edit marks: Update 'Max Score' for subsections, and 'Marks' (score_range) for each performance level.",
+    "Edit subsection ID: Modify the subsection ID field to match your question numbering system.",
+    "Edit percentage: Update the 'Percentage' (threshold) field for each performance level to set grade boundaries.",
+    "Add deductions: Click '+ Add Penalty' to add new deductions, then enter deduction name and penalty amount.",
+    "Edit deductions: Modify deduction name and penalty fields directly. Set penalty to 0 to remove a deduction.",
+    "Save changes: Click 'Save All Changes' to apply edits, or 'Cancel' to discard changes and restore original.",
+  ];
+  
+  const stepFourTips = [
+    "Review and update grade submissions: Click 'Edit' button in the results table header to enter edit mode.",
+    "Edit earned scores: Click on the earned score field (left side of '/') to modify the points awarded for each section/question.",
+    "Max scores are read-only: The maximum score (right side of '/') cannot be edited and is set from your rubric.",
+    "Score validation: Earned scores cannot exceed the maximum score for that section/question.",
+    "Edit comments: Click on any comment text area to modify feedback for each section/question.",
+    "Add comments: If no comments exist, type in the empty text area to add new feedback for that section/question.",
+    "Edit multiple comments: Each comment appears in a separate text area—edit them individually or add more lines.",
+    "Total score calculation: The total score automatically recalculates based on all edited section/question scores.",
+    "Save changes: Click 'Save' button to apply all edits. Changes are saved per submission file.",
+    "Export results: Click 'Export CSV' button to download all grading results (including edits) as a CSV file.",
+  ];
+  
+  const defaultTips = [
     "Upload the full assignment brief before generating your rubric so the context is complete.",
-    "Preview the rubric once it’s created and tweak any criteria before you start grading files.",
+    "Preview the rubric once it's created and tweak any criteria before you start grading files.",
     "Keep the assignment name consistent—support can resolve questions faster when they see the exact title.",
   ];
+  
+  const tips = step === 1 ? stepOneTips : step === 2 ? stepTwoTips : step === 3 ? stepThreeTips : step === 4 ? stepFourTips : defaultTips;
 
   return (
     <aside
