@@ -185,7 +185,93 @@ const Header: FC = () => {
         </button>
 
         {mobileOpen && (
-          <div className="nav-overlay open" onClick={() => setMobileOpen(false)} />
+          <div className="mobile-menu-overlay">
+            <div className="mobile-menu-content">
+              {/* Top section with logo and close button */}
+              <div className="mobile-menu-header">
+                <Link href="/" className="mobile-menu-logo" onClick={closeAll}>
+                  <img src="/logoicon.png" alt="EdGenAI" />
+                  <span className="mobile-menu-logo-text">EdGenAI</span>
+                </Link>
+                <button
+                  className="mobile-menu-close"
+                  onClick={() => setMobileOpen(false)}
+                  aria-label="Close menu"
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18 6L6 18M6 6L18 18" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+              </div>
+
+              {/* Navigation links */}
+              <nav className="mobile-menu-nav">
+                <Link href="/" className="mobile-menu-link" onClick={closeAll}>
+                  Home
+                </Link>
+
+                <div className="mobile-menu-item">
+                  <Link href="/products" className="mobile-menu-link" onClick={closeAll}>
+                    Products
+                  </Link>
+                  <div className="mobile-menu-dropdown">
+                    <Link
+                      href={loggedIn ? '/auto-grading-wizard' : '/auto-grade'}
+                      className="mobile-menu-link mobile-menu-sublink"
+                      onClick={closeAll}
+                    >
+                      Auto Grade
+                    </Link>
+                    <Link
+                      href={loggedIn ? '/plan-my-assignment' : '/plan-my-assignment-wizard'}
+                      className="mobile-menu-link mobile-menu-sublink"
+                      onClick={closeAll}
+                    >
+                      Plan My Assignment
+                    </Link>
+                  </div>
+                </div>
+
+                <Link href="/services" className="mobile-menu-link" onClick={closeAll}>
+                  Services
+                </Link>
+
+                <Link href="/success-stories" className="mobile-menu-link" onClick={closeAll}>
+                  Success Stories
+                </Link>
+
+                <Link href="/contact" className="mobile-menu-link" onClick={closeAll}>
+                  Contact Us
+                </Link>
+
+                {/* Sign Up link */}
+                {!loggedIn && (
+                  <Link href="/signup" className="mobile-menu-link" onClick={closeAll}>
+                    Sign Up
+                  </Link>
+                )}
+              </nav>
+
+              {/* Bottom Login/Logout button */}
+              <div className="mobile-menu-footer">
+                {!loggedIn ? (
+                  <Link href="/login" className="mobile-menu-login-btn" onClick={closeAll}>
+                    Login
+                  </Link>
+                ) : (
+                  <button
+                    className="mobile-menu-login-btn"
+                    onClick={() => {
+                      handleLogout();
+                      closeAll();
+                    }}
+                  >
+                    Logout
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
         )}
 
         <nav className={`nav ${mobileOpen ? "open" : ""}`}>
