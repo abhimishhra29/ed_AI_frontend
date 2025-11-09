@@ -4,7 +4,7 @@ import { MouseEvent, useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, ArrowDown, FileSearch } from 'lucide-react';
 
 import educatorsImg from '../components/educators.jpeg';
 import studentsImg from '../components/students.jpeg';
@@ -51,7 +51,7 @@ export default function HomePage(): JSX.Element {
     <div className="home-page">
       <main className="container">
           <header id="hero" className="hero" role="banner">
-            <h1>Empowering Education with Generative AI</h1>
+            <h1>Empowering <span className="education-highlight">Education</span> with Generative AI</h1>
             <p>
               EdGenAI provides intelligent tools and expert guidance to automate grading, streamline student planning, and integrate generative AI into your institution.
             </p>
@@ -61,9 +61,11 @@ export default function HomePage(): JSX.Element {
             <div className="hero-actions">
               <Link href="/products" className="btn-primary">
                 Explore Our AI Tools
+                <ArrowDown size={24} />
               </Link>
               <Link href="/services" className="btn-primary btn-secondary">
                 Learn About Consultancy
+                <FileSearch size={24} />
               </Link>
             </div>
           </header>
