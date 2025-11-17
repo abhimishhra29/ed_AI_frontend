@@ -5,7 +5,6 @@ import '../styles/global.css';
 import '../components/Header.css';
 import '../components/Footer.css';
 import '../styles/pages/Home.css';
-import '../styles/pages/Products.css';
 import '../styles/pages/Services.css';
 import '../styles/pages/Contact.css';
 import '../styles/pages/AutoGrade.css';
