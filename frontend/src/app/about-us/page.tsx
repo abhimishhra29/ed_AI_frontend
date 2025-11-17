@@ -26,13 +26,13 @@ export default function WhyEdGenAI() {
         <h2>Our AI Principles</h2>
         <p>
           We’re committed to building AI responsibly. Our systems are guided by three principles:
-          <strong> Transparency</strong> — clear explanations of how outputs are generated;
-          <strong> Modularity</strong> — tools that adapt to your curriculum; and
-          <strong> Privacy</strong> — robust protections for student and institutional data.
+          <strong> Transparency</strong>, clear explanations of how outputs are generated;
+          <strong> Modularity</strong>, tools that adapt to your curriculum; and
+          <strong> Privacy</strong>, robust protections for student and institutional data.
         </p>
         <p>
           Above all, we prioritize the integrity of the learning process. We design AI not to shortcut thinking,
-          but to support critical reasoning, scaffold reflection, and enhance feedback—at scale.
+          but to support critical reasoning, scaffold reflection, and enhance feedback at scale.
         </p>
       </section>
     </div>

@@ -455,7 +455,7 @@ function InfoPanel({ isOpen, onToggle, step }: InfoPanelProps) {
   const defaultTips = [
     "Upload the full assignment brief before generating your rubric so the context is complete.",
     "Preview the rubric once it's created and tweak any criteria before you start grading files.",
-    "Keep the assignment name consistent—support can resolve questions faster when they see the exact title.",
+    "Keep the assignment name consistent, support can resolve questions faster when they see the exact title.",
   ];
   
   const tips = step === 1 ? stepOneTips : step === 2 ? stepTwoTips : step === 3 ? stepThreeTips : step === 4 ? stepFourTips : defaultTips;

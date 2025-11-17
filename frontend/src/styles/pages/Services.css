@@ -232,7 +232,7 @@
   overflow-wrap: break-word;
   width: 100%;
   max-width: 100%;
-  hyphens: auto;
+  hyphens: none;
   overflow: visible;
   text-overflow: clip;
   display: block;

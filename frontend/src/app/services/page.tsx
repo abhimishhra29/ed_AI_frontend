@@ -181,7 +181,7 @@ export default function Services() {
     },
     {
       title: 'Security & Data Governance',
-      description: 'Education institutions face strict data and policy requirements—we help you deploy AI safely, ensuring governance is built-in from day one.',
+      description: 'Education institutions face strict data and policy requirements. We help you deploy AI safely, ensuring governance is built-in from day one.',
       deliverablesLabel: 'Our governance services include:',
       deliverables: [
         'Privacy-first AI adoption strategy',
@@ -194,7 +194,7 @@ export default function Services() {
     },
     {
       title: 'Course Design',
-      description: ' We support educators in creating courses that leverage AI to improve engagement, clarity, and student outcomes—without sacrificing academic integrity.',
+      description: ' We support educators in creating courses that leverage AI to improve engagement, clarity, and student outcomes without sacrificing academic integrity.',
       deliverablesLabel: 'Includes:',
       deliverables: [
         'Modular, outcome-aligned course design frameworks',
@@ -220,7 +220,7 @@ export default function Services() {
     },
     {
       title: 'AI Coaching & Advisory',
-      description: ' We partner with leaders, educators, and technical teams to help them use AI effectively, sustainably, and ethically—no matter the starting point.',
+      description: ' We partner with leaders, educators, and technical teams to help them use AI effectively, sustainably, and ethically, no matter the starting point.',
       deliverablesLabel: 'What coaching includes:',
       deliverables: [
         '1:1 or team-based AI strategy and implementation guidance',
@@ -240,7 +240,7 @@ export default function Services() {
         <div className="services-hero-overlay"></div>
         <div className="services-hero-content">
           <h1 className="services-hero-title">GenAI Services</h1>
-          <p className="services-hero-subtitle">Practical GenAI for education—faster feedback, fairer assessment, and confident rollouts.</p>
+          <p className="services-hero-subtitle">Practical GenAI for education: faster feedback, fairer assessment, and confident rollouts.</p>
         </div>
       </section>
         

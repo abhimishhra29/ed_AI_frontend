@@ -1,9 +1,11 @@
 html {
   scroll-behavior: smooth;
+  hyphens: none;
 }
 
 * {
   box-sizing: border-box;
+  hyphens: none;
 }
 
 body {
@@ -14,6 +16,9 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  hyphens: none;
+  word-break: normal;
+  overflow-wrap: break-word;
 }
 
 main {

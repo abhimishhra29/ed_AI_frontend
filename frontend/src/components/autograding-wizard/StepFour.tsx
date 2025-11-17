@@ -293,7 +293,7 @@ const StepFour: FC = () => {
           validFiles.push(file);
         }
       } catch {
-        setPageError(`Could not read "${file.name}" – please re-upload.`);
+        setPageError(`Could not read "${file.name}", please re-upload.`);
       }
     }
 
@@ -365,7 +365,7 @@ const StepFour: FC = () => {
               const earned = toScoreString(values[1]);
               const commentText = sanitizeComment(values[2]);
               columnMap[label] = commentText
-                ? `${earned}/${max} – ${commentText}`
+                ? `${earned}/${max}, ${commentText}`
                 : `${earned}/${max}`;
             }
           );
@@ -398,7 +398,7 @@ const StepFour: FC = () => {
               .join(" | ");
 
             columnMap[label] = feedback
-              ? `${earned}/${max} – ${feedback}`
+              ? `${earned}/${max}, ${feedback}`
               : `${earned}/${max}`;
           });
         }

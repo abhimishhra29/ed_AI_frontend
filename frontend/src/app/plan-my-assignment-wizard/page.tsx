@@ -56,7 +56,7 @@ export default function PlanMyAssignmentLanding(): JSX.Element {
           <div className="hero-content">
             <h1 className="hero-title">Plan Your Assignment with Confidence 🎯</h1>
             <p className="hero-subtitle">
-              Break down any project into manageable tasks, milestones, and timelines—
+              Break down any project into manageable tasks, milestones, and timelines,
               powered by intelligent AI-driven planning.
             </p>
             <div className="hero-cta">
@@ -144,7 +144,7 @@ export default function PlanMyAssignmentLanding(): JSX.Element {
               <div className="faq-item">
                 <h3>Can I edit the plan?</h3>
                 <p>
-                  Absolutely—add, remove, or adjust any task or deadline
+                  Absolutely, add, remove, or adjust any task or deadline
                   to fit your needs.
                 </p>
               </div>

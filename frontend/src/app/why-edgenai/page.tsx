@@ -39,7 +39,7 @@ export default function WhyEdGenAI() {
         </p>
         <p>
           Every solution we build reflects deep collaboration with the education community, ensuring our tools
-          enhance—not disrupt—the integrity of the learning process.
+          enhance, not disrupt, the integrity of the learning process.
         </p>
       </section>
 
@@ -51,8 +51,8 @@ export default function WhyEdGenAI() {
           classroom use.
         </p>
         <p>
-          Our agile approach allows us to quickly respond to feedback and ensure our tools evolve with your needs—always
-          with full transparency into how they work and why they’re designed the way they are.
+          Our agile approach allows us to quickly respond to feedback and ensure our tools evolve with your needs, always
+          with full transparency into how they work and why they're designed the way they are.
         </p>
       </section>
 

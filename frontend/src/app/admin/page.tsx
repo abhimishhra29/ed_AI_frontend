@@ -186,7 +186,7 @@ export default function AdminPanel() {
             >
               <span>
                 {user.username}
-                {user.is_superuser && ' (admin)'} – Iterations: {user.grading_iterations}
+                {user.is_superuser && ' (admin)'}, Iterations: {user.grading_iterations}
               </span>
               <div>
                 <button onClick={() => handleDelete(user.username)}>

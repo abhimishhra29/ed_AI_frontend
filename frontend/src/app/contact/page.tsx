@@ -36,7 +36,7 @@ export default function Contact() {
       {status && <p className="status-text">{status}</p>}
 
       <p className="disclaimer">
-        We respect your privacy — your information will only be used to
+        We respect your privacy, your information will only be used to
         respond to this inquiry.
       </p>
     </div>

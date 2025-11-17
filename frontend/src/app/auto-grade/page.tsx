@@ -58,8 +58,8 @@ export default function AutoGradeLanding(): JSX.Element {
           <div className="hero-content">
             <h1 className="hero-title">Smarter, Faster, and Fairer Grading</h1>
             <p className="hero-subtitle">
-              Powered by Agentic AI, AutoGrade evaluates student work—from typed
-              essays to handwritten scans—using your rubric for objective,
+              Powered by Agentic AI, AutoGrade evaluates student work, from typed
+              essays to handwritten scans, using your rubric for objective,
               consistent, and explainable results.
             </p>
             <div className="hero-cta">
@@ -148,7 +148,7 @@ export default function AutoGradeLanding(): JSX.Element {
                 />
                 <h3>Rubric-Aligned Scoring</h3>
                 <p>
-                  Grades are grounded in your custom marking rubrics—no
+                  Grades are grounded in your custom marking rubrics, no
                   black-box magic, just transparent evaluation.
                 </p>
               </div>
@@ -204,7 +204,7 @@ export default function AutoGradeLanding(): JSX.Element {
                 <h3>Do you support DOCX or image uploads?</h3>
                 <p>
                   Not yet. We&apos;re working on supporting Word files and various
-                  image formats — coming soon!
+                  image formats, coming soon!
                 </p>
               </div>
               <div className="faq-item">

@@ -93,7 +93,7 @@ export default function HomePage(): JSX.Element {
                   </div>
                   <div className="persona-content">
                     <h3>For Educators</h3>
-                    <p>Focus on teaching&mdash;leave the grading to AI.</p>
+                    <p>Focus on teaching, leave the grading to AI.</p>
                     <div className="feature-item">
                       <div className="icon-wrapper">
                         <CheckCircle className="icon" size={20} />
@@ -298,7 +298,7 @@ export default function HomePage(): JSX.Element {
                   Build a sustainable roadmap for digital transformation.
                 </p>
                 <p className="details">
-                  Successfully adopting AI requires more than just tools&mdash;it requires a vision. We work with your leadership to develop a comprehensive AI strategy, addressing policy, infrastructure, and pedagogical goals to ensure a smooth and impactful integration across your institution.
+                  Successfully adopting AI requires more than just tools, it requires a vision. We work with your leadership to develop a comprehensive AI strategy, addressing policy, infrastructure, and pedagogical goals to ensure a smooth and impactful integration across your institution.
                 </p>
                 <Link href="/services#strategic-implementation" className="btn btn-primary">
                   Plan Your Strategy
