@@ -6,9 +6,14 @@ export default function Services() {
   const scrollToService = (index: number) => {
     const element = document.getElementById(`service-${index}`);
     if (element) {
-      const yOffset = -100; // Offset to account for any fixed headers
-      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-      window.scrollTo({ top: y, behavior: 'smooth' });
+      // Find the service-item container (parent of the title)
+      const serviceItem = element.closest('.service-item');
+      if (serviceItem) {
+        // Scroll to position the horizontal divider line at the top
+        const yOffset = -170; // Offset to show the horizontal line at the top
+        const y = (serviceItem as HTMLElement).getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
     }
   };
   const timelineSteps = [
