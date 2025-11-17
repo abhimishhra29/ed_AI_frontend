@@ -5,12 +5,44 @@
   padding: 2rem 2rem;
 }
 
-.footer-links {
+.footer-top {
+  width: 90%;
+  margin: 0 auto 2rem auto;
+}
+
+.footer-top-content {
   display: flex;
-  justify-content: center;
+  align-items: center;
+  justify-content: space-between;
   gap: 2.5rem;
   flex-wrap: wrap;
-  margin-bottom: 2rem;
+}
+
+.footer-logo-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.footer-logo {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
+
+.footer-brand-name {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #374151;
+}
+
+.footer-links {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  flex-wrap: wrap;
 }
 
 .footer-links a {
@@ -24,6 +56,10 @@
 .footer-links a:hover {
   color: #111827;
   text-decoration: underline;
+}
+
+.footer-logo-link:hover {
+  opacity: 0.8;
 }
 
 .footer-separator {

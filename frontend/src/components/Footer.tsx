@@ -1,14 +1,23 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Footer() {
   return (
     <footer className="footer">
-      <div className="footer-links">
-        <Link href="/">Home</Link>
-        <Link href="/auto-grade">Auto Grade</Link>
-        <Link href="/services">Services</Link>
-        <Link href="/contact">Contact Us</Link>
-        <Link href="/privacy">Privacy Policy</Link>
+      <div className="footer-top">
+        <div className="footer-top-content">
+          <Link href="/" className="footer-logo-link">
+            <Image src="/logoicon.png" alt="EdGenAI" className="footer-logo" width={24} height={24} />
+            <span className="footer-brand-name">EdGenAI</span>
+          </Link>
+          <div className="footer-links">
+            <Link href="/">Home</Link>
+            <Link href="/auto-grade">Auto Grade</Link>
+            <Link href="/services">Services</Link>
+            <Link href="/contact">Contact Us</Link>
+            <Link href="/privacy">Privacy Policy</Link>
+          </div>
+        </div>
       </div>
       <div className="footer-separator"></div>
       <div className="footer-bottom">
