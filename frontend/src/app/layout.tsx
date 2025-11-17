@@ -11,7 +11,6 @@ import '../styles/pages/AutoGrade.css';
 import '../styles/pages/AutoGradingWizard.css';
 import '../styles/pages/Tools.css';
 import '../styles/pages/Signup.css';
-import '../styles/pages/SuccessStories.css';
 import '../styles/pages/WhyEdGenAI.css';
 import '../styles/pages/AdminPanel.css';
 import '../styles/pages/login.css';

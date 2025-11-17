@@ -236,10 +236,6 @@ const Header: FC = () => {
                   Services
                 </Link>
 
-                <Link href="/success-stories" className="mobile-menu-link" onClick={closeAll}>
-                  Success Stories
-                </Link>
-
                 <Link href="/contact" className="mobile-menu-link" onClick={closeAll}>
                   Contact Us
                 </Link>
@@ -306,12 +302,6 @@ const Header: FC = () => {
           <div className="nav-item" onMouseEnter={() => setOpenMenu("services")}>
             <Link href="/services" className="nav-link" onClick={closeAll}>
               Services
-            </Link>
-          </div>
-
-          <div className="nav-item" onMouseEnter={() => setOpenMenu("success")}>
-            <Link href="/success-stories" className="nav-link" onClick={closeAll}>
-              Success Stories
             </Link>
           </div>
 
