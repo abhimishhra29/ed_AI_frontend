@@ -245,8 +245,8 @@ export default function Services() {
       <section className="services-hero" style={{ backgroundImage: `url(${heroImage.src || heroImage})` }}>
         <div className="services-hero-overlay"></div>
         <div className="services-hero-content">
-          <h1 className="services-hero-title">GenAI Services</h1>
-          <p className="services-hero-subtitle">Practical GenAI for education: faster feedback, fairer assessment, and confident rollouts.</p>
+          <h1 className="services-hero-title"> Services</h1>
+          <p className="services-hero-subtitle">End-to-end AI solutions that transform business operations to enhance administrative, teaching, and learning experiences.</p>
         </div>
       </section>
         
