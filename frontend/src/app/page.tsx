@@ -59,7 +59,7 @@ export default function HomePage(): JSX.Element {
               Reclaim Your Time. Revolutionize Your Classroom.
             </p>
             <div className="hero-actions">
-              <Link href="/products" className="btn-primary">
+              <Link href="#autograding" className="btn-primary">
                 Explore Our AI Tools
                 <ArrowDown size={24} />
               </Link>
