@@ -1,5 +1,5 @@
 // src/lib/api.ts
-const API_BASE = "http://swtgw3rk-8000.aue.devtunnels.ms";
+const API_BASE = "http://127.0.0.1:8000";
 // const API_BASE = "";
 let isRefreshing = false;
 let refreshPromise: Promise<void> | null = null;

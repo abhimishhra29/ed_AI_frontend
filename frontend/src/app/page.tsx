@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { CheckCircle, ArrowDown, FileSearch } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 import educatorsImg from '../components/educators.jpeg';
 import studentsImg from '../components/students.jpeg';
@@ -50,25 +51,67 @@ export default function HomePage(): JSX.Element {
   return (
     <div className="home-page">
       <main className="container">
-          <header id="hero" className="hero" role="banner">
-            <h1>Empowering <span className="education-highlight">Education</span> with Generative AI</h1>
-            <p>
+          <section className="flex flex-col text-center mx-auto items-center justify-center gap-8 max-w-4xl px-4 sm:px-6 py-16 sm:py-20 md:py-24">
+            <h1 className="hero-title-animated">
+              <div className="hero-title-line">
+                {"Empowering Education with".split(" ").map((word, index) => (
+                  <motion.span
+                    key={`line1-${index}`}
+                    initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
+                    animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                    transition={{ delay: index * 0.06, duration: 0.3 }}
+                    className="inline-block"
+                  >
+                    {word}
+                  </motion.span>
+                ))}
+              </div>
+              <div className="hero-title-line">
+                {"Generative AI".split(" ").map((word, index) => (
+                  <motion.span
+                    key={`line2-${index}`}
+                    initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
+                    animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                    transition={{ delay: (4 + index) * 0.06, duration: 0.3 }}
+                    className="inline-block"
+                  >
+                    {word}
+                  </motion.span>
+                ))}
+              </div>
+            </h1>
+            <motion.p
+              initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              transition={{ delay: 0.2, duration: 0.3 }}
+              className="hero-description"
+            >
               EdGenAI provides intelligent tools and expert guidance to automate grading, streamline student planning, and integrate generative AI into your institution.
-            </p>
-            <p className="hero-tagline">
-              Reclaim Your Time. Revolutionize Your Classroom.
-            </p>
-            <div className="hero-actions">
-              <Link href="#autograding" className="btn-primary">
-                Explore Our AI Tools
-                <ArrowDown size={24} />
-              </Link>
-              <Link href="/services" className="btn-primary btn-secondary">
-                Learn About Consultancy
-                <FileSearch size={24} />
-              </Link>
+            </motion.p>
+            <div className="hero-logos">
+              {[
+                { src: "/logos/gordan.png", alt: "Gordon Institute of TAFE" },
+                { src: "/logos/deakin.png", alt: "Deakin University" },
+                { src: "/logos/rmit.svg", alt: "RMIT University" },
+              ].map((logo, index) => (
+                <motion.div
+                  key={logo.src}
+                  initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
+                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  transition={{ delay: 0.3 + index * 0.05, duration: 0.3 }}
+                  className="flex items-center px-2"
+                >
+                  <Image 
+                    src={logo.src} 
+                    alt={logo.alt} 
+                    width={140} 
+                    height={44} 
+                    className="h-auto w-24 sm:w-28 object-contain" 
+                  />
+                </motion.div>
+              ))}
             </div>
-          </header>
+          </section>
 
           <section id="personas" className="page-section">
             <h2>Who We Help</h2>
