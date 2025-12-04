@@ -152,6 +152,75 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 2rem;
+  overflow: visible !important; /* Allow features section to break out */
+}
+
+/* Override container max-width for features section */
+.home-page .container .features-section,
+.container .features-section,
+main.container .features-section {
+  max-width: 100vw !important;
+  width: 100vw !important;
+  margin-left: calc(-50vw + 50%) !important;
+  margin-right: calc(-50vw + 50%) !important;
+  position: relative !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Break features section out of container constraints */
+/* Escape from .container max-width: 1200px */
+.home-page .container .features-section,
+.container .features-section,
+main.container .features-section,
+.home-page main.container .features-section {
+  margin-left: calc(-50vw + 50%) !important;
+  margin-right: calc(-50vw + 50%) !important;
+  width: 100vw !important;
+  max-width: 100vw !important;
+  position: relative !important;
+  left: 50% !important;
+  right: 50% !important;
+  transform: translateX(-50%) !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  box-sizing: border-box !important;
+  overflow: visible !important; /* Ensure cards are not cut off */
+  display: flex !important;
+  justify-content: center !important; /* Center the inner container */
+  align-items: center !important;
+}
+
+/* Ensure the features container also breaks out */
+.home-page .container .features-section .features-container,
+.container .features-section .features-container,
+main.container .features-section .features-container {
+  width: 100% !important;
+  max-width: 100% !important;
+  padding-left: 48px !important;
+  padding-right: 48px !important;
+  overflow: visible !important; /* Ensure both cards are visible */
+  box-sizing: border-box !important;
+}
+
+@media (min-width: 1024px) {
+  .home-page .container .features-section .features-container,
+  .container .features-section .features-container,
+  main.container .features-section .features-container {
+    padding-left: 64px !important;
+    padding-right: 64px !important;
+  }
+}
+
+@media (min-width: 1440px) {
+  .home-page .container .features-section .features-container,
+  .container .features-section .features-container,
+  main.container .features-section .features-container {
+    padding-left: 80px !important;
+    padding-right: 80px !important;
+  }
 }
 
 /* ---------- Hero Section ---------- */
@@ -813,4 +882,454 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* ============================================
+   EXACT FEATURE CARDS STYLES - EXACT SPECIFICATIONS
+   
+   NOTE: Using !important and high specificity to prevent conflicts with:
+   - global.css (section padding)
+   - AutoGrade.css (conflicting .feature-card styles)
+   - Any Tailwind utility classes
+   
+   EXACT CARD DIMENSIONS:
+   - Mobile (<640px):    340px height, 100% width
+   - Small (≥640px):     420px height, 100% width
+   - Desktop (≥768px):  500px height
+     * Active:   768px width (flex: 1.6)
+     * Inactive: 432px width (flex: 0.9)
+   
+   EXACT GAP:
+   - All breakpoints: 16px (vertical on mobile, horizontal on desktop)
+   
+   EXACT BORDER RADIUS:
+   - All cards: 16px
+   ============================================ */
+
+/* Section Container - EXACT DIMENSIONS */
+/* High specificity to override global section styles and container constraints */
+section.features-section,
+.home-page .features-section,
+#features.features-section {
+  max-width: 100vw !important; /* Full viewport width */
+  width: 100vw !important;
+  padding-top: 0 !important; /* Override global section padding */
+  padding-bottom: 80px !important;
+  padding-left: 0 !important; /* Padding handled by inner container */
+  padding-right: 0 !important;
+  position: relative !important;
+  box-sizing: border-box !important;
+  overflow: visible !important; /* Ensure cards are not cut off */
+  display: flex !important;
+  justify-content: center !important; /* Center the container */
+  align-items: center !important;
+  margin: 0 auto !important; /* Center the section */
+}
+
+@media (min-width: 640px) {
+  section.features-section,
+  .home-page .features-section,
+  #features.features-section,
+  .home-page .container .features-section,
+  .container .features-section {
+    padding-bottom: 96px !important;
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  section.features-section,
+  .home-page .features-section,
+  #features.features-section,
+  .home-page .container .features-section,
+  .container .features-section {
+    padding-left: 48px !important; /* Reduced padding for more width */
+    padding-right: 48px !important;
+  }
+}
+
+@media (min-width: 1440px) {
+  section.features-section,
+  .home-page .features-section,
+  #features.features-section,
+  .home-page .container .features-section,
+  .container .features-section {
+    padding-left: 64px !important; /* Minimal padding on large screens */
+    padding-right: 64px !important;
+  }
+}
+
+/* Features Container - EXACT GAP (16px at all breakpoints) */
+/* High specificity to prevent conflicts */
+.features-section .features-container,
+.home-page .features-container,
+.home-page .container .features-section .features-container,
+.container .features-section .features-container,
+main.container .features-section .features-container {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16px !important; /* 16px vertical gap on mobile/small */
+  overflow: visible !important; /* Ensure both cards are visible */
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: auto !important; /* Center the container */
+  margin-right: auto !important;
+  justify-content: center !important; /* Center cards */
+  align-items: center !important; /* Center cards vertically */
+}
+
+@media (min-width: 768px) {
+  .features-section .features-container,
+  .home-page .features-container,
+  .home-page .container .features-section .features-container,
+  .container .features-section .features-container,
+  main.container .features-section .features-container {
+    flex-direction: row !important;
+    gap: 16px !important; /* 16px horizontal gap on desktop */
+    overflow: visible !important; /* Ensure both cards are visible */
+    flex-wrap: nowrap !important; /* Prevent wrapping */
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important; /* Center the container */
+    justify-content: center !important; /* Center cards horizontally */
+    align-items: stretch !important; /* Stretch cards to same height */
+  }
+}
+
+/* Feature Card - EXACT DIMENSIONS & TRANSITIONS */
+/* High specificity to override AutoGrade.css and other conflicts */
+  .features-section .feature-card,
+  .home-page .feature-card,
+  .features-container .feature-card,
+  a.feature-card {
+  position: relative !important;
+  flex: 1;
+  overflow: hidden !important;
+  border-radius: 16px !important; /* Exact border radius */
+  height: 340px !important; /* Mobile: exact height */
+  width: 100% !important; /* Mobile: full width */
+  backdrop-filter: blur(8px);
+  transition: flex 500ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+  text-decoration: none !important;
+  display: block !important;
+  color: white !important; /* Force white text on all text elements */
+  /* Override any conflicting styles from AutoGrade.css */
+  background: transparent !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  border: none !important;
+  text-align: left !important;
+  /* Prevent any vertical movement on hover */
+  transform: translateY(0) !important;
+}
+
+/* Explicitly prevent any hover effects that cause vertical movement */
+/* Override AutoGrade.css hover effect that lifts cards */
+.features-section .feature-card:hover,
+.home-page .feature-card:hover,
+.features-container .feature-card:hover,
+a.feature-card:hover {
+  transform: translateY(0) !important; /* Prevent vertical lift */
+  box-shadow: none !important; /* Prevent shadow changes */
+  border-color: transparent !important; /* Prevent border color changes */
+  /* Only allow flex expansion, no vertical movement or other hover effects */
+}
+
+/* Ensure all text inside feature cards is white (except button) */
+.features-section .feature-card p,
+.features-section .feature-card h3,
+.features-section .feature-card h1,
+.features-section .feature-card h2,
+.features-section .feature-card h4,
+.features-section .feature-card h5,
+.features-section .feature-card h6,
+.features-section .feature-card span,
+.features-section .feature-card div:not(.card-button):not(.card-button *) {
+  color: white !important;
+}
+
+/* Exception: Button and button icon should remain primary color */
+.features-section .card-button,
+.feature-card .card-button {
+  color: #213442 !important;
+  background-color: white !important;
+}
+
+.features-section .card-button svg,
+.feature-card .card-button svg {
+  color: #213442 !important;
+  stroke: #213442 !important;
+  fill: none !important;
+}
+
+/* Small screens (≥ 640px, < 768px) */
+@media (min-width: 640px) {
+  .features-section .feature-card,
+  .home-page .feature-card,
+  .features-container .feature-card,
+  a.feature-card {
+    height: 420px !important; /* Small: exact height */
+    width: 100% !important; /* Small: full width */
+  }
+}
+
+/* Desktop (≥ 768px) - EXTENDED DIMENSIONS */
+/* Cards extended to fill more width but both fully visible and centered */
+@media (min-width: 768px) {
+  .features-section .features-container,
+  .home-page .features-container,
+  .home-page .container .features-section .features-container,
+  .container .features-section .features-container,
+  main.container .features-section .features-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 168px !important;
+    padding-right: 168px !important;
+    overflow: visible !important; /* Ensure both cards are fully visible */
+    box-sizing: border-box !important;
+    margin-left: auto !important; /* Center the container */
+    margin-right: auto !important;
+    display: flex !important;
+    justify-content: center !important; /* Center cards horizontally */
+    align-items: stretch !important; /* Stretch cards to same height */
+    flex-wrap: nowrap !important; /* Prevent wrapping */
+    position: relative !important;
+  }
+
+  .features-section .feature-card,
+  .home-page .feature-card,
+  .features-container .feature-card,
+  a.feature-card {
+    height: 500px !important; /* Exact: 500px */
+    flex: 1.4 !important; /* Balanced flex for both cards to be visible */
+    width: auto !important; /* Let flex control width */
+    min-width: 0 !important; /* Allow flex to work properly */
+    flex-shrink: 1 !important; /* Allow cards to shrink if needed */
+    overflow: hidden !important; /* Only hide overflow within card, not container */
+  }
+
+  .features-section .feature-card.active,
+  .home-page .feature-card.active,
+  .features-container .feature-card.active,
+  a.feature-card.active {
+    flex: 2.0 !important; /* Slightly larger but still allows both cards to be visible */
+    flex-shrink: 1 !important; /* Allow active card to shrink if needed */
+  }
+}
+
+@media (min-width: 1024px) {
+  .features-section .features-container,
+  .home-page .features-container {
+    padding-left: 64px !important;
+    padding-right: 64px !important;
+  }
+}
+
+@media (min-width: 1440px) {
+  .features-section .features-container,
+  .home-page .features-container {
+    padding-left: 80px !important;
+    padding-right: 80px !important;
+  }
+}
+
+/* Card Inner */
+.card-inner {
+  position: relative;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Card Image - EXACT SCALE */
+.card-image {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.card-image-img {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+  transform: scale(1.1);
+}
+
+@media (min-width: 768px) {
+  .card-image-img {
+    transform: scale(1.0);
+  }
+}
+
+/* Card Content - EXACT PADDING & GAP */
+.card-content {
+  position: relative;
+  z-index: 10;
+  padding: 24px;
+  color: white !important; /* Force white text */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: flex-start;
+  justify-content: space-between;
+  height: 100%;
+  gap: 12px;
+}
+
+/* Ensure all text elements are above the gradient */
+.card-content > *:not(.card-gradient) {
+  position: relative;
+  z-index: 11 !important; /* Above gradient */
+}
+
+/* Card Gradient Overlay - EXACT GRADIENT */
+.card-gradient {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top right, rgba(33, 52, 66, 0.7), transparent);
+  z-index: 1; /* Behind text content */
+  pointer-events: none; /* Allow clicks to pass through */
+}
+
+@media (min-width: 768px) {
+  .card-gradient {
+    background: linear-gradient(to top right, rgba(33, 52, 66, 0.5), transparent);
+  }
+}
+
+/* Title - EXACT TYPOGRAPHY */
+.card-content h3,
+.features-section h3,
+.feature-card h3 {
+  font-size: 30px;
+  font-weight: 600;
+  z-index: 11 !important; /* Above gradient */
+  position: relative;
+  margin: 0;
+  color: white !important; /* Force white text */
+  line-height: 1.5;
+}
+
+/* Card Bottom Section */
+.card-bottom {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 11 !important; /* Above gradient */
+}
+
+/* Card Description Container */
+.card-description {
+  z-index: 11 !important; /* Above gradient */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Mobile Description - EXACT TYPOGRAPHY */
+.mobile-description,
+.features-section .mobile-description,
+.feature-card .mobile-description {
+  max-width: 384px;
+  font-size: 14px;
+  margin: 0;
+  color: white !important; /* Force white text */
+  line-height: 1.5;
+  position: relative;
+  z-index: 11 !important; /* Above gradient */
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+@media (min-width: 640px) {
+  .mobile-description {
+    font-size: 16px;
+  }
+}
+
+@media (min-width: 768px) {
+  .mobile-description {
+    display: none;
+  }
+}
+
+/* Desktop Description - EXACT TRANSITION */
+.desktop-description,
+.features-section .desktop-description,
+.feature-card .desktop-description {
+  max-width: 384px;
+  font-size: 16px;
+  display: none;
+  transition: opacity 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+  margin: 0;
+  color: white !important; /* Force white text */
+  line-height: 1.5;
+  position: relative;
+  z-index: 11 !important; /* Above gradient */
+  visibility: visible !important;
+}
+
+@media (min-width: 768px) {
+  .desktop-description {
+    display: block !important;
+  }
+
+  .desktop-description.active {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+}
+
+/* Card Button - EXACT DIMENSIONS & TRANSITION */
+.card-button {
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  background-color: white;
+  color: #213442;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  transition: background-color 150ms;
+  z-index: 10;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.card-button:hover {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.card-button svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2;
+}
+
+/* Accessibility */
+.feature-card:focus {
+  outline: 2px solid rgba(33, 52, 66, 0.5);
+  outline-offset: 2px;
+}
+
+.card-button:focus {
+  outline: 2px solid rgba(33, 52, 66, 0.5);
+  outline-offset: 2px;
 }

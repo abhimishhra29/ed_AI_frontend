@@ -10,6 +10,7 @@ import { motion } from 'framer-motion';
 import educatorsImg from '../components/educators.jpeg';
 import studentsImg from '../components/students.jpeg';
 import leadersImg from '../components/leaders.jpeg';
+import FeatureCards from '../components/FeatureCards';
 
 export default function HomePage(): JSX.Element {
   const router = useRouter();
@@ -112,6 +113,9 @@ export default function HomePage(): JSX.Element {
               ))}
             </div>
           </section>
+
+          {/* Feature Cards Section */}
+          <FeatureCards />
 
           <section id="personas" className="page-section">
             <h2>Who We Help</h2>
