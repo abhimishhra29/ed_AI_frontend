@@ -1,42 +1,85 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
 
 export default function Footer() {
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <footer className="footer">
-      <div className="footer-top">
-        <div className="footer-top-content">
-          <Link href="/" className="footer-logo-link">
-            <Image src="/logoicon.png" alt="EdGenAI" className="footer-logo" width={24} height={24} />
-            <span className="footer-brand-name">EdGenAI</span>
-          </Link>
-          <div className="footer-links">
-            <Link href="/">Home</Link>
-            <Link href="/auto-grade">Auto Grade</Link>
-            <Link href="/services">Services</Link>
-            <Link href="/contact">Contact Us</Link>
-            <Link href="/privacy">Privacy Policy</Link>
+      {/* Watermark Background */}
+      <div className="footer-watermark">EDGEN AI</div>
+      
+      {/* CTA Section */}
+      <div className="footer-cta">
+        <div className="footer-cta-content">
+          <p className="footer-cta-label">START YOUR JOURNEY</p>
+          <h2 className="footer-cta-heading">Step into the future of learning</h2>
+          <Link href="/contact" className="footer-cta-button">Book a Demo</Link>
+        </div>
+      </div>
+
+      {/* Main Footer Content */}
+      <div className="footer-main">
+        <div className="footer-main-content">
+          {/* Brand Column */}
+          <div className="footer-column footer-brand">
+            <div className="footer-brand-header">
+              <div className="footer-brand-logo">
+                <Image src="/logoicon.png" alt="EdGenAI" width={40} height={40} className="footer-logo-img" />
+              </div>
+              <h3 className="footer-brand-title">edgen AI</h3>
+            </div>
+            <p className="footer-brand-description">
+              EdGenAI is the home you've been searching for. We bring clarity to AI adoption so your teams can move faster and teach better.
+            </p>
+            <button onClick={scrollToTop} className="footer-back-to-top">
+              Back to top
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M18 15l-6-6-6 6"/>
+              </svg>
+            </button>
+          </div>
+
+          {/* Useful Links Column */}
+          <div className="footer-column">
+            <h4 className="footer-column-title">Useful</h4>
+            <ul className="footer-links-list">
+              <li><Link href="/careers">Careers</Link></li>
+            </ul>
+          </div>
+
+          {/* Updates Links Column */}
+          <div className="footer-column">
+            <h4 className="footer-column-title">Updates</h4>
+            <ul className="footer-links-list">
+              <li><a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+            </ul>
+          </div>
+
+          {/* Legal Links Column */}
+          <div className="footer-column">
+            <h4 className="footer-column-title">Legal</h4>
+            <ul className="footer-links-list">
+              <li><Link href="/privacy">Privacy Policy</Link></li>
+              <li><Link href="/terms">Terms & Conditions</Link></li>
+            </ul>
           </div>
         </div>
       </div>
-      <div className="footer-separator"></div>
+
+      {/* Bottom Copyright Section */}
       <div className="footer-bottom">
-        <p className="footer-copyright">
-          &copy; {new Date().getFullYear()} EdGenAI. All rights reserved.
-        </p>
-        <div className="footer-social-icons">
-          <a href="https://twitter.com" aria-label="Twitter" className="social-icon" target="_blank" rel="noopener noreferrer">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-            </svg>
-          </a>
-          <a href="https://www.linkedin.com/company/edgenaiau/posts/?feedView=all" aria-label="LinkedIn" className="social-icon" target="_blank" rel="noopener noreferrer">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-            </svg>
-          </a>
+        <div className="footer-bottom-content">
+          <p className="footer-copyright">
+            © 2025 EdGen AI. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>
   );
 }
+
