@@ -21,23 +21,24 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.5rem 1rem;
-  background: var(--header-bg);
-  color: var(--link-color);
+  background: transparent;
+  color: var(--text-dark);
   z-index: 10000;
-  box-shadow: var(--nav-shadow);
-  border-bottom: 0.2px solid #2e3b4e;
+  box-shadow: none;
+  border-bottom: none;
 }
 
 /* --- Logo --- */
 .logo {
   font-weight: bold;
   text-decoration: none;
-  color: var(--link-color);
+  color: var(--text-dark);
 }
 
 .logo img {
   height: 70px;
   max-width: 100%;
+  filter: brightness(0) saturate(100%) invert(13%) sepia(15%) saturate(1000%) hue-rotate(180deg) brightness(95%) contrast(85%);
 }
 
 /* --- Hamburger --- */
@@ -54,7 +55,7 @@
 .hamburger span {
   width: 24px;
   height: 2px;
-  background: var(--link-color);
+  background: var(--text-dark);
   display: block;
   border-radius: 2px;
 }
@@ -70,7 +71,7 @@
 .nav-link,
 .nav a,
 .nav button.nav-link {
-  color: var(--link-color);
+  color: var(--text-dark);
   background: none;
   border: none;
   text-decoration: none;
@@ -90,15 +91,15 @@
 .nav-link:hover,
 .nav a:hover,
 .nav button.nav-link:hover {
-  background: var(--link-hover-bg);
-  color: var(--link-color);
+  background: rgba(33, 51, 66, 0.1);
+  color: var(--text-dark);
 }
 
 .nav-link.active,
 .nav a.active,
 .nav button.nav-link.active {
   background: var(--primary-highlight);
-  color: var(--link-color);
+  color: var(--text-light);
 }
 
 /* --- Dropdowns --- */
@@ -110,8 +111,8 @@
   position: absolute;
   top: calc(100% + 8px);
   left: 0;
-  background: var(--header-bg);
-  color: var(--link-color);
+  background: var(--warm-white);
+  color: var(--text-dark);
   min-width: 200px;
   padding: 0.8rem 1rem;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
@@ -121,12 +122,13 @@
   transition: all 0.2s ease-in-out;
   border-radius: 10px;
   z-index: 20;
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .dropdown a {
   display: block;
   padding: 0.4rem 0;
-  color: var(--link-color);
+  color: var(--text-dark);
   text-decoration: none;
   font-weight: 500;
   border-radius: 5px;
@@ -134,12 +136,12 @@
 }
 
 .dropdown a:hover {
-  background: var(--link-hover-bg);
-  color: var(--link-color);
+  background: rgba(33, 51, 66, 0.1);
+  color: var(--text-dark);
 }
 
 .dropdown.open {
-  background: var(--header-bg);
+  background: var(--warm-white);
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
