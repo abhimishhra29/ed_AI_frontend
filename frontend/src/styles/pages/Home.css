@@ -711,7 +711,10 @@ main.container .features-section .features-container {
 
 /* ---------- Final CTA ---------- */
 .final-cta {
-  background: linear-gradient(135deg, var(--hero-gradient-start) 0%, var(--hero-gradient-end) 100%);
+  background-image: url('/banner/banner.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   padding: 6rem 3rem;
   border-radius: var(--radius);
   text-align: center;
@@ -719,8 +722,32 @@ main.container .features-section .features-container {
   box-shadow: var(--shadow-medium);
   position: relative;
   overflow: hidden;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Background image zoom effect on hover */
+.final-cta::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('/banner/banner.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: scale(1);
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.final-cta:hover::after {
+  transform: scale(1.1);
+}
+
+/* Subtle overlay to ensure text readability - very light */
 .final-cta::before {
   content: '';
   position: absolute;
@@ -728,18 +755,24 @@ main.container .features-section .features-container {
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--hero-gradient-overlay);
+  background: rgba(33, 51, 66, 0.3);
   pointer-events: none;
+  z-index: 1;
+  transition: background 0.3s ease;
+}
+
+.final-cta:hover::before {
+  background: rgba(33, 51, 66, 0.2);
 }
 
 .final-cta > * {
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .final-cta h2 {
   font-family: 'Astrid', sans-serif;
-  color: var(--primary-dark);
+  color: #ffffff !important;
   font-size: clamp(2.2rem, 5vw, 3.2rem);
   margin-bottom: 1.25rem;
   font-weight: 700;
@@ -747,21 +780,29 @@ main.container .features-section .features-container {
 }
 
 .final-cta .subheading {
-  color: var(--text-dark);
-  opacity: 0.9;
+  color: #ffffff !important;
+  opacity: 1;
   max-width: 650px;
   margin: 0 auto 3rem;
   font-size: clamp(1.05rem, 1.8vw, 1.2rem);
+  line-height: 1.6;
 }
 
 .final-cta .btn-primary {
   padding: 1.125rem 3rem;
   font-size: 1.1rem;
   box-shadow: var(--shadow-medium);
+  background: var(--primary-highlight, #4E6F8A) !important;
+  color: #ffffff !important;
+  border: none !important;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .final-cta .btn-primary:hover {
   box-shadow: var(--shadow-strong);
+  background: var(--primary-hover, #3a5a6f) !important;
+  transform: translateY(-2px);
 }
 
 /* ---------- Link Card Styles ---------- */
@@ -838,6 +879,11 @@ main.container .features-section .features-container {
   .final-cta {
     padding: 4rem 2rem;
     margin: 3rem 0;
+  }
+
+  .final-cta::before {
+    width: 50%;
+    opacity: 0.3;
   }
 }
 
