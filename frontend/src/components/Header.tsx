@@ -19,7 +19,6 @@ const Header: FC = () => {
   const [sessionExpired, setSessionExpired] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
-  const isServicesPage = pathname === '/services';
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -171,7 +170,7 @@ const Header: FC = () => {
 
       <div style={{ paddingTop: sessionExpired ? 48 : 0 }} />
 
-      <header className={`header ${isServicesPage ? 'services-page-header' : ''}`} onMouseLeave={closeMenus}>
+      <header className="header" onMouseLeave={closeMenus}>
         <Link href="/" className="logo">
           <img src={logo.src} alt="EdGenAI" />
         </Link>
