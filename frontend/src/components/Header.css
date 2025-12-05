@@ -107,6 +107,15 @@
   position: relative;
 }
 
+.nav-item > .nav-link {
+  cursor: default !important;
+  pointer-events: auto;
+}
+
+.nav-item > .nav-link:hover {
+  cursor: default !important;
+}
+
 .dropdown {
   position: absolute;
   top: calc(100% + 8px);

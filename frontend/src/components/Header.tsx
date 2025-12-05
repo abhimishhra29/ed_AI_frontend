@@ -3,7 +3,7 @@
 // Header.tsx
 import { FC, useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 import logo from './logo.png';
 import { apiFetch } from '../lib/api';
@@ -18,6 +18,8 @@ const Header: FC = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [sessionExpired, setSessionExpired] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
+  const isServicesPage = pathname === '/services';
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -169,7 +171,7 @@ const Header: FC = () => {
 
       <div style={{ paddingTop: sessionExpired ? 48 : 0 }} />
 
-      <header className="header" onMouseLeave={closeMenus}>
+      <header className={`header ${isServicesPage ? 'services-page-header' : ''}`} onMouseLeave={closeMenus}>
         <Link href="/" className="logo">
           <img src={logo.src} alt="EdGenAI" />
         </Link>
@@ -279,10 +281,31 @@ const Header: FC = () => {
           <div
             className="nav-item"
             onMouseEnter={() => setOpenMenu("products")}
+            onMouseLeave={() => setOpenMenu(null)}
+            onClick={(e) => {
+              // Prevent any navigation when clicking on Products
+              if (e.target === e.currentTarget || (e.target as HTMLElement).textContent === 'Products') {
+                e.preventDefault();
+                e.stopPropagation();
+              }
+            }}
           >
-            <Link href="/" className="nav-link" onClick={closeAll}>
+            <span 
+              className="nav-link" 
+              style={{ cursor: 'default', pointerEvents: 'auto' }}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+              }}
+              onMouseDown={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+              }}
+            >
               Products
-            </Link>
+            </span>
             <div className={`dropdown ${openMenu === "products" ? "open" : ""}`}>
               <Link
                 href={loggedIn ? '/auto-grading-wizard' : '/auto-grade'}
