@@ -238,25 +238,20 @@ const Header: FC = () => {
                   Services
                 </Link>
 
-                <Link href="/contact" className="mobile-menu-link" onClick={closeAll}>
-                  Contact Us
-                </Link>
-
-                {/* Sign Up link */}
                 {!loggedIn && (
-                  <Link href="/signup" className="mobile-menu-link" onClick={closeAll}>
-                    Sign Up
+                  <Link href="/login" className="mobile-menu-link" onClick={closeAll}>
+                    Login
                   </Link>
                 )}
+
+                <Link href="/contact" className="mobile-menu-link book-demo-btn-mobile" onClick={closeAll}>
+                  Book a Demo
+                </Link>
               </nav>
 
               {/* Bottom Login/Logout button */}
               <div className="mobile-menu-footer">
-                {!loggedIn ? (
-                  <Link href="/login" className="mobile-menu-login-btn" onClick={closeAll}>
-                    Login
-                  </Link>
-                ) : (
+                {loggedIn && (
                   <button
                     className="mobile-menu-login-btn"
                     onClick={() => {
@@ -328,19 +323,10 @@ const Header: FC = () => {
             </Link>
           </div>
 
-          <Link href="/contact" className="nav-link" onClick={closeAll}>
-            Contact Us
-          </Link>
-
           {!loggedIn && (
-            <>
-              <Link href="/login" className="nav-link" onClick={closeAll}>
-                Login
-              </Link>
-              <Link href="/signup" className="signup-button" onClick={closeAll}>
-                Sign Up
-              </Link>
-            </>
+            <Link href="/login" className="nav-link" onClick={closeAll}>
+              Login
+            </Link>
           )}
 
           {loggedIn && (
@@ -354,6 +340,10 @@ const Header: FC = () => {
               Logout
             </button>
           )}
+
+          <Link href="/contact" className="nav-link book-demo-btn" onClick={closeAll}>
+            Book a Demo
+          </Link>
         </nav>
       </header>
     </>

@@ -156,23 +156,44 @@
   transform: translateY(0);
 }
 
-/* --- Signup Button --- */
-.signup-button {
-  padding: 0.5rem 1.2rem;
-  background: var(--primary-highlight);
-  color: var(--link-color);
-  font-weight: 600;
-  border-radius: var(--nav-link-radius);
-  text-decoration: none;
-  transition: background 0.2s;
-  margin-left: 0.7rem;
-  border: none;
+/* --- Book a Demo Button --- */
+.book-demo-btn {
+  background: var(--primary-dark, #213342) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 24px !important;
+  padding: 0.5rem 1.25rem !important;
+  font-weight: 500;
   font-size: 1rem;
+  transition: background 0.2s ease, transform 0.1s ease;
+  white-space: nowrap;
+  text-decoration: none;
 }
 
-.signup-button:hover {
-  background: var(--link-hover-bg);
-  color: var(--link-color);
+.book-demo-btn:hover {
+  background: var(--primary-hover, #3a5a6f) !important;
+  color: #ffffff !important;
+  transform: translateY(-1px);
+}
+
+.book-demo-btn-mobile {
+  background: var(--primary-dark, #213342) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 24px !important;
+  padding: 0.75rem 1.5rem !important;
+  font-weight: 500;
+  font-size: 1rem;
+  text-align: center;
+  margin-top: 0.5rem;
+  transition: background 0.2s ease;
+  display: block;
+  text-decoration: none;
+}
+
+.book-demo-btn-mobile:hover {
+  background: var(--primary-hover, #3a5a6f) !important;
+  color: #ffffff !important;
 }
 
 /* --- Mobile Menu Overlay (Full Page) --- */
