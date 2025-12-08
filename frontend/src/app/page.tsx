@@ -51,7 +51,7 @@ export default function HomePage(): JSX.Element {
             </motion.p>
             <div className="hero-logos">
               {[
-                { src: "/logos/Uni-Mel.jpg", alt: "University of Melbourne" },
+                { src: "/logos/the-university-of-melbourne-logo-png-transparent.png", alt: "University of Melbourne" },
                 { src: "/logos/rmit.svg", alt: "RMIT University" },
               ].map((logo, index) => (
                 <motion.div

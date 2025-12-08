@@ -11,21 +11,26 @@
   --nav-link-radius: 6px;
   --nav-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   --header-bg: var(--primary-dark);
+  --header-height: 80px;
 }
 
 /* --- Header Bar --- */
 .header {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0.5rem 1rem;
-  background: transparent;
+  background: var(--warm-white);
   color: var(--text-dark);
-  z-index: 10000;
-  box-shadow: none;
+  z-index: 11000;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
   border-bottom: none;
+  min-height: var(--header-height);
 }
 
 /* Services Page - Same as home page (sticky navigation) */
@@ -225,7 +230,7 @@
     width: 100vw;
     height: 100vh;
     background: var(--warm-white);
-    z-index: 10000;
+    z-index: 12000;
     overflow-y: auto;
     animation: fadeIn 0.3s ease-in-out;
   }
@@ -395,4 +400,8 @@
   font-size: 1rem;
   z-index: 9999;
   box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+.header-spacer {
+  height: var(--header-height);
 }

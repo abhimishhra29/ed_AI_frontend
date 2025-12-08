@@ -170,7 +170,11 @@ const Header: FC = () => {
 
       <div style={{ paddingTop: sessionExpired ? 48 : 0 }} />
 
-      <header className="header" onMouseLeave={closeMenus}>
+      <header
+        className="header"
+        style={{ top: sessionExpired ? 48 : 0 }}
+        onMouseLeave={closeMenus}
+      >
         <Link href="/" className="logo">
           <img src={logo.src} alt="EdGenAI" />
         </Link>
@@ -345,6 +349,11 @@ const Header: FC = () => {
           </Link>
         </nav>
       </header>
+      <div
+        className="header-spacer"
+        aria-hidden="true"
+        style={{ height: sessionExpired ? '128px' : '80px' }}
+      />
     </>
   );
 };
