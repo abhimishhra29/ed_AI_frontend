@@ -71,11 +71,13 @@ export default function AutoGradeLanding(): JSX.Element {
               </Link>
             </div>
           </div>
-          <div className="hero-image-wrapper">
-            <img
-              src="https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=600"
-              alt="Abstract illustration of AI and education"
-              className="hero-image"
+          <div className="hero-video-wrapper">
+            <iframe
+              src="https://www.youtube.com/embed/PBtyISfftTc"
+              title="AutoGrade Demo"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
             />
           </div>
         </div>
@@ -168,26 +170,7 @@ export default function AutoGradeLanding(): JSX.Element {
           </div>
         </section>
 
-        {/* --- Demo Video Section --- */}
-        <section className="demo-section">
-          <div className="container">
-            <h2 className="section-title">See AutoGrade in Action 🚀</h2>
-          <p className="section-subtitle">
-              Watch this short demo to see how AI-powered grading can save you
-              time and enhance feedback.
-            </p>
-            <div className="video-wrapper">
-              <iframe
-                src="https://www.youtube.com/embed/0zdvedRBcyk"
-                title="Demo Video"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            </div>
-          </div>
-        </section>
-
+        
         {/* --- FAQ Section --- */}
         <section className="faq-section">
           <div className="container faq-container">
