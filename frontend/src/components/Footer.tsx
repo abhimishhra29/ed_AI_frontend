@@ -28,9 +28,7 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="footer-column footer-brand">
             <div className="footer-brand-header">
-              <div className="footer-brand-logo">
-                <Image src="/logoicon.png" alt="EdGenAI" width={40} height={40} className="footer-logo-img" />
-              </div>
+
               <h3 className="footer-brand-title">edgen AI</h3>
             </div>
             <p className="footer-brand-description">
