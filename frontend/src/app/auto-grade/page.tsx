@@ -169,44 +169,7 @@ export default function AutoGradeLanding(): JSX.Element {
             </div>
           </div>
         </section>
-
-        
-        {/* --- FAQ Section --- */}
-        <section className="faq-section">
-          <div className="container faq-container">
-            <h2 className="section-title">❓ Frequently Asked Questions</h2>
-            <div className="faq-grid">
-              <div className="faq-item">
-                <h3>Can I upload handwritten answers?</h3>
-                <p>
-                  Yes! Just scan them and upload as a PDF. Our OCR technology
-                  reads and grades them accurately.
-                </p>
-              </div>
-              <div className="faq-item">
-                <h3>Do you support DOCX or image uploads?</h3>
-                <p>
-                  Not yet. We&apos;re working on supporting Word files and various
-                  image formats, coming soon!
-                </p>
-              </div>
-              <div className="faq-item">
-                <h3>Is the grading process explainable?</h3>
-                <p>
-                  Absolutely. Every score includes a detailed rationale that is
-                  directly aligned with your rubric&apos;s criteria.
-                </p>
-              </div>
-              <div className="faq-item">
-                <h3>Can I adjust or override a grade?</h3>
-                <p>
-                  Yes, AutoGrade is designed to support human-in-the-loop review
-                  for any flagged or edge cases.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
+                
       </main>
     </div>
   );

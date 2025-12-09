@@ -16,7 +16,7 @@ interface TokenResponse {
 }
 
 export default function Login() {
-  const [email, setEmail] = useState('');
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -25,8 +25,8 @@ export default function Login() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!email || !password) {
-      setErrorMsg('Please enter both username and password');
+    if (!identifier.trim() || !password) {
+      setErrorMsg('Please enter your email or username and password');
       return;
     }
 
@@ -34,7 +34,7 @@ export default function Login() {
       const res = await apiFetch('/token/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: email, password }),
+        body: JSON.stringify({ username: identifier.trim(), password }),
       });
       const data: TokenResponse = await res.json();
 
@@ -76,15 +76,16 @@ export default function Login() {
 
         <form className="login-form" onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="email">E-Mail Address:</label>
+            <label htmlFor="identifier">Email or Username:</label>
             <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={e => setEmail(e.target.value.toLowerCase())}
-              placeholder="Enter your email..."
+              id="identifier"
+              type="text"
+              value={identifier}
+              onChange={e => setIdentifier(e.target.value)}
+              placeholder="Enter your email or username..."
               required
               autoFocus
+              autoComplete="username"
             />
           </div>
           <div>
