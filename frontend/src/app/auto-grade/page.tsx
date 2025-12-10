@@ -71,11 +71,13 @@ export default function AutoGradeLanding(): JSX.Element {
               </Link>
             </div>
           </div>
-          <div className="hero-image-wrapper">
-            <img
-              src="https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=600"
-              alt="Abstract illustration of AI and education"
-              className="hero-image"
+          <div className="hero-video-wrapper">
+            <iframe
+              src="https://www.youtube.com/embed/PBtyISfftTc"
+              title="AutoGrade Demo"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
             />
           </div>
         </div>
@@ -167,63 +169,7 @@ export default function AutoGradeLanding(): JSX.Element {
             </div>
           </div>
         </section>
-
-        {/* --- Demo Video Section --- */}
-        <section className="demo-section">
-          <div className="container">
-            <h2 className="section-title">See AutoGrade in Action 🚀</h2>
-          <p className="section-subtitle">
-              Watch this short demo to see how AI-powered grading can save you
-              time and enhance feedback.
-            </p>
-            <div className="video-wrapper">
-              <iframe
-                src="https://www.youtube.com/embed/0zdvedRBcyk"
-                title="Demo Video"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            </div>
-          </div>
-        </section>
-
-        {/* --- FAQ Section --- */}
-        <section className="faq-section">
-          <div className="container faq-container">
-            <h2 className="section-title">❓ Frequently Asked Questions</h2>
-            <div className="faq-grid">
-              <div className="faq-item">
-                <h3>Can I upload handwritten answers?</h3>
-                <p>
-                  Yes! Just scan them and upload as a PDF. Our OCR technology
-                  reads and grades them accurately.
-                </p>
-              </div>
-              <div className="faq-item">
-                <h3>Do you support DOCX or image uploads?</h3>
-                <p>
-                  Not yet. We&apos;re working on supporting Word files and various
-                  image formats, coming soon!
-                </p>
-              </div>
-              <div className="faq-item">
-                <h3>Is the grading process explainable?</h3>
-                <p>
-                  Absolutely. Every score includes a detailed rationale that is
-                  directly aligned with your rubric&apos;s criteria.
-                </p>
-              </div>
-              <div className="faq-item">
-                <h3>Can I adjust or override a grade?</h3>
-                <p>
-                  Yes, AutoGrade is designed to support human-in-the-loop review
-                  for any flagged or edge cases.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
+                
       </main>
     </div>
   );
