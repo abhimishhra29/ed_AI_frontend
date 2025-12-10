@@ -162,16 +162,6 @@ export default function HomePage(): JSX.Element {
               </div>
             </div>
           </section>
-
-          <section id="contact" className="page-section final-cta">
-            <h2>Ready to Transform Your Institution?</h2>
-            <p className="subheading">
-              Schedule a free consultation with our team today and start your AI journey.
-            </p>
-            <Link href="/contact" className="btn-primary">
-              Get Started for Free
-            </Link>
-          </section>
       </main>
     </div>
   );
