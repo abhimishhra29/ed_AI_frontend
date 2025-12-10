@@ -12,16 +12,16 @@ export default function FeatureCards() {
 
   const features = [
     {
-      title: 'Automated Grading',
+      title: 'Tools',
       description: 'Reduce marking time with AI that scores rubrics, drafts feedback, and flags outliers.',
       image: '/backgrounds/bg2.png', // Sky/clouds background
       href: '/auto-grade',
     },
     {
-      title: 'Personalized Study Plans',
+      title: 'Consultancy',
       description: 'Build pathways for every learner with tailored tasks, pacing, and AI-created resources.',
       image: '/backgrounds/bg1.png', // Blurred flowers background
-      href: '/plan-my-assignment-wizard', // Links to plan my assignment wizard page
+      href: '/services', // Links to services page
     },
   ];
 

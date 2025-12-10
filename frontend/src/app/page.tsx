@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 
 import FeatureCards from '../components/FeatureCards';
+import FeatureGrid from '../components/FeatureGrid';
+import ServicesGrid from '../components/ServicesGrid';
 
 export default function HomePage(): JSX.Element {
 
@@ -75,6 +77,12 @@ export default function HomePage(): JSX.Element {
 
           {/* Feature Cards Section */}
           <FeatureCards />
+
+          {/* Feature Grid Section */}
+          <FeatureGrid />
+
+          {/* Services Grid Section */}
+          <ServicesGrid />
 
           <section id="why-us" className="page-section">
             <div className="why-us-header">
