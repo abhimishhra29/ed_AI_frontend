@@ -28,7 +28,7 @@
   background: var(--warm-white);
   color: var(--text-dark);
   z-index: 11000;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: none;
   border-bottom: none;
   min-height: var(--header-height);
 }

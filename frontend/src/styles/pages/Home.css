@@ -1427,7 +1427,6 @@ a.feature-card:hover {
   outline: 2px solid rgba(33, 52, 66, 0.5);
   outline-offset: 2px;
 }
-<<<<<<< HEAD
 
 /* ============================================
    FEATURE GRID SECTION - Three Card Layout
@@ -2091,5 +2090,3 @@ a.services-grid-card {
   outline: 2px solid rgba(33, 52, 66, 0.5) !important;
   outline-offset: 2px !important;
 }
-=======
->>>>>>> 1c40b6a6c7e9c471a81ebdf8f705d8993897993d
