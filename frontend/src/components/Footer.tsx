@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 
 export default function Footer() {
   const scrollToTop = () => {
@@ -46,7 +45,11 @@ export default function Footer() {
           <div className="footer-column">
             <h4 className="footer-column-title">Useful</h4>
             <ul className="footer-links-list">
-              <li><Link href="/careers">Careers</Link></li>
+              <li>
+                <a href="https://www.linkedin.com/company/edgenaiau" target="_blank" rel="noopener noreferrer">
+                  Careers
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -54,16 +57,11 @@ export default function Footer() {
           <div className="footer-column">
             <h4 className="footer-column-title">Updates</h4>
             <ul className="footer-links-list">
-              <li><a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a></li>
-            </ul>
-          </div>
-
-          {/* Legal Links Column */}
-          <div className="footer-column">
-            <h4 className="footer-column-title">Legal</h4>
-            <ul className="footer-links-list">
-              <li><Link href="/privacy">Privacy Policy</Link></li>
-              <li><Link href="/terms">Terms & Conditions</Link></li>
+              <li>
+                <a href="https://www.linkedin.com/company/edgenaiau" target="_blank" rel="noopener noreferrer">
+                  Linkedin
+                </a>
+              </li>
             </ul>
           </div>
         </div>
@@ -80,4 +78,3 @@ export default function Footer() {
     </footer>
   );
 }
-
