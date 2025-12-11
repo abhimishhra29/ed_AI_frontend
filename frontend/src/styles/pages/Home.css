@@ -684,16 +684,9 @@ section#why-us.page-section {
 .why-us-title-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  align-items: flex-start;
-}
-
-@media (min-width: 768px) {
-  .why-us-title-wrapper {
-    flex-direction: row;
-    align-items: center;
-    gap: 3rem;
-  }
+  gap: 1rem;
+  align-items: center;
+  text-align: center;
 }
 
 section#why-us.page-section h2 {
@@ -704,15 +697,8 @@ section#why-us.page-section h2 {
   margin: 0;
   letter-spacing: -0.02em;
   line-height: 1.2;
-  flex: 0 0 auto;
-  min-width: 0;
-}
-
-@media (min-width: 768px) {
-  section#why-us.page-section h2 {
-    flex: 0 0 35%;
-    max-width: 400px;
-  }
+  width: 100%;
+  text-align: center;
 }
 
 .why-us-intro {
@@ -720,15 +706,8 @@ section#why-us.page-section h2 {
   color: var(--text-muted);
   line-height: 1.7;
   margin: 0;
-  max-width: 100%;
-  flex: 1;
-}
-
-@media (min-width: 768px) {
-  .why-us-intro {
-    max-width: none;
-    padding-top: 0;
-  }
+  max-width: 720px;
+  text-align: center;
 }
 
 /* Service Cards Grid */

@@ -11,7 +11,7 @@ export default function FeatureGrid() {
   const features = [
     {
       title: 'AutoGrade: AI-Powered Grading',
-      description: 'Evaluate submissions against your rubrics, remove bias, and deliver consistent feedback in minutes.',
+      description: 'Evaluate submissions against your rubrics and deliver fair grades with consistent, constructive feedback in minutes.',
       image: 'https://images.unsplash.com/photo-1631557777232-a2632ae3c67d?auto=format&fit=crop&w=1600&q=80', // AutoGrade workspace (selected)
       href: '/auto-grade',
       size: 'large' as const,

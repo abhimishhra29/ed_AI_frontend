@@ -13,7 +13,7 @@ export default function FeatureCards() {
   const features = [
     {
       title: 'Tools',
-      description: 'AutoGrade and Plan My Assignment help you reclaim time with AI-powered grading and student planning.',
+      description: 'Reclaim your time with EdGenAI. Our AI-powered tools automate repetitive tasks so you can stay focused on meaningful work, we handle the rest.',
       image: 'https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=1600&q=80', // Productive desk with laptop and sticky-notes for AI tools in action
       href: '#feature-grid',
     },
