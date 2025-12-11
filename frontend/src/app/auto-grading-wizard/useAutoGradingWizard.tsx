@@ -9,6 +9,7 @@ import {
 } from 'react';
 
 export type WorkflowOption = 'Assignment_grader' | 'handwritten_ocr';
+export type AssignmentStructureOption = 'question_based' | 'report_based';
 
 export interface AutoGradingWizardContextType {
   /* navigation */
@@ -22,6 +23,8 @@ export interface AutoGradingWizardContextType {
   /* grading‑stage state */
   assignmentName: string;
   setAssignmentName: Dispatch<SetStateAction<string>>;
+  assignmentStructure: AssignmentStructureOption;
+  setAssignmentStructure: Dispatch<SetStateAction<AssignmentStructureOption>>;
   workflows: WorkflowOption[];
   selectedWorkflow: WorkflowOption;
   setSelectedWorkflow: Dispatch<SetStateAction<WorkflowOption>>;

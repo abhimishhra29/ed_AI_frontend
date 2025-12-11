@@ -1434,6 +1434,12 @@ a.feature-card:hover {
    Uses same container width as banner and other sections
    ============================================ */
 
+/* Anchor offsets for fixed header */
+#feature-grid,
+#services-grid {
+  scroll-margin-top: 120px;
+}
+
 /* Section Container - Stay within container constraints */
 section.feature-grid-section,
 .home-page .feature-grid-section,

@@ -23,12 +23,19 @@ const StepOne: FC<StepOneProps> = ({ WORKFLOW_LABELS }) => {
     setGeneratedRubric,
     setRubricGenerationError,
     setExtractedQuestions,
+    assignmentStructure,
+    setAssignmentStructure,
   } = useAutoGradingWizard();
 
   const workflowOptions: WorkflowOption[] =
     workflows.length > 0
       ? workflows
       : (Object.keys(WORKFLOW_LABELS) as WorkflowOption[]);
+
+  const assignmentStructureOptions = [
+    { value: "question_based", label: "Q/A Based" },
+    { value: "report_based", label: "Report Based" },
+  ] as const;
 
   const resetWizardState = () => {
     setGeneratedRubric(null);
@@ -106,6 +113,35 @@ const StepOne: FC<StepOneProps> = ({ WORKFLOW_LABELS }) => {
                     Sign in to load available assignment types.
                   </div>
                 )}
+              </div>
+
+              <div className="form-field">
+                <span className="workflow-label">Question Paper Type:</span>
+                <div
+                  className="workflow-toggle"
+                  role="radiogroup"
+                  aria-label="Question Paper Type"
+                >
+                  {assignmentStructureOptions.map((option) => {
+                    const isActive = assignmentStructure === option.value;
+                    return (
+                      <button
+                        type="button"
+                        key={option.value}
+                        className={`workflow-toggle__option${
+                          isActive ? " workflow-toggle__option--active" : ""
+                        }`}
+                        onClick={() => {
+                          setAssignmentStructure(option.value);
+                          resetWizardState();
+                        }}
+                        aria-pressed={isActive}
+                      >
+                        {option.label}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
 
               <div className="form-field">

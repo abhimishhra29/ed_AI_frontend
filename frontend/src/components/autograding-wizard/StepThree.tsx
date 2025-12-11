@@ -1,7 +1,86 @@
 'use client';
 
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { useAutoGradingWizard } from '../../app/auto-grading-wizard/useAutoGradingWizard';
+import AnimatedDots from "../AnimatedDots";
+
+const parseScoreValue = (value: unknown): number => {
+  if (typeof value === 'number') {
+    return Number.isFinite(value) ? value : 0;
+  }
+  if (typeof value === 'string') {
+    const match = value.match(/(\d+(?:\.\d+)?)/);
+    if (match) {
+      const parsed = parseFloat(match[1]);
+      return Number.isNaN(parsed) ? 0 : parsed;
+    }
+  }
+  return 0;
+};
+
+const pickScoreFromValues = (values: unknown[]): number => {
+  for (const value of values) {
+    const parsed = parseScoreValue(value);
+    if (parsed > 0) {
+      return parsed;
+    }
+  }
+  return 0;
+};
+
+const extractMarksFromText = (text: string): number => {
+  if (!text) return 0;
+  let best = 0;
+  const rangePattern = /(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*(?:marks?|pts?|points?)/gi;
+  text.replace(rangePattern, (_match, _low, high) => {
+    const value = parseFloat(high);
+    if (!Number.isNaN(value) && value > best) {
+      best = value;
+    }
+    return '';
+  });
+
+  const directPattern = /(\d+(?:\.\d+)?)\s*(?:marks?|pts?|points?)/gi;
+  let directMatch: RegExpExecArray | null;
+  while ((directMatch = directPattern.exec(text)) !== null) {
+    const value = parseFloat(directMatch[1]);
+    if (!Number.isNaN(value) && value > best) {
+      best = value;
+    }
+  }
+  return best;
+};
+
+const deriveQuestionScore = (question: any): number => {
+  if (!question) return 0;
+  const subquestions = Array.isArray(question.subquestions) ? question.subquestions : [];
+  if (subquestions.length > 0) {
+    const subtotal = subquestions.reduce((sum: number, sub: any) => {
+      return sum + pickScoreFromValues([
+        sub.max_score_hint,
+        sub.max_score,
+        sub.maxScore,
+        sub.score,
+      ]);
+    }, 0);
+    if (subtotal > 0) {
+      return subtotal;
+    }
+  }
+
+  const questionScore = pickScoreFromValues([
+    question.max_score_hint,
+    question.max_score,
+    question.maxScore,
+    question.score_hint,
+    question.score,
+  ]);
+  if (questionScore > 0) {
+    return questionScore;
+  }
+
+  return extractMarksFromText(question.prompt || question.title || '');
+};
 
 const StepThree: FC = () => {
   const {
@@ -23,6 +102,21 @@ const StepThree: FC = () => {
   const [editedRubrics, setEditedRubrics] = useState<Record<string, string>>({});
   const [originalRubricBackup, setOriginalRubricBackup] = useState<any>(null);
   const [selectedQuestionId, setSelectedQuestionId] = useState<string | null>(null);
+  const [rubricDraft, setRubricDraft] = useState<any | null>(null);
+  const hasQuestions = Array.isArray(extractedQuestions) && extractedQuestions.length > 0;
+  const totalMarks = useMemo(() => {
+    if (!hasQuestions || !Array.isArray(extractedQuestions)) {
+      return 0;
+    }
+    return extractedQuestions.reduce((sum: number, question: any) => {
+      return sum + deriveQuestionScore(question);
+    }, 0);
+  }, [extractedQuestions, hasQuestions]);
+  const formattedTotalMarks = hasQuestions
+    ? (totalMarks > 0
+        ? (Number.isInteger(totalMarks) ? totalMarks.toString() : totalMarks.toFixed(1))
+        : 'N/A')
+    : 'N/A';
 
   // Default to first question when questions are available
   useEffect(() => {
@@ -80,20 +174,22 @@ const StepThree: FC = () => {
   };
 
   const handleEditRubrics = () => {
-    // Save a backup of the original rubric before editing
     if (extractedQuestions && generatedRubric && generatedRubric.rubric) {
-      // Create a deep copy of the current rubric
-      setOriginalRubricBackup(JSON.parse(JSON.stringify(generatedRubric)));
+      const snapshot = JSON.parse(JSON.stringify(generatedRubric));
+      setOriginalRubricBackup(snapshot);
+      setRubricDraft(snapshot);
       setIsEditMode(true);
     }
   };
 
   const handleSaveAllRubrics = () => {
-    // Since we're directly updating generatedRubric in the new edit mode,
-    // we just need to exit edit mode. The changes are already saved in state.
+    if (rubricDraft) {
+      setGeneratedRubric(JSON.parse(JSON.stringify(rubricDraft)));
+    }
     setIsEditMode(false);
     setEditedRubrics({});
     setOriginalRubricBackup(null);
+    setRubricDraft(null);
   };
 
   const handleCancelAllEditing = () => {
@@ -104,31 +200,48 @@ const StepThree: FC = () => {
     setIsEditMode(false);
     setEditedRubrics({});
     setOriginalRubricBackup(null);
+    setRubricDraft(null);
+  };
+
+  const getActiveRubricSource = () => {
+    if (isEditMode && rubricDraft) {
+      return rubricDraft;
+    }
+    return generatedRubric;
+  };
+
+  const mutateRubric = (mutator: (draft: any) => void) => {
+    const source = getActiveRubricSource();
+    if (!source) return;
+    const next = JSON.parse(JSON.stringify(source));
+    mutator(next);
+    if (isEditMode) {
+      setRubricDraft(next);
+    } else {
+      setGeneratedRubric(next);
+    }
   };
 
   const handleSaveRubric = () => {
     if (editingQuestionId && editedRubric) {
-      // Get the original rubric to preserve all its structure
       const originalRubric = getQuestionRubric(editingQuestionId);
       
       if (originalRubric) {
-        // Convert plain text back to JSON format
         const parsedRubric = parsePlainTextToRubricImproved(editedRubric);
-        
-        // Preserve ALL original fields and only update the parsed content
         const updatedRubric = {
-          ...originalRubric, // Keep all original fields (canonical_id, subquestion_id, etc.)
-          ...parsedRubric,   // Override with parsed content
-          question_id: editingQuestionId // Ensure question_id is preserved
+          ...originalRubric,
+          ...parsedRubric,
+          question_id: editingQuestionId
         };
         
-        // Update the specific question's rubric in the generated rubric
-        const updatedGeneratedRubric = { ...generatedRubric };
-        const rubricIndex = updatedGeneratedRubric.rubric.findIndex((item: any) => item.question_id === editingQuestionId);
-        if (rubricIndex !== -1) {
-          updatedGeneratedRubric.rubric[rubricIndex] = updatedRubric;
-          setGeneratedRubric(updatedGeneratedRubric);
-        }
+        mutateRubric((draft) => {
+          const rubricIndex = draft.rubric.findIndex(
+            (item: any) => item.question_id === editingQuestionId
+          );
+          if (rubricIndex !== -1) {
+            draft.rubric[rubricIndex] = updatedRubric;
+          }
+        });
       }
     }
     setIsEditingRubric(false);
@@ -455,14 +568,10 @@ const StepThree: FC = () => {
   };
 
   const getQuestionRubric = (questionId: string) => {
-    if (!generatedRubric || !generatedRubric.rubric) return null;
+    const source = getActiveRubricSource();
+    if (!source || !source.rubric) return null;
     
-    // Debug logs (remove in production)
-    // console.log(`Looking for rubric for question ID: ${questionId}`);
-    // console.log(`Available rubric question IDs:`, generatedRubric.rubric.map((item: any) => item.question_id));
-    
-    const rubricItem = generatedRubric.rubric.find((item: any) => item.question_id === questionId);
-    // console.log(`Found rubric item:`, rubricItem);
+    const rubricItem = source.rubric.find((item: any) => item.question_id === questionId);
     
     return rubricItem;
   };
@@ -707,7 +816,7 @@ const StepThree: FC = () => {
           )}
 
           {isGeneratingRubric && (
-            <div className="loading-indicator">Generating rubric…</div>
+            <div className="loading-indicator">Generating rubric<AnimatedDots /></div>
           )}
 
           {!isGeneratingRubric && extractedQuestions && (
@@ -745,6 +854,14 @@ const StepThree: FC = () => {
                   </button>
                 )}
               </div>
+              {hasQuestions && (
+                <div className="questions-meta">
+                  <div className="total-marks-chip" title="Sum of section and subsection marks">
+                    <span>Total Marks</span>
+                    <strong>{formattedTotalMarks}</strong>
+                  </div>
+                </div>
+              )}
               <div className="questions-container">
                 <aside className="side-nav">
                   <ul className="side-nav-list">
@@ -805,13 +922,15 @@ const StepThree: FC = () => {
                                             value={(subsection.canonical_id ?? subsection.subquestion_id ?? '') + ''}
                                             placeholder="N/A"
                                             onChange={(e) => {
-                                              const updatedRubric = JSON.parse(JSON.stringify(generatedRubric));
-                                              const rubricIndex = updatedRubric.rubric.findIndex((item: any) => item.question_id === selectedQuestionId);
-                                              if (rubricIndex !== -1) {
-                                                updatedRubric.rubric[rubricIndex].subsections[index].canonical_id = e.target.value;
-                                                updatedRubric.rubric[rubricIndex].subsections[index].subquestion_id = e.target.value;
-                                                setGeneratedRubric(updatedRubric);
-                                              }
+                                              mutateRubric((draft) => {
+                                                const rubricIndex = draft.rubric.findIndex(
+                                                  (item: any) => item.question_id === selectedQuestionId
+                                                );
+                                                if (rubricIndex !== -1) {
+                                                  draft.rubric[rubricIndex].subsections[index].canonical_id = e.target.value;
+                                                  draft.rubric[rubricIndex].subsections[index].subquestion_id = e.target.value;
+                                                }
+                                              });
                                             }}
                                           />
                                           <input
@@ -824,21 +943,23 @@ const StepThree: FC = () => {
                                             }
                                             placeholder="N/A"
                                             onChange={(e) => {
-                                              const updatedRubric = JSON.parse(JSON.stringify(generatedRubric));
-                                              const rubricIndex = updatedRubric.rubric.findIndex((item: any) => item.question_id === selectedQuestionId);
-                                              if (rubricIndex !== -1) {
-                                                updatedRubric.rubric[rubricIndex].subsections[index].max_score = e.target.value;
-                                                const newMaxScore = e.target.value;
-                                                if (updatedRubric.rubric[rubricIndex].subsections[index].performance_levels) {
-                                                  updatedRubric.rubric[rubricIndex].subsections[index].performance_levels.forEach((level: any) => {
-                                                    if (level.score_range) {
-                                                      const calculatedPercentage = calculatePercentageFromMarks(level.score_range, newMaxScore);
-                                                      level.threshold = calculatedPercentage;
-                                                    }
-                                                  });
+                                              const newMaxScore = e.target.value;
+                                              mutateRubric((draft) => {
+                                                const rubricIndex = draft.rubric.findIndex(
+                                                  (item: any) => item.question_id === selectedQuestionId
+                                                );
+                                                if (rubricIndex !== -1) {
+                                                  draft.rubric[rubricIndex].subsections[index].max_score = newMaxScore;
+                                                  const levels = draft.rubric[rubricIndex].subsections[index].performance_levels;
+                                                  if (levels) {
+                                                    levels.forEach((level: any) => {
+                                                      if (level.score_range) {
+                                                        level.threshold = calculatePercentageFromMarks(level.score_range, newMaxScore);
+                                                      }
+                                                    });
+                                                  }
                                                 }
-                                                setGeneratedRubric(updatedRubric);
-                                              }
+                                              });
                                             }}
                                           />
                                         </div>
@@ -855,34 +976,43 @@ const StepThree: FC = () => {
                                                 <input
                                                   type="text"
                                                   className="editable-field score-range"
-                                                  value={(level.score_range ?? '') + ''}
-                                                  placeholder="N/A"
-                                                  onChange={(e) => {
-                                                    const updatedRubric = JSON.parse(JSON.stringify(generatedRubric));
-                                                    const rubricIndex = updatedRubric.rubric.findIndex((item: any) => item.question_id === selectedQuestionId);
+                                                value={(level.score_range ?? '') + ''}
+                                                placeholder="N/A"
+                                                onChange={(e) => {
+                                                  const newRange = e.target.value;
+                                                  mutateRubric((draft) => {
+                                                    const rubricIndex = draft.rubric.findIndex(
+                                                      (item: any) => item.question_id === selectedQuestionId
+                                                    );
                                                     if (rubricIndex !== -1) {
-                                                      updatedRubric.rubric[rubricIndex].subsections[index].performance_levels[levelIndex].score_range = e.target.value;
-                                                      const maxScore = subsection.max_score;
-                                                      const calculatedPercentage = calculatePercentageFromMarks(e.target.value, maxScore);
-                                                      updatedRubric.rubric[rubricIndex].subsections[index].performance_levels[levelIndex].threshold = calculatedPercentage;
-                                                      setGeneratedRubric(updatedRubric);
+                                                      const levelDraft =
+                                                        draft.rubric[rubricIndex].subsections[index].performance_levels[levelIndex];
+                                                      levelDraft.score_range = newRange;
+                                                      const maxScore = draft.rubric[rubricIndex].subsections[index].max_score;
+                                                      levelDraft.threshold = calculatePercentageFromMarks(newRange, maxScore);
                                                     }
-                                                  }}
-                                                />
-                                                <input
-                                                  type="text"
-                                                  className="editable-field threshold"
-                                                  value={(level.threshold ?? '') + ''}
-                                                  placeholder="N/A"
-                                                  onChange={(e) => {
-                                                    const updatedRubric = JSON.parse(JSON.stringify(generatedRubric));
-                                                    const rubricIndex = updatedRubric.rubric.findIndex((item: any) => item.question_id === selectedQuestionId);
+                                                  });
+                                                }}
+                                              />
+                                              <input
+                                                type="text"
+                                                className="editable-field threshold"
+                                                value={(level.threshold ?? '') + ''}
+                                                placeholder="N/A"
+                                                onChange={(e) => {
+                                                  const nextThreshold = e.target.value;
+                                                  mutateRubric((draft) => {
+                                                    const rubricIndex = draft.rubric.findIndex(
+                                                      (item: any) => item.question_id === selectedQuestionId
+                                                    );
                                                     if (rubricIndex !== -1) {
-                                                      updatedRubric.rubric[rubricIndex].subsections[index].performance_levels[levelIndex].threshold = e.target.value;
-                                                      setGeneratedRubric(updatedRubric);
+                                                      draft.rubric[rubricIndex].subsections[index].performance_levels[
+                                                        levelIndex
+                                                      ].threshold = nextThreshold;
                                                     }
-                                                  }}
-                                                />
+                                                  });
+                                                }}
+                                              />
                                               </div>
                                               <textarea
                                                 className="editable-field level-description"
@@ -900,12 +1030,16 @@ const StepThree: FC = () => {
                                                   return cleaned;
                                                 })()}
                                                 onChange={(e) => {
-                                                  const updatedRubric = JSON.parse(JSON.stringify(generatedRubric));
-                                                  const rubricIndex = updatedRubric.rubric.findIndex((item: any) => item.question_id === selectedQuestionId);
-                                                  if (rubricIndex !== -1) {
-                                                    updatedRubric.rubric[rubricIndex].subsections[index].performance_levels[levelIndex].description = e.target.value;
-                                                    setGeneratedRubric(updatedRubric);
-                                                  }
+                                                  mutateRubric((draft) => {
+                                                    const rubricIndex = draft.rubric.findIndex(
+                                                      (item: any) => item.question_id === selectedQuestionId
+                                                    );
+                                                    if (rubricIndex !== -1) {
+                                                      draft.rubric[rubricIndex].subsections[index].performance_levels[
+                                                        levelIndex
+                                                      ].description = e.target.value;
+                                                    }
+                                                  });
                                                 }}
                                               />
                                             </div>
@@ -921,19 +1055,23 @@ const StepThree: FC = () => {
                                                 type="button"
                                                 className="edit-rubric-button penalty-action"
                                                 onClick={() => {
-                                                  const updatedRubric = JSON.parse(JSON.stringify(generatedRubric));
-                                                  const rubricIndex = updatedRubric.rubric.findIndex((item: any) => item.question_id === selectedQuestionId);
-                                                  if (rubricIndex !== -1) {
-                                                    if (!updatedRubric.rubric[rubricIndex].subsections[index].deductions) {
-                                                      updatedRubric.rubric[rubricIndex].subsections[index].deductions = [];
+                                                  mutateRubric((draft) => {
+                                                    const rubricIndex = draft.rubric.findIndex(
+                                                      (item: any) => item.question_id === selectedQuestionId
+                                                    );
+                                                    if (rubricIndex !== -1) {
+                                                      const subsectionDraft =
+                                                        draft.rubric[rubricIndex].subsections[index];
+                                                      if (!subsectionDraft.deductions) {
+                                                        subsectionDraft.deductions = [];
+                                                      }
+                                                      subsectionDraft.deductions.push({
+                                                        reason: 'Deduction',
+                                                        penalty: '',
+                                                        description: ''
+                                                      });
                                                     }
-                                                    updatedRubric.rubric[rubricIndex].subsections[index].deductions.push({
-                                                      reason: 'Deduction',
-                                                      penalty: '',
-                                                      description: ''
-                                                    });
-                                                    setGeneratedRubric(updatedRubric);
-                                                  }
+                                                  });
                                                 }}
                                               >
                                                 + Add Penalty
@@ -948,13 +1086,20 @@ const StepThree: FC = () => {
                                                 value={(deduction.reason ?? deduction.area ?? '') + ''}
                                                 placeholder="Deduction"
                                                 onChange={(e) => {
-                                                  const updatedRubric = JSON.parse(JSON.stringify(generatedRubric));
-                                                  const rubricIndex = updatedRubric.rubric.findIndex((item: any) => item.question_id === selectedQuestionId);
-                                                  if (rubricIndex !== -1) {
-                                                    updatedRubric.rubric[rubricIndex].subsections[index].deductions[deductionIndex].reason = e.target.value;
-                                                    updatedRubric.rubric[rubricIndex].subsections[index].deductions[deductionIndex].area = e.target.value;
-                                                    setGeneratedRubric(updatedRubric);
-                                                  }
+                                                  const nextValue = e.target.value;
+                                                  mutateRubric((draft) => {
+                                                    const rubricIndex = draft.rubric.findIndex(
+                                                      (item: any) => item.question_id === selectedQuestionId
+                                                    );
+                                                    if (rubricIndex !== -1) {
+                                                      draft.rubric[rubricIndex].subsections[index].deductions[
+                                                        deductionIndex
+                                                      ].reason = nextValue;
+                                                      draft.rubric[rubricIndex].subsections[index].deductions[
+                                                        deductionIndex
+                                                      ].area = nextValue;
+                                                    }
+                                                  });
                                                 }}
                                               />
                                               <input
@@ -963,19 +1108,22 @@ const StepThree: FC = () => {
                                                 value={(deduction.penalty ?? '') + ''}
                                                 placeholder="N/A"
                                                 onChange={(e) => {
-                                                  const updatedRubric = JSON.parse(JSON.stringify(generatedRubric));
-                                                  const rubricIndex = updatedRubric.rubric.findIndex((item: any) => item.question_id === selectedQuestionId);
-                                                  if (rubricIndex !== -1) {
-                                                    const input = e.target.value.trim();
-                                                    // If user explicitly sets 0, remove the deduction row
-                                                    const numeric = parseFloat(input);
-                                                    if (input !== '' && !isNaN(numeric) && numeric === 0) {
-                                                      updatedRubric.rubric[rubricIndex].subsections[index].deductions.splice(deductionIndex, 1);
-                                                    } else {
-                                                      updatedRubric.rubric[rubricIndex].subsections[index].deductions[deductionIndex].penalty = e.target.value;
+                                                  mutateRubric((draft) => {
+                                                    const rubricIndex = draft.rubric.findIndex(
+                                                      (item: any) => item.question_id === selectedQuestionId
+                                                    );
+                                                    if (rubricIndex !== -1) {
+                                                      const input = e.target.value.trim();
+                                                      const numeric = parseFloat(input);
+                                                      const deductionList =
+                                                        draft.rubric[rubricIndex].subsections[index].deductions;
+                                                      if (input !== '' && !isNaN(numeric) && numeric === 0) {
+                                                        deductionList.splice(deductionIndex, 1);
+                                                      } else {
+                                                        deductionList[deductionIndex].penalty = e.target.value;
+                                                      }
                                                     }
-                                                    setGeneratedRubric(updatedRubric);
-                                                  }
+                                                  });
                                                 }}
                                               />
                                               {/* description intentionally removed */}
@@ -992,66 +1140,73 @@ const StepThree: FC = () => {
                                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', marginBottom: '0.25rem' }}>
                                     <h4 style={{ margin: 0 }}>Global Deductions:</h4>
                                     <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                      <button
-                                        type="button"
-                                        className="edit-rubric-button penalty-action"
-                                        onClick={() => {
-                                          const updatedRubric = JSON.parse(JSON.stringify(generatedRubric));
-                                          const rubricIndex = updatedRubric.rubric.findIndex((item: any) => item.question_id === selectedQuestionId);
+                                    <button
+                                      type="button"
+                                      className="edit-rubric-button penalty-action"
+                                      onClick={() => {
+                                        mutateRubric((draft) => {
+                                          const rubricIndex = draft.rubric.findIndex(
+                                            (item: any) => item.question_id === selectedQuestionId
+                                          );
                                           if (rubricIndex !== -1) {
-                                            if (!updatedRubric.rubric[rubricIndex].deductions) {
-                                              updatedRubric.rubric[rubricIndex].deductions = [];
+                                            if (!draft.rubric[rubricIndex].deductions) {
+                                              draft.rubric[rubricIndex].deductions = [];
                                             }
-                                            updatedRubric.rubric[rubricIndex].deductions.push({
+                                            draft.rubric[rubricIndex].deductions.push({
                                               area: 'Deduction',
                                               penalty: '',
                                               description: ''
                                             });
-                                            setGeneratedRubric(updatedRubric);
                                           }
-                                        }}
-                                      >
-                                        + Add Penalty
-                                      </button>
+                                        });
+                                      }}
+                                    >
+                                      + Add Penalty
+                                    </button>
                                     </div>
                                   </div>
                                   {rubricItem.deductions.map((deduction: any, index: number) => (
                                     <div key={index} className="deduction">
-                                      <input
-                                        type="text"
-                                        className="editable-field deduction-name"
-                                        value={(deduction.area ?? deduction.reason ?? '') + ''}
-                                        placeholder="Deduction"
-                                        onChange={(e) => {
-                                          const updatedRubric = JSON.parse(JSON.stringify(generatedRubric));
-                                          const rubricIndex = updatedRubric.rubric.findIndex((item: any) => item.question_id === selectedQuestionId);
+                                    <input
+                                      type="text"
+                                      className="editable-field deduction-name"
+                                      value={(deduction.area ?? deduction.reason ?? '') + ''}
+                                      placeholder="Deduction"
+                                      onChange={(e) => {
+                                        const nextValue = e.target.value;
+                                        mutateRubric((draft) => {
+                                          const rubricIndex = draft.rubric.findIndex(
+                                            (item: any) => item.question_id === selectedQuestionId
+                                          );
                                           if (rubricIndex !== -1) {
-                                            updatedRubric.rubric[rubricIndex].deductions[index].area = e.target.value;
-                                            updatedRubric.rubric[rubricIndex].deductions[index].reason = e.target.value;
-                                            setGeneratedRubric(updatedRubric);
+                                            draft.rubric[rubricIndex].deductions[index].area = nextValue;
+                                            draft.rubric[rubricIndex].deductions[index].reason = nextValue;
                                           }
-                                        }}
-                                      />
-                                      <input
-                                        type="text"
-                                        className="editable-field penalty"
-                                        value={(deduction.penalty ?? '') + ''}
-                                        placeholder="N/A"
-                                        onChange={(e) => {
-                                          const updatedRubric = JSON.parse(JSON.stringify(generatedRubric));
-                                          const rubricIndex = updatedRubric.rubric.findIndex((item: any) => item.question_id === selectedQuestionId);
+                                        });
+                                      }}
+                                    />
+                                    <input
+                                      type="text"
+                                      className="editable-field penalty"
+                                      value={(deduction.penalty ?? '') + ''}
+                                      placeholder="N/A"
+                                      onChange={(e) => {
+                                        mutateRubric((draft) => {
+                                          const rubricIndex = draft.rubric.findIndex(
+                                            (item: any) => item.question_id === selectedQuestionId
+                                          );
                                           if (rubricIndex !== -1) {
                                             const input = e.target.value.trim();
                                             const numeric = parseFloat(input);
                                             if (input !== '' && !isNaN(numeric) && numeric === 0) {
-                                              updatedRubric.rubric[rubricIndex].deductions.splice(index, 1);
+                                              draft.rubric[rubricIndex].deductions.splice(index, 1);
                                             } else {
-                                              updatedRubric.rubric[rubricIndex].deductions[index].penalty = e.target.value;
+                                              draft.rubric[rubricIndex].deductions[index].penalty = e.target.value;
                                             }
-                                            setGeneratedRubric(updatedRubric);
                                           }
-                                        }}
-                                      />
+                                        });
+                                      }}
+                                    />
                                       {/* description intentionally removed */}
                                     </div>
                                   ))}

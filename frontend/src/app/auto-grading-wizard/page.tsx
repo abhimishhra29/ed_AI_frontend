@@ -1,6 +1,13 @@
 'use client';
 
-import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import {
+  FormEvent,
+  FocusEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { ChevronLeft, ChevronRight, Info } from "lucide-react";
 
 // Step pages (presentational-only)
@@ -16,6 +23,7 @@ import {
   AutoGradingWizardContext,
   AutoGradingWizardContextType,
   WorkflowOption,
+  AssignmentStructureOption,
 } from "./useAutoGradingWizard";
 
 const TIMEOUT_SECONDS = 600;
@@ -30,10 +38,13 @@ type WizardStep = 1 | 2 | 3 | 4;
 function CombinedAutoGradingWizard() {
   const [step, setStep] = useState<WizardStep>(1);
   const [isInfoPanelOpen, setIsInfoPanelOpen] = useState(false);
+  const [isInfoPanelHovering, setIsInfoPanelHovering] = useState(false);
 
   const [assignmentFile, setAssignmentFile] = useState<File | null>(null);
 
   const [assignmentName, setAssignmentName] = useState<string>("");
+  const [assignmentStructure, setAssignmentStructure] =
+    useState<AssignmentStructureOption>("question_based");
   const [workflows, setWorkflows] = useState<WorkflowOption[]>([
     ...ALLOWED_WORKFLOWS,
   ]);
@@ -127,7 +138,6 @@ function CombinedAutoGradingWizard() {
       );
       return;
     }
-
     setIsGeneratingRubric(true);
     setRubricGenerationError(null);
 
@@ -136,6 +146,7 @@ function CombinedAutoGradingWizard() {
     if (assignmentName) {
       fd.append("assignmentName", assignmentName);
     }
+    fd.append("assignmentStructure", assignmentStructure);
 
     try {
       const resp = await apiFetch("/api/v2/rubric", {
@@ -175,7 +186,7 @@ function CombinedAutoGradingWizard() {
     } finally {
       setIsGeneratingRubric(false);
     }
-  }, [assignmentFile, assignmentName]);
+  }, [assignmentFile, assignmentName, assignmentStructure]);
 
   const handleGrade = useCallback(
     async (event: FormEvent<HTMLFormElement>) => {
@@ -228,6 +239,7 @@ function CombinedAutoGradingWizard() {
           formData.append("assignmentFile", assignmentSource);
           formData.append("rubricJson", rubricPayload);
           formData.append("solutionFile", file);
+          formData.append("assignmentStructure", assignmentStructure);
 
           const response = await apiFetch("/api/v1/grade", {
             method: "POST",
@@ -266,6 +278,7 @@ function CombinedAutoGradingWizard() {
     [
       assignmentFile,
       assignmentName,
+      assignmentStructure,
       generatedRubric,
       selectedWorkflow,
       solutionFilesSelected,
@@ -285,6 +298,8 @@ function CombinedAutoGradingWizard() {
       workflows,
       selectedWorkflow,
       setSelectedWorkflow,
+      assignmentStructure,
+      setAssignmentStructure,
       isSubmitting,
       gradingError,
       timeLeft,
@@ -306,6 +321,7 @@ function CombinedAutoGradingWizard() {
     [
       assignmentFile,
       assignmentName,
+      assignmentStructure,
       extractedQuestions,
       generatedRubric,
       generateRubric,
@@ -334,6 +350,10 @@ function CombinedAutoGradingWizard() {
 
   const toggleInfoPanel = useCallback(() => {
     setIsInfoPanelOpen((open) => !open);
+  }, []);
+
+  const handleInfoPanelHoverChange = useCallback((hovering: boolean) => {
+    setIsInfoPanelHovering(hovering);
   }, []);
 
   const handleContinueFromStep3 = useCallback(() => {
@@ -400,7 +420,12 @@ function CombinedAutoGradingWizard() {
           {step === 4 && <StepFour />}
         </main>
 
-        <InfoPanel isOpen={isInfoPanelOpen} onToggle={toggleInfoPanel} step={step} />
+        <InfoPanel
+          isOpen={isInfoPanelOpen || isInfoPanelHovering}
+          onToggle={toggleInfoPanel}
+          onHoverChange={handleInfoPanelHoverChange}
+          step={step}
+        />
       </div>
     </AutoGradingWizardContext.Provider>
   );
@@ -417,17 +442,24 @@ function Header({ step }: { step: WizardStep }) {
 type InfoPanelProps = {
   isOpen: boolean;
   onToggle: () => void;
+  onHoverChange?: (hovering: boolean) => void;
   step: WizardStep;
 };
 
-function InfoPanel({ isOpen, onToggle, step }: InfoPanelProps) {
+function InfoPanel({
+  isOpen,
+  onToggle,
+  onHoverChange,
+  step,
+}: InfoPanelProps) {
   const titleId = "auto-grading-info-panel-title";
   const contentId = "auto-grading-info-panel-content";
   
   const stepOneTips = [
-    "Select Assignment Type",
-    "Typed Assignment: For submissions created using Word, Docs, or other software.",
-    "Handwritten Assignment: For scanned or photographed handwritten work.",
+    "Pick the Assignment Type that matches the submission format before moving on.",
+    "Typed Assignment handles Word/Google Docs style PDFs, Handwritten Assignment is tuned for scanned pen-and-paper uploads.",
+    "Set the Question Paper Type to 'Q/A Based' when the Assignment has numbered questions or MCQs.",
+    "Switch it to 'Report Based' for essays, case studies",
   ];
   
   const stepTwoTips = [
@@ -460,11 +492,25 @@ function InfoPanel({ isOpen, onToggle, step }: InfoPanelProps) {
   
   const tips = step === 1 ? stepOneTips : step === 2 ? stepTwoTips : step === 3 ? stepThreeTips : step === 4 ? stepFourTips : defaultTips;
 
+  const handleMouseEnter = () => onHoverChange?.(true);
+  const handleMouseLeave = () => onHoverChange?.(false);
+  const handleBlurCapture = (event: FocusEvent<HTMLElement>) => {
+    const nextTarget = event.relatedTarget as Node | null;
+    if (!event.currentTarget.contains(nextTarget)) {
+      onHoverChange?.(false);
+    }
+  };
+  const handleFocusCapture = () => onHoverChange?.(true);
+
   return (
     <aside
       className={`click-info-panel ${isOpen ? "open" : ""}`}
       role="complementary"
       aria-labelledby={titleId}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onFocusCapture={handleFocusCapture}
+      onBlurCapture={handleBlurCapture}
     >
       <button
         type="button"
