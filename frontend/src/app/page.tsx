@@ -49,7 +49,16 @@ export default function HomePage(): JSX.Element {
               transition={{ delay: 0.2, duration: 0.3 }}
               className="hero-description"
             >
-              EdGenAI provides intelligent tools and expert guidance to automate grading, streamline student planning, and integrate generative AI into your institution.
+              EdGenAI provides intelligent tools and expert guidance to automate grading{'\n'}, and integrate generative AI into your institution.
+            </motion.p>
+            <motion.p
+              initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              transition={{ delay: 0.28, duration: 0.3 }}
+              className="hero-tagline text-center w-full mt-2"
+              style={{ textAlign: 'center', marginTop: '1rem' }}
+            >
+              <strong className="block text-center w-full">Reclaim Your Time. Revolutionize Your Classroom.</strong>
             </motion.p>
             <div className="hero-logos">
               {[
@@ -89,7 +98,7 @@ export default function HomePage(): JSX.Element {
               <div className="why-us-title-wrapper">
                 <h2>Why Partner with EdGenAI?</h2>
                 <p className="why-us-intro">
-                  More than just a vendor, we act as your strategic partner in educational innovation—aligning technology, insight, and support to help you achieve meaningful impact.
+                  We&apos;re more than a vendor; we&apos;re your dedicated partner in educational innovation.
                 </p>
               </div>
             </div>
@@ -113,7 +122,7 @@ export default function HomePage(): JSX.Element {
                 </div>
                 <div className="service-card-content">
                   <h3>Education Experts</h3>
-                  <p>Our team blends seasoned educators and AI researchers for unmatched insight into educational innovation.</p>
+                  <p>Our team blends seasoned educators and AI researchers for unmatched insight.</p>
                 </div>
               </div>
               <div className="service-card">
@@ -135,7 +144,7 @@ export default function HomePage(): JSX.Element {
                 </div>
                 <div className="service-card-content">
                   <h3>Transparent Collaboration</h3>
-                  <p>Agile, co-creative processes keep you in control every step of the way, ensuring transparency and trust.</p>
+                  <p>Agile, co-creative processes keep you in control every step of the way.</p>
                 </div>
               </div>
               <div className="service-card">
@@ -157,7 +166,7 @@ export default function HomePage(): JSX.Element {
                 </div>
                 <div className="service-card-content">
                   <h3>Ethical &amp; Secure</h3>
-                  <p>Committed to the highest standards of data privacy and responsible AI implementation in education.</p>
+                  <p>Committed to the highest standards of data privacy and responsible AI.</p>
                 </div>
               </div>
             </div>

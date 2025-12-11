@@ -10,33 +10,27 @@ export default function ServicesGrid() {
 
   const services = [
     {
-      title: 'Business Automation',
-      description: 'We help education providers streamline complex administrative processes using secure, reliable GenAI solutions.',
-      image: '/backgrounds/bg2.png', // Sky/clouds background
-      href: '/services#service-0',
+      title: 'Curriculum & Assessment Design',
+      description: 'Co-design AI-infused learning modules, authentic assessments, and course materials that prepare students for an AI-driven world.',
+      image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1600&q=80', // Educator outlining curriculum plans on paper and laptop
+      href: '/services#curriculum-design',
       position: 'top-left' as const, // Large card, spans 2 rows
     },
     {
-      title: 'Professional Development and Training',
-      description: 'We provide hands-on, evidence-based training tailored for educators, support staff, and leadership teams looking to implement GenAI in teaching, operations, and student engagement.',
-      image: '/backgrounds/bg1.png', // Blurred flowers background
-      href: '/services#service-1',
+      title: 'Faculty Training Workshops',
+      description: 'Hands-on workshops that build practical AI literacy so educators can teach, streamline workflows, and guide students ethically.',
+      image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1600&q=80', // Facilitator leading an interactive training session
+      href: '/services#faculty-training',
       position: 'top-right' as const, // Small card
     },
     {
-      title: 'Course Design',
-      description: 'We support educators in creating courses that leverage AI to improve engagement, clarity, and student outcomes without sacrificing academic integrity.',
-      image: '/backgrounds/bg3.webp', // Castle/moat background
-      href: '/services#service-3',
+      title: 'Strategic AI Implementation',
+      description: 'Develop a comprehensive AI strategy across policy, infrastructure, and pedagogy to integrate AI smoothly at scale.',
+      image: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=1600&q=80', // Leadership team in a strategy workshop
+      href: '/services#strategic-implementation',
       position: 'middle-right' as const, // Small card
     },
-    {
-      title: 'Security and Data Governance',
-      description: 'Education institutions face strict data and policy requirements. We help you deploy AI safely, ensuring governance is built-in from day one.',
-      image: '/backgrounds/bg2.png', // Sky/clouds background
-      href: '/services#service-2',
-      position: 'bottom-left' as const, // Large card, spans 2 columns
-    },
+
   ];
 
   return (
@@ -47,7 +41,7 @@ export default function ServicesGrid() {
       <div className="services-grid-header">
         <h2 className="services-grid-title">Services</h2>
         <p className="services-grid-subtitle text-primary">
-          End-to-end AI solutions that transform business operations to enhance administrative, teaching, and learning experiences.
+          Integrate AI into your curriculum, train faculty, and build a sustainable strategy with a trusted partner.
         </p>
       </div>
       <div className="services-grid-container">
@@ -123,4 +117,3 @@ export default function ServicesGrid() {
     </section>
   );
 }
-

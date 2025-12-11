@@ -10,23 +10,24 @@ export default function FeatureGrid() {
 
   const features = [
     {
-      title: 'Automated Grading',
-      description: 'Reduce marking time with AI that scores rubrics, drafts feedback, and flags outliers.',
-      image: '/backgrounds/bg2.png', // Sky/clouds background
+      title: 'AutoGrade: AI-Powered Grading',
+      description: 'Evaluate submissions against your rubrics, remove bias, and deliver consistent feedback in minutes.',
+      image: 'https://images.unsplash.com/photo-1631557777232-a2632ae3c67d?auto=format&fit=crop&w=1600&q=80', // AutoGrade workspace (selected)
       href: '/auto-grade',
       size: 'large' as const,
     },
     {
-      title: 'Auto Grading',
-      description: 'Build pathways for every learner with tailored tasks, pacing, and AI-created resources.',
-      image: '/backgrounds/bg1.png', // Blurred flowers background
+      title: 'View Demo of AutoGrade',
+      description: 'Watch a quick walkthrough of AutoGrade evaluating a submission in real time.',
+      image: '/backgrounds/Screenshot%202025-12-11%20at%206.09.10%E2%80%AFPM.png', // Provided demo screenshot
       href: '/auto-grade',
       size: 'small' as const,
+      isDemo: true,
     },
     {
-      title: 'Plan My Assignment',
-      description: 'Surface lesson ideas, examples, and formative checks tailored to each cohort in seconds.',
-      image: '/backgrounds/bg3.webp', // Castle/moat background
+      title: 'Plan My Assignment: Student Planning Tool',
+      description: 'Help students actively plan assignments, manage deadlines, and track progress with AI support.',
+      image: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&w=1600&q=80', // Organized study planner
       href: '/plan-my-assignment-wizard',
       size: 'small' as const,
     },
@@ -40,7 +41,7 @@ export default function FeatureGrid() {
       <div className="feature-grid-header">
         <h2 className="feature-grid-title">Tools</h2>
         <p className="feature-grid-subtitle text-primary">
-          An Education partner for universities, TAFEs, and schools looking to integrate AI into their teaching and learning processes.
+          AutoGrade and Plan My Assignment bring AI-powered grading and planning to your classroom.
         </p>
       </div>
       <div className="feature-grid-container">
@@ -98,4 +99,3 @@ export default function FeatureGrid() {
     </section>
   );
 }
-

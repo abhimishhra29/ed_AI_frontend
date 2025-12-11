@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowDown } from 'lucide-react';
 import Image from 'next/image';
 import { useState, type MouseEvent } from 'react';
 import Link from 'next/link';
@@ -13,14 +13,14 @@ export default function FeatureCards() {
   const features = [
     {
       title: 'Tools',
-      description: 'Reduce marking time with AI that scores rubrics, drafts feedback, and flags outliers.',
-      image: '/backgrounds/bg2.png', // Sky/clouds background
+      description: 'AutoGrade and Plan My Assignment help you reclaim time with AI-powered grading and student planning.',
+      image: 'https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=1600&q=80', // Productive desk with laptop and sticky-notes for AI tools in action
       href: '#feature-grid',
     },
     {
       title: 'Consultancy',
-      description: 'Build pathways for every learner with tailored tasks, pacing, and AI-created resources.',
-      image: '/backgrounds/bg1.png', // Blurred flowers background
+      description: 'Curriculum design, faculty training, and strategic AI implementation to integrate generative AI responsibly.',
+      image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1600&q=80', // Consultancy workshop with projector (requested)
       href: '#services-grid', // Scroll to services section
     },
   ];
@@ -115,7 +115,7 @@ export default function FeatureCards() {
                       aria-label={`Explore ${feature.title}`}
                       onClick={(event) => handleButtonClick(event, feature.href, index)}
                     >
-                      <ArrowUpRight />
+                      <ArrowDown />
                     </button>
                   </div>
                 </div>
