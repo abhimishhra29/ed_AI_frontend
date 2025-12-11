@@ -19,6 +19,8 @@ const Header: FC = () => {
   const [sessionExpired, setSessionExpired] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const autoGradeHref = loggedIn ? '/auto-grading-wizard' : '/auto-grade';
+  const planAssignmentHref = loggedIn ? '/plan-my-assignment' : '/plan-my-assignment-wizard';
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -216,19 +218,19 @@ const Header: FC = () => {
                 </Link>
 
                 <div className="mobile-menu-item">
-                  <Link href="/products" className="mobile-menu-link" onClick={closeAll}>
+                  <Link href={autoGradeHref} className="mobile-menu-link" onClick={closeAll}>
                     Products
                   </Link>
                   <div className="mobile-menu-dropdown">
                     <Link
-                      href={loggedIn ? '/auto-grading-wizard' : '/auto-grade'}
+                      href={autoGradeHref}
                       className="mobile-menu-link mobile-menu-sublink"
                       onClick={closeAll}
                     >
                       Auto Grade
                     </Link>
                     <Link
-                      href={loggedIn ? '/plan-my-assignment' : '/plan-my-assignment-wizard'}
+                      href={planAssignmentHref}
                       className="mobile-menu-link mobile-menu-sublink"
                       onClick={closeAll}
                     >
@@ -280,39 +282,23 @@ const Header: FC = () => {
             className="nav-item"
             onMouseEnter={() => setOpenMenu("products")}
             onMouseLeave={() => setOpenMenu(null)}
-            onClick={(e) => {
-              // Prevent any navigation when clicking on Products
-              if (e.target === e.currentTarget || (e.target as HTMLElement).textContent === 'Products') {
-                e.preventDefault();
-                e.stopPropagation();
-              }
-            }}
           >
-            <span 
-              className="nav-link" 
-              style={{ cursor: 'default', pointerEvents: 'auto' }}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                return false;
-              }}
-              onMouseDown={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                return false;
-              }}
+            <Link 
+              href={autoGradeHref}
+              className="nav-link"
+              onClick={closeAll}
             >
               Products
-            </span>
+            </Link>
             <div className={`dropdown ${openMenu === "products" ? "open" : ""}`}>
               <Link
-                href={loggedIn ? '/auto-grading-wizard' : '/auto-grade'}
+                href={autoGradeHref}
                 onClick={closeAll}
               >
                 Auto Grade
               </Link>
               <Link
-                href={loggedIn ? '/plan-my-assignment' : '/plan-my-assignment-wizard'}
+                href={planAssignmentHref}
                 onClick={closeAll}
               >
                 Plan My Assignment
