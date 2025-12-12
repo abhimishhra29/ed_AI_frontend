@@ -879,7 +879,7 @@ const StepThree: FC = () => {
                             onClick={() => setSelectedQuestionId(id)}
                             title={fullTitle}
                           >
-                            {(id.endsWith(':') ? id : `${id}:`)} {truncated}
+                            {id.endsWith(':') ? id : `${id}:`}
                           </li>
                         );
                       })
@@ -1222,16 +1222,15 @@ const StepThree: FC = () => {
                                     <div key={index} className="subsection">
                                       <div className="subsection-header">
                                         <strong>{subsection.label || subsection.title || `Subsection ${index + 1}`}</strong>
-                                        <span className="subsection-id">ID: {subsection.canonical_id || subsection.subquestion_id || 'N/A'}</span>
                                         <span className="subsection-score">Max Score: {subsection.max_score || 'N/A'}</span>
                                       </div>
                                       {subsection.performance_levels && subsection.performance_levels.length > 0 && (
                                         <div className="performance-levels">
                                           <h5>Performance Levels:</h5>
-                                          <div className="performance-levels-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0', marginBottom: '0.5rem', gap: '1rem' }}>
+                                          <div className="performance-levels-header" style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', padding: '0.5rem 0', marginBottom: '0.5rem', gap: '0.3rem' }}>
                                             <span style={{ flex: 1 }}></span>
-                                            <span style={{ fontSize: '1.5rem', fontWeight: 700, color: '#213342', width: '80px', textAlign: 'center', flexShrink: 0 }}>Marks</span>
-                                            <span style={{ fontSize: '1.5rem', fontWeight: 700, color: '#213342', width: '120px', minWidth: '120px', textAlign: 'center', flexShrink: 0 }}>Percentage</span>
+                                            <span style={{ fontSize: '1.5rem', fontWeight: 700, color: '#213342', width: '85px', minWidth: '85px', textAlign: 'center', flexShrink: 0, whiteSpace: 'nowrap' }}>Marks</span>
+                                            <span style={{ fontSize: '1.5rem', fontWeight: 700, color: '#213342', width: '160px', minWidth: '160px', textAlign: 'center', flexShrink: 0 }}>Percentage</span>
                                             <span></span>
                                           </div>
                                           {subsection.performance_levels.map((level: any, levelIndex: number) => (
