@@ -31,7 +31,8 @@ export default function Footer() {
               <h3 className="footer-brand-title">edgen AI</h3>
             </div>
             <p className="footer-brand-description">
-              EdGenAI is the home you've been searching for. We bring clarity to AI adoption so your teams can move faster and teach better.
+                            EdGenAI helps institutions adopt AI with clarity, confidence, and responsibility.
+
             </p>
             <button onClick={scrollToTop} className="footer-back-to-top">
               Back to top
@@ -71,7 +72,7 @@ export default function Footer() {
       <div className="footer-bottom">
         <div className="footer-bottom-content">
           <p className="footer-copyright">
-            © 2025 EdGen AI. All rights reserved.
+            © 2025 EdGenAI Technologies. All rights reserved.
           </p>
         </div>
       </div>

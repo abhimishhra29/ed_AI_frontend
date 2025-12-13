@@ -91,6 +91,15 @@
   text-align: center;
 }
 
+.hero-logos-caption {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+  color: #1f1f1f;
+  margin: 0.5rem auto 0;
+  text-align: center;
+  letter-spacing: 0.01em;
+}
+
 /* Hero Logos */
 .hero-logos {
   display: flex !important;

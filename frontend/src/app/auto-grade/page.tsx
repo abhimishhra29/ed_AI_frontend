@@ -89,7 +89,7 @@ export default function AutoGradeLanding(): JSX.Element {
           <div className="container">
             <h2 className="section-title">A New Era of Assessment</h2>
             <p className="section-subtitle">
-              AutoGrade is more than just a tool; it&apos;s a complete grading
+              AutoGrade is more than just a product; it&apos;s a complete grading
               partner designed for performance and trust.
             </p>
             <div className="features-grid">

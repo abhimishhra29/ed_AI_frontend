@@ -22,7 +22,7 @@ import Header from '../components/Header';
 export const metadata: Metadata = {
   title: 'EdGenAI',
   description:
-    'EdGenAI delivers AI-powered grading, planning, and consultancy tools that help educators transform learning experiences.',
+    'EdGenAI delivers AI-powered grading and planning products plus consultancy services that help educators transform learning experiences.',
   icons: {
     icon: '/logoicon.png',
     shortcut: '/logoicon.png',

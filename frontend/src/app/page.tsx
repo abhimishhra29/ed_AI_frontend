@@ -49,7 +49,7 @@ export default function HomePage(): JSX.Element {
               transition={{ delay: 0.2, duration: 0.3 }}
               className="hero-description"
             >
-              EdGenAI provides intelligent tools and expert guidance to integrate generative AI into your institution.
+              EdGenAI provides intelligent products and expert guidance to integrate generative AI into your institution.
             </motion.p>
             <motion.p
               initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
@@ -60,6 +60,7 @@ export default function HomePage(): JSX.Element {
             >
               <strong className="block text-center w-full">Reclaim Your Time. Revolutionize Your Classroom.</strong>
             </motion.p>
+            
             <div className="hero-logos">
               {[
                 { src: "/logos/the-university-of-melbourne-logo-png-transparent.png", alt: "University of Melbourne" },
@@ -82,6 +83,14 @@ export default function HomePage(): JSX.Element {
                 </motion.div>
               ))}
             </div>
+            <motion.p
+              initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              transition={{ delay: 0.32, duration: 0.3 }}
+              className="hero-logos-caption"
+            >
+              Supported by leading universities
+            </motion.p>
           </section>
 
           {/* Feature Cards Section */}

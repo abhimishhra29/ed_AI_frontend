@@ -197,7 +197,7 @@ const Header: FC = () => {
               {/* Top section with logo and close button */}
               <div className="mobile-menu-header">
                 <Link href="/" className="mobile-menu-logo" onClick={closeAll}>
-                  <img src="/logoicon.png" alt="EdGenAI" />
+                  <img src={logo.src} alt="EdGenAI" />
                   <span className="mobile-menu-logo-text">EdGenAI</span>
                 </Link>
                 <button
@@ -240,7 +240,7 @@ const Header: FC = () => {
                 </div>
 
                 <Link href="/services" className="mobile-menu-link" onClick={closeAll}>
-                  Services
+                  Consultancy
                 </Link>
 
                 {!loggedIn && (
@@ -308,7 +308,7 @@ const Header: FC = () => {
 
           <div className="nav-item" onMouseEnter={() => setOpenMenu("services")}>
             <Link href="/services" className="nav-link" onClick={closeAll}>
-              Services
+              Consultancy
             </Link>
           </div>
 

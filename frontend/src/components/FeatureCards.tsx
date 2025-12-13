@@ -12,13 +12,13 @@ export default function FeatureCards() {
 
   const features = [
     {
-      title: 'Tools',
-      description: 'Reclaim your time with EdGenAI. Our AI-powered tools automate repetitive tasks so you can stay focused on meaningful work, we handle the rest.',
-      image: 'https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=1600&q=80', // Productive desk with laptop and sticky-notes for AI tools in action
+      title: 'Products',
+      description: 'Reclaim your time with AutoGrade. Our AI-powered products automate repetitive tasks so you can stay focused on meaningful work, we handle the rest.',
+      image: 'https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=1600&q=80', // Productive desk with laptop and sticky-notes for AI products in action
       href: '#feature-grid',
     },
     {
-      title: 'Consultancy',
+      title: 'Consultancy Services',
       description: 'Curriculum design, faculty training, and strategic AI implementation to integrate generative AI responsibly.',
       image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1600&q=80', // Consultancy workshop with projector (requested)
       href: '#services-grid', // Scroll to services section

@@ -39,9 +39,9 @@ export default function ServicesGrid() {
       className="services-grid-section"
     >
       <div className="services-grid-header">
-        <h2 className="services-grid-title">Services</h2>
+        <h2 className="services-grid-title">Consultancy Services</h2>
         <p className="services-grid-subtitle text-primary">
-          Integrate AI into your curriculum, train faculty, and build a sustainable strategy with a trusted partner.
+          Integrate AI into your curriculum, train faculty, and build a sustainable strategy with a trusted consultancy partner.
         </p>
       </div>
       <div className="services-grid-container">

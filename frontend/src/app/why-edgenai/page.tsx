@@ -33,12 +33,12 @@ export default function WhyEdGenAI() {
       <section id="mission" className="page-section">
         <h2>GenAI Experts for Authentic Learning</h2>
         <p>
-          We specialize in building GenAI tools that align with authentic, outcomes-based education. Our mission is
+          We specialize in building GenAI products that align with authentic, outcomes-based education. Our mission is
           to support deeper learning through thoughtfully designed AI that scaffolds reflection,
           encourages critical thinking, and empowers educators to deliver the best.
         </p>
         <p>
-          Every solution we build reflects deep collaboration with the education community, ensuring our tools
+          Every solution we build reflects deep collaboration with the education community, ensuring our products
           enhance, not disrupt, the integrity of the learning process.
         </p>
       </section>
@@ -51,7 +51,7 @@ export default function WhyEdGenAI() {
           classroom use.
         </p>
         <p>
-          Our agile approach allows us to quickly respond to feedback and ensure our tools evolve with your needs, always
+          Our agile approach allows us to quickly respond to feedback and ensure our products evolve with your needs, always
           with full transparency into how they work and why they're designed the way they are.
         </p>
       </section>
@@ -64,7 +64,7 @@ export default function WhyEdGenAI() {
           control over how data is used.
         </p>
         <p>
-          Whether you&apos;re an educator, student, or administrator, you can trust that EdGenAI’s tools protect what matters
+          Whether you&apos;re an educator, student, or administrator, you can trust that EdGenAI’s products protect what matters
           most: learner integrity, data ownership, and ethical application of AI in education.
         </p>
       </section>

@@ -25,7 +25,7 @@ export default function FeatureGrid() {
       isDemo: true,
     },
     {
-      title: 'Plan My Assignment: Student Planning Tool',
+      title: 'Plan My Assignment: Student Planner',
       description: 'Help students actively plan assignments, manage deadlines, and track progress with AI support.',
       image: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&w=1600&q=80', // Organized study planner
       href: '/plan-my-assignment-wizard',
@@ -39,9 +39,9 @@ export default function FeatureGrid() {
       className="feature-grid-section"
     >
       <div className="feature-grid-header">
-        <h2 className="feature-grid-title">Tools</h2>
+        <h2 className="feature-grid-title">Products</h2>
         <p className="feature-grid-subtitle text-primary">
-          AutoGrade and Plan My Assignment bring AI-powered grading and planning to your classroom.
+          AutoGrade and Plan My Assignment bring AI-powered grading and planning products to your classroom.
         </p>
       </div>
       <div className="feature-grid-container">

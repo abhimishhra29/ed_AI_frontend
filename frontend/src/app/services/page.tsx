@@ -168,7 +168,7 @@ export default function Services() {
         'Workflow automation for admin, support, and academic teams',
         'AI-driven knowledge bases and helpdesk assistants',
         'Automated student onboarding, reminders, and progress nudges',
-        'Custom integrations connecting LMS, SIS, CRM, and communication tools',
+        'Custom integrations connecting LMS, SIS, CRM, and communication platforms',
         'Efficiency analytics to track time savings and ROI'
       ],
       svg: timelineSteps[0].svg
@@ -207,7 +207,7 @@ export default function Services() {
         'Modular, outcome-aligned course design frameworks',
         'AI-assisted creation of lessons, activities, readings, and resources',
         'Adaptive content pathways based on learner progress',
-        'Integration of AI tools into curriculum delivery',
+        'Integration of AI products into curriculum delivery',
         'Templates and design kits for rapid course development'
       ],
       svg: timelineSteps[3].svg
@@ -215,7 +215,7 @@ export default function Services() {
     {
       title: 'Assessment Design',
       description: ' We help institutions modernize assessment systems by combining pedagogy, automation, and learning analytics.',
-      deliverablesLabel: 'Services include:',
+      deliverablesLabel: 'Consultancy services include:',
       deliverables: [
         'AI-assisted design of quizzes, assignments, and exams',
         'Rubric-aligned tasks that maintain academic rigor',
@@ -232,7 +232,7 @@ export default function Services() {
       deliverables: [
         '1:1 or team-based AI strategy and implementation guidance',
         'Review of existing workflows, pain points, and opportunities',
-        'Hands-on support in prompt engineering and tool selection',
+        'Hands-on support in prompt engineering and product selection',
         'Roadmaps for scaling AI pilots across departments',
         'Continuous improvement and impact monitoring'
       ],
@@ -246,7 +246,7 @@ export default function Services() {
       <section className="services-hero" style={{ backgroundImage: `url(${heroImage.src || heroImage})` }}>
         <div className="services-hero-overlay"></div>
         <div className="services-hero-content">
-          <h1 className="services-hero-title"> Services</h1>
+          <h1 className="services-hero-title">Consultancy Services</h1>
           <p className="services-hero-subtitle">End-to-end AI solutions that transform business operations to enhance administrative, teaching, and learning experiences.</p>
         </div>
       </section>
@@ -285,9 +285,7 @@ export default function Services() {
       <section className="services-cards-section">
         <div className="services-cards-container">
           <div className="services-cards-title-wrapper">
-            <h2 className="services-cards-title hero-title-animated">
-              Our Services
-            </h2>
+
           </div>
 
           <div className="services-list">
