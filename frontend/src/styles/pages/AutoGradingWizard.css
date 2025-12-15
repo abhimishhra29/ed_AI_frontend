@@ -436,17 +436,31 @@
   box-sizing: border-box;
 }
 
-/* Step 3 - Questions section (full width, no white space) */
+/* Step 3 - Questions section (aligned with back/continue buttons) */
 .wizard-step-three .questions-section {
-  width: calc(100vw - 1vw) !important;
-  max-width: 100%;
+  /* Match wizard-top-buttons width: auto-grading-wizard has 1.5vw padding on each side
+     wizard-top-buttons is 100% of that = 100vw - 3vw = 97vw
+     But questions-section is inside wizard-content which has 2vw padding on each side
+     So we need: 97vw (wizard-top-buttons width) + 4vw (wizard-content padding) = 101vw
+     Actually, since wizard-content is 100% of auto-grading-wizard content area (97vw),
+     and has 2vw padding, the inner content is 97vw - 4vw = 93vw
+     To match wizard-top-buttons (97vw), we need: 97vw + 4vw = 101vw
+     But that's more than 100vw, so we use: calc(100vw - 3vw) which accounts for auto-grading-wizard padding
+     and then add back the wizard-content padding difference: calc(100vw - 3vw + 4vw) = calc(100vw + 1vw)
+     Actually simpler: just use the same calculation as wizard-top-buttons: calc(100vw - 3vw)
+     But since it's inside wizard-content with 2vw padding, we need to extend it: calc(100% + 4vw)
+  */
+  width: calc(100% + 4vw) !important; /* Extend beyond wizard-content to match wizard-top-buttons width */
+  max-width: calc(100vw - 5vw) !important; /* But don't exceed wizard-top-buttons width */
   height: 92vh !important;
   background: white;
   border: 1px solid #e5e5e5;
   border-radius: 16px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.12);
   padding: 1.5vw 2vw 2vw;
-  margin: 0;
+  margin: 0; /* Remove auto margin, use negative margin to align */
+  margin-left: -2vw; /* Offset wizard-content's left padding */
+  margin-right: -2vw; /* Offset wizard-content's right padding */
   margin-top: 0;
   box-sizing: border-box;
   display: flex;

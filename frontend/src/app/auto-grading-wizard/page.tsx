@@ -8,6 +8,7 @@ import {
   useMemo,
   useState,
 } from "react";
+import { useRouter } from "next/navigation";
 import { ChevronLeft, ChevronRight, Info } from "lucide-react";
 
 // Step pages (presentational-only)
@@ -36,6 +37,7 @@ const DEFAULT_WORKFLOW: WorkflowOption = ALLOWED_WORKFLOWS[0];
 type WizardStep = 1 | 2 | 3 | 4;
 
 function CombinedAutoGradingWizard() {
+  const router = useRouter();
   const [step, setStep] = useState<WizardStep>(1);
   const [isInfoPanelOpen, setIsInfoPanelOpen] = useState(false);
   const [isInfoPanelHovering, setIsInfoPanelHovering] = useState(false);
@@ -155,6 +157,22 @@ function CombinedAutoGradingWizard() {
       });
 
       if (!resp.ok) {
+        if (resp.status === 401) {
+          // Clear authentication tokens
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
+          localStorage.removeItem("loggedIn");
+          // Notify other tabs about logout
+          try {
+            const bc = new BroadcastChannel("auth");
+            bc.postMessage({ type: "logout" });
+            bc.close();
+          } catch {}
+          window.dispatchEvent(new Event("storage"));
+          // Redirect to login page
+          router.push("/login");
+          return;
+        }
         let message = `Rubric generation failed (HTTP ${resp.status}).`;
         try {
           const errorJson = await resp.json();
@@ -180,13 +198,30 @@ function CombinedAutoGradingWizard() {
         Array.isArray(questionPayload) ? questionPayload : null
       );
     } catch (err: any) {
-      setGeneratedRubric(null);
-      setExtractedQuestions(null);
-      setRubricGenerationError(err?.message || "Rubric generation failed.");
+      // Check if it's a session expiration error
+      if (err?.message === "Session expired" || err?.message?.includes("Session expired")) {
+        // Clear authentication tokens
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("loggedIn");
+        // Notify other tabs about logout
+        try {
+          const bc = new BroadcastChannel("auth");
+          bc.postMessage({ type: "logout" });
+          bc.close();
+        } catch {}
+        window.dispatchEvent(new Event("storage"));
+        // Redirect to login page
+        router.push("/login");
+      } else {
+        setGeneratedRubric(null);
+        setExtractedQuestions(null);
+        setRubricGenerationError(err?.message || "Rubric generation failed.");
+      }
     } finally {
       setIsGeneratingRubric(false);
     }
-  }, [assignmentFile, assignmentName, assignmentStructure]);
+  }, [assignmentFile, assignmentName, assignmentStructure, router]);
 
   const handleGrade = useCallback(
     async (event: FormEvent<HTMLFormElement>) => {
@@ -223,7 +258,19 @@ function CombinedAutoGradingWizard() {
 
       const timer = setTimeout(() => {
         clearInterval(tick);
-        alert("Timeout");
+        // Clear authentication tokens
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("loggedIn");
+        // Notify other tabs about logout
+        try {
+          const bc = new BroadcastChannel("auth");
+          bc.postMessage({ type: "logout" });
+          bc.close();
+        } catch {}
+        window.dispatchEvent(new Event("storage"));
+        // Redirect to login page
+        router.push("/login");
       }, TIMEOUT_SECONDS * 1000);
 
       try {
@@ -248,9 +295,19 @@ function CombinedAutoGradingWizard() {
 
           if (!response.ok) {
             if (response.status === 401) {
-              setGradingError("Session expired. Please log in again.");
+              // Clear authentication tokens
               localStorage.removeItem("accessToken");
               localStorage.removeItem("refreshToken");
+              localStorage.removeItem("loggedIn");
+              // Notify other tabs about logout
+              try {
+                const bc = new BroadcastChannel("auth");
+                bc.postMessage({ type: "logout" });
+                bc.close();
+              } catch {}
+              window.dispatchEvent(new Event("storage"));
+              // Redirect to login page
+              router.push("/login");
               break;
             }
 
@@ -268,7 +325,24 @@ function CombinedAutoGradingWizard() {
           ]);
         }
       } catch (error: any) {
-        setGradingError(error?.message || "Network error");
+        // Check if it's a session expiration error
+        if (error?.message === "Session expired" || error?.message?.includes("Session expired")) {
+          // Clear authentication tokens
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
+          localStorage.removeItem("loggedIn");
+          // Notify other tabs about logout
+          try {
+            const bc = new BroadcastChannel("auth");
+            bc.postMessage({ type: "logout" });
+            bc.close();
+          } catch {}
+          window.dispatchEvent(new Event("storage"));
+          // Redirect to login page
+          router.push("/login");
+        } else {
+          setGradingError(error?.message || "Network error");
+        }
       } finally {
         clearTimeout(timer);
         clearInterval(tick);
