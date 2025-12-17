@@ -47,7 +47,7 @@ export default function Footer() {
             <h4 className="footer-column-title">Useful</h4>
             <ul className="footer-links-list">
               <li>
-                <a href="https://www.linkedin.com/company/edgenaiau" target="_blank" rel="noopener noreferrer">
+                <a href="https://www.linkedin.com/company/edgenaiau/jobs/" target="_blank" rel="noopener noreferrer">
                   Careers
                 </a>
               </li>
