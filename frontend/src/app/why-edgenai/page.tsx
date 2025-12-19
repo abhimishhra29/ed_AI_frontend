@@ -52,7 +52,7 @@ export default function WhyEdGenAI() {
         </p>
         <p>
           Our agile approach allows us to quickly respond to feedback and ensure our products evolve with your needs, always
-          with full transparency into how they work and why they're designed the way they are.
+          with full transparency into how they work and why they are designed the way they are.
         </p>
       </section>
 

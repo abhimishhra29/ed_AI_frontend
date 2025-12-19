@@ -44,7 +44,7 @@ export default function FollowBanner() {
       
       {/* Content */}
       <div className="follow-banner-content">
-        <h3 className="follow-banner-title">Don't miss out. Follow us & stay updated!</h3>
+        <h3 className="follow-banner-title">Do not miss out. Follow us & stay updated!</h3>
         <p className="follow-banner-description">
           Get the latest updates, insights, and exclusive content delivered straight to your inbox. 
           Join our community and be part of the future of education.

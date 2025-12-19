@@ -57,7 +57,7 @@ export default function ForgotPassword() {
       <div className="login-card">
         <h1>Forgot Password</h1>
         <p className="login-subtitle">
-          Enter your email address and we'll send you instructions to reset your password.
+          Enter your email address and we will send you instructions to reset your password.
         </p>
 
         {status && (
