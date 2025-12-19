@@ -52,17 +52,21 @@ export default function AutoGradeLanding(): JSX.Element {
 
   return (
     <div className="autograd-landing-page">
-      {/* --- Hero Section --- */}
-      <header className="hero-section">
-        <div className="container hero-container">
-          <div className="hero-content">
-            <h1 className="hero-title">Smarter, Faster, and Fairer Grading</h1>
-            <p className="hero-subtitle">
-              Powered by Agentic AI, AutoGrade evaluates student work, from typed
-              essays to handwritten scans, using your rubric for objective,
-              consistent, and explainable results.
+      {/* --- Hero Section with New Design --- */}
+      <header className="hero-section autograde-hero-new">
+        <div className="container hero-container-new">
+          {/* Left Side - Text and CTA */}
+          <div className="hero-content-new">
+            <h1 className="hero-title-new">
+              <span>Grade Student</span>
+              <span className="title-accent-blue">Submissions</span>
+              <span>With AI</span>
+            </h1>
+            <p className="hero-subtitle-new">
+              Automatically evaluate student submissions with AI-powered grading that delivers consistent, fair, and constructive feedback.
             </p>
-            <div className="hero-cta">
+            
+            <div className="hero-cta-new">
               <Link
                 href={loggedIn ? '/auto-grading-wizard' : '/signup'}
                 className="btn btn-primary"
@@ -71,19 +75,68 @@ export default function AutoGradeLanding(): JSX.Element {
               </Link>
             </div>
           </div>
-          <div className="hero-video-wrapper">
-            <iframe
-              src="https://www.youtube.com/embed/PBtyISfftTc"
-              title="AutoGrade Demo"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
+
+          {/* Right Side - YouTube Video */}
+          <div className="hero-video-container-new">
+            <div className="hero-video-wrapper-new">
+              <iframe
+                src="https://www.youtube.com/embed/PBtyISfftTc"
+                title="AutoGrade Demo"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
           </div>
         </div>
       </header>
 
       <main>
+        {/* --- Why Autograde is Better Choice Section --- */}
+        <section className="why-autograde-section">
+          <div className="container why-autograde-container">
+            {/* Left Side - Title, Description, and Button */}
+            <div className="why-autograde-left">
+              <h2 className="why-autograde-title">
+                <span>Why Autograde</span>
+                <span>is Better Choice</span>
+              </h2>
+            </div>
+
+            {/* Right Side - Statistics Cards */}
+            <div className="why-autograde-right">
+              <div className="stat-card stat-card-1">
+                <div className="stat-accent-bar"></div>
+                <div className="stat-quote-marks">&quot;</div>
+                <p className="stat-text">
+                  Up to ~9 hours/week spent on marking &amp; assessment alone.
+                </p>
+              </div>
+              <div className="stat-card stat-card-2">
+                <div className="stat-accent-bar"></div>
+                <div className="stat-quote-marks">&quot;</div>
+                <p className="stat-text">
+                  ~25% of secondary teachers spend 10+ hours per week grading student work.
+                </p>
+              </div>
+              <div className="stat-card stat-card-3">
+                <div className="stat-accent-bar"></div>
+                <div className="stat-quote-marks">&quot;</div>
+                <p className="stat-text">
+                  50% of teachers report grading as a major source of stress.
+                </p>
+              </div>
+              <div className="stat-card stat-card-4">
+                <div className="stat-accent-bar"></div>
+                <div className="stat-quote-marks">&quot;</div>
+                <p className="stat-text">
+                  Marking is one of the highest workload contributors in Australian classrooms.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* --- Features Section --- */}
         <section className="features-section">
           <div className="container">
@@ -94,77 +147,65 @@ export default function AutoGradeLanding(): JSX.Element {
             </p>
             <div className="features-grid">
               {/* Feature Cards */}
-              <div className="feature-card">
-                <img
-                  src="https://images.unsplash.com/photo-1562654501-a0ccc0fc3fb1?q=80&w=3732&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                  alt="A collection of different assignment types"
-                  className="feature-icon"
-                />
-                <h3>Supports All Assignment Types</h3>
-                <p>
-                  Evaluates reports, essays, Q&amp;A, multimodal inputs, and
-                  even handwritten scans with precision.
-                </p>
+              <div className="feature-card feature-card-1">
+                <div className="feature-card-overlay"></div>
+                <div className="feature-card-content">
+                  <h3>SUPPORTS ALL ASSIGNMENT TYPES</h3>
+                  <p>
+                    Evaluates reports, essays, Q&amp;A, multimodal inputs, and
+                    even handwritten scans with precision.
+                  </p>
+                </div>
               </div>
-              <div className="feature-card">
-                <img
-                  src="https://images.unsplash.com/photo-1677756119517-756a188d2d94?q=80&w=2650&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                  alt="Abstract agentic AI illustration"
-                  className="feature-icon"
-                />
-                <h3>Agentic AI Architecture</h3>
-                <p>
-                  Modular AI agents handle similarity checks, grading, and
-                  analytics for scalable performance.
-                </p>
+              <div className="feature-card feature-card-2">
+                <div className="feature-card-overlay"></div>
+                <div className="feature-card-content">
+                  <h3>AGENTIC AI ARCHITECTURE</h3>
+                  <p>
+                    Modular AI agents handle similarity checks, grading, and
+                    analytics for scalable performance.
+                  </p>
+                </div>
               </div>
-              <div className="feature-card">
-                <img
-                  src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                  alt="A target with an arrow in the bullseye"
-                  className="feature-icon"
-                />
-                <h3>Precision Grading</h3>
-                <p>
-                  Delivers high-accuracy grading and flags low-confidence cases
-                  for optional human review.
-                </p>
+              <div className="feature-card feature-card-3">
+                <div className="feature-card-overlay"></div>
+                <div className="feature-card-content">
+                  <h3>PRECISION GRADING</h3>
+                  <p>
+                    Delivers high-accuracy grading and flags low-confidence cases
+                    for optional human review.
+                  </p>
+                </div>
               </div>
-              <div className="feature-card">
-                <img
-                  src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                  alt="A scanned document being digitized"
-                  className="feature-icon"
-                />
-                <h3>Handwritten Script Support</h3>
-                <p>
-                  Our advanced OCR accurately reads and processes scanned
-                  handwritten answer sheets in PDF format.
-                </p>
+              <div className="feature-card feature-card-4">
+                <div className="feature-card-overlay"></div>
+                <div className="feature-card-content">
+                  <h3>HANDWRITTEN SCRIPT SUPPORT</h3>
+                  <p>
+                    Our advanced OCR accurately reads and processes scanned
+                    handwritten answer sheets in PDF format.
+                  </p>
+                </div>
               </div>
-              <div className="feature-card">
-                <img
-                  src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                  alt="A checklist with green checkmarks"
-                  className="feature-icon"
-                />
-                <h3>Rubric-Aligned Scoring</h3>
-                <p>
-                  Grades are grounded in your custom marking rubrics, no
-                  black-box magic, just transparent evaluation.
-                </p>
+              <div className="feature-card feature-card-5">
+                <div className="feature-card-overlay"></div>
+                <div className="feature-card-content">
+                  <h3>RUBRIC-ALIGNED SCORING</h3>
+                  <p>
+                    Grades are grounded in your custom marking rubrics, no
+                    black-box magic, just transparent evaluation.
+                  </p>
+                </div>
               </div>
-              <div className="feature-card">
-                <img
-                  src="https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=300"
-                  alt="A report card with an explanation"
-                  className="feature-icon"
-                />
-                <h3>Rationales for Every Grade</h3>
-                <p>
-                  Every score comes with a natural language explanation that you
-                  and your students can understand and trust.
-                </p>
+              <div className="feature-card feature-card-6">
+                <div className="feature-card-overlay"></div>
+                <div className="feature-card-content">
+                  <h3>RATIONALES FOR EVERY GRADE</h3>
+                  <p>
+                    Every score comes with a natural language explanation that you
+                    and your students can understand and trust.
+                  </p>
+                </div>
               </div>
             </div>
           </div>

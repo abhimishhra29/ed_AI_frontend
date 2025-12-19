@@ -3,6 +3,7 @@
 :root {
   --primary-brand: #0f172a;
   --primary-accent: #1d4ed8;
+  --primary-dark: #213342;
   --text-dark: #171717;
   --background-white: #ffffff;
   --background-light: #f8fafc;
@@ -59,6 +60,106 @@ body {
   padding: 6rem 0;
   background-color: var(--background-white);
   overflow: hidden;
+}
+
+/* New Hero Design */
+.autograde-hero-new {
+  background: #fafafa !important;
+  padding: 4rem 2rem 0 !important;
+  position: relative;
+  overflow: hidden;
+  min-height: 85vh;
+  display: flex;
+  align-items: center;
+}
+
+.hero-container-new {
+  max-width: 1600px;
+  margin: 0 auto;
+  width: 100%;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 4rem;
+  align-items: start;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-content-new {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.hero-title-new {
+  font-family: Georgia, 'Times New Roman', serif !important;
+  font-size: clamp(2.5rem, 5vw, 4.5rem) !important;
+  font-weight: 800 !important;
+  color: #000000 !important;
+  margin: 0 !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.03em !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.25rem !important;
+  text-align: left !important;
+}
+
+.hero-title-new .title-accent-blue {
+  color: var(--primary-dark) !important;
+}
+
+.hero-subtitle-new {
+  font-size: clamp(0.95rem, 1.5vw, 1.1rem) !important;
+  color: #666 !important;
+  line-height: 1.7 !important;
+  margin: 0 !important;
+  max-width: 500px !important;
+  font-weight: 400 !important;
+  text-align: left !important;
+}
+
+/* CTA Button */
+.hero-cta-new {
+  margin-top: 0.1rem;
+}
+
+.hero-cta-new .btn-primary {
+  padding: 0.75rem 1.25rem !important;
+  border-radius: 50px !important;
+  font-size: 0.95rem !important;
+  width: auto !important;
+  display: inline-block !important;
+}
+
+/* Hero Video Container */
+.hero-video-container-new {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-video-wrapper-new {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
+  background: #000;
+}
+
+.hero-video-wrapper-new iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
 }
 
 .hero-container {
@@ -144,58 +245,114 @@ body {
 
 
 /* --- Features Section --- */
-.features-section {
-  padding: 6rem 0;
+.autograd-landing-page .features-section {
+  padding: 0 0 6rem 0 !important;
 }
 
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
+.autograd-landing-page .features-section .container {
+  max-width: 1600px !important;
 }
 
-.feature-card {
-  background: var(--background-white);
-  padding: 2.5rem 2rem;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--border-color);
-  text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+.autograd-landing-page .features-section .features-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 2rem !important;
+  max-width: 100% !important;
 }
 
-.feature-card:hover {
-  transform: translateY(-10px);
-  box-shadow: var(--shadow-md);
-  border-color: var(--primary-accent);
+.autograd-landing-page .features-section .feature-card {
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  padding: 0 !important;
+  border-radius: 12px !important;
+  border: none !important;
+  text-align: left !important;
+  transition: transform 0.3s ease !important;
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-end !important;
+  height: 400px !important;
+  width: 100% !important;
+  flex: none !important;
+  overflow: hidden !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+  transform: translateY(0) !important;
 }
 
-.feature-icon {
-  width: 80px;
-  height: 80px;
-  margin-bottom: 1.5rem;
-  border-radius: 50%;
-  object-fit: cover;
+/* Background images for each feature card */
+.autograd-landing-page .features-section .feature-card-1 {
+  background-image: url('https://images.unsplash.com/photo-1562654501-a0ccc0fc3fb1?q=80&w=3732&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') !important;
 }
 
-.feature-card h3 {
-  font-size: 1.3rem;
-  font-weight: 600;
-  color: #0a0909;
+.autograd-landing-page .features-section .feature-card-2 {
+  background-image: url('https://images.unsplash.com/photo-1677756119517-756a188d2d94?q=80&w=2650&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') !important;
 }
 
-.feature-card p {
-  font-size: 1rem;
-  color: #000;
-  line-height: 1.6;
-  margin: 0.25rem 0 0 0;
+.autograd-landing-page .features-section .feature-card-3 {
+  background-image: url('https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') !important;
 }
 
-/* Ensure AutoGrade feature cards stay dark even if shared styles force white */
+.autograd-landing-page .features-section .feature-card-4 {
+  background-image: url('https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') !important;
+}
+
+.autograd-landing-page .features-section .feature-card-5 {
+  background-image: url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') !important;
+}
+
+.autograd-landing-page .features-section .feature-card-6 {
+  background-image: url('https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=300') !important;
+}
+
+.autograd-landing-page .features-section .feature-card:hover {
+  transform: translateY(-5px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+}
+
+.autograd-landing-page .features-section .feature-card .feature-card-overlay {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.3), transparent) !important;
+  z-index: 1 !important;
+}
+
+.autograd-landing-page .features-section .feature-card .feature-card-content {
+  position: relative !important;
+  z-index: 2 !important;
+  padding: 3rem 2.5rem !important;
+  color: #ffffff !important;
+}
+
+.autograd-landing-page .features-section .feature-card h3 {
+  font-size: 1.2rem !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  margin-bottom: 1rem !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  position: relative !important;
+}
+
+.autograd-landing-page .features-section .feature-card p {
+  font-size: 0.95rem !important;
+  color: #ffffff !important;
+  line-height: 1.7 !important;
+  margin: 0 !important;
+  position: relative !important;
+}
+
+/* Ensure AutoGrade feature cards stay white */
 .autograd-landing-page .features-section .feature-card h3,
 .autograd-landing-page .features-section .feature-card p,
 .autograd-landing-page .features-section .feature-card span {
-  color: #000 !important;
+  color: #ffffff !important;
 }
 
 .video-wrapper {
@@ -260,6 +417,17 @@ body {
 }
 
 /* --- Responsive Adjustments --- */
+@media (max-width: 1200px) {
+  .hero-container-new {
+    grid-template-columns: 1fr !important;
+    gap: 3rem;
+  }
+
+  .hero-video-container-new {
+    order: -1;
+  }
+}
+
 @media (max-width: 992px) {
   .hero-container {
     grid-template-columns: 1fr;
@@ -283,6 +451,16 @@ body {
   .hero-cta {
     justify-content: center;
   }
+
+  .autograd-landing-page .features-section .features-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .autograd-landing-page .features-section .features-grid {
+    grid-template-columns: 1fr !important;
+  }
 }
 
 @media (max-width: 768px) {
@@ -291,5 +469,160 @@ body {
   }
   .faq-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* --- Why Autograde is Better Choice Section --- */
+.why-autograde-section {
+  padding: 0 0 6rem 0;
+  background-color: var(--background-white);
+}
+
+.why-autograde-container {
+  max-width: 1600px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: center;
+}
+
+/* Left Side - Title, Description, Button */
+.why-autograde-left {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.why-autograde-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 800;
+  color: #000;
+  line-height: 1.1;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.why-autograde-description {
+  font-size: clamp(0.95rem, 1.5vw, 1.05rem);
+  color: #666;
+  line-height: 1.7;
+  margin: 0;
+  max-width: 500px;
+}
+
+.why-autograde-button {
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  width: fit-content;
+  background: linear-gradient(90deg, #9333ea, #f97316);
+  color: #ffffff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.why-autograde-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(147, 51, 234, 0.3);
+}
+
+/* Right Side - Statistics Cards */
+.why-autograde-right {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.stat-card {
+  background: #f5f5f5;
+  border-radius: 12px;
+  padding: 1.5rem;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.stat-accent-bar {
+  position: absolute;
+  left: 0;
+  top: -4px;
+  bottom: -4px;
+  width: 4px;
+  background: var(--primary-accent);
+  border-radius: 2px;
+}
+
+.stat-quote-marks {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  font-size: 3rem;
+  font-weight: 300;
+  color: var(--primary-accent);
+  line-height: 1;
+  font-family: Georgia, serif;
+}
+
+.stat-text {
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
+  color: #333;
+  line-height: 1.6;
+  margin: 0;
+  padding-right: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .why-autograde-container {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .why-autograde-left {
+    text-align: center;
+    align-items: center;
+  }
+
+  .why-autograde-description {
+    text-align: center;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .why-autograde-section {
+    padding: 4rem 0;
+  }
+
+  .why-autograde-container {
+    gap: 2rem;
+  }
+
+  .stat-card {
+    padding: 1.25rem;
+  }
+
+  .stat-quote-marks {
+    font-size: 2.5rem;
+    top: 0.75rem;
+    right: 1.25rem;
+  }
+
+  .stat-text {
+    padding-right: 1.5rem;
   }
 }

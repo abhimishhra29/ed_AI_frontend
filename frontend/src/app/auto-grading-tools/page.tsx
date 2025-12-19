@@ -2,6 +2,7 @@
 
 import { type ReactNode, useEffect, useRef, useState, FormEvent } from 'react';
 import Link from 'next/link';
+import { Upload, FileText, Clock, CheckCircle2, Download, AlertCircle, X } from 'lucide-react';
 
 import { apiFetch } from '../../lib/api';
 
@@ -23,7 +24,7 @@ export default function GradingToolPage() {
   const API_BASE = '';
 
   const WORKFLOW_LABELS: Record<string, string> = {
-    auto_grade: "Assignment",
+    auto_grade: "Typed Assignment",
     handwritten_ocr: "Handwritten Exam",
     test_view: "Test Workflow"
   };
@@ -56,7 +57,7 @@ export default function GradingToolPage() {
 
   (async () => {
       try {
-        const res = await apiFetch("/api/v1/workflow/list/grade"); // GET by default
+        const res = await apiFetch("/api/v1/workflow/list/grade");
         if (!res.ok) throw new Error(`Failed to load workflows: ${res.status}`);
         const data: { workflows?: string[] } = await res.json();
 
@@ -69,7 +70,6 @@ export default function GradingToolPage() {
         }
       } catch (err) {
         console.error(err);
-        // optionally set an error state here
       }
     })();
 
@@ -115,25 +115,49 @@ export default function GradingToolPage() {
     }]);
 
     const resultBlocks = taskEntries.map(([qid, max, awarded, feedback], idx) => (
-      <div className="task-block" key={idx}>
-        <div className="task-header">
-          <strong>🧾 {qid}</strong>: {awarded} / {max} marks
+      <div className="result-task-card" key={idx}>
+        <div className="result-task-header">
+          <div className="result-task-title">
+            <FileText size={18} />
+            <span>{qid}</span>
+          </div>
+          <div className="result-task-score">
+            <span className="score-awarded">{awarded}</span>
+            <span className="score-separator">/</span>
+            <span className="score-max">{max}</span>
+            <span className="score-label">marks</span>
+          </div>
         </div>
-        <div className="task-feedback">
-          <em>💬 {feedback}</em>
+        <div className="result-task-feedback">
+          <p>{feedback}</p>
         </div>
       </div>
     ));
 
     setOutputItems(prev => [
       ...prev,
-      <div className="grading-result-block" key={filename || 'result'}>
-        <h2>📝 Grading Results {filename ? `for ${filename}` : ''}</h2>
-        {resultBlocks}
-        <p className="total-score">✅ <strong>Total Score:</strong> {parsed.grade || parsed.rationale.total_score}</p>
-        {parsed.similarity_score !== undefined && (
-          <p className="similarity-score">📊 <strong>Similarity Score:</strong> {(parsed.similarity_score * 100).toFixed(2)}%</p>
-        )}
+      <div className="grading-result-card" key={filename || 'result'}>
+        <div className="result-card-header">
+          <div className="result-card-title">
+            <CheckCircle2 size={24} />
+            <h3>Grading Results {filename ? `for ${filename}` : ''}</h3>
+          </div>
+        </div>
+        <div className="result-tasks-container">
+          {resultBlocks}
+        </div>
+        <div className="result-summary">
+          <div className="summary-score-card">
+            <div className="summary-label">Total Score</div>
+            <div className="summary-value">{parsed.grade || parsed.rationale.total_score}</div>
+          </div>
+          {parsed.similarity_score !== undefined && (
+            <div className="summary-similarity-card">
+              <div className="summary-label">Similarity</div>
+              <div className="summary-value">{(parsed.similarity_score * 100).toFixed(1)}%</div>
+            </div>
+          )}
+        </div>
       </div>
     ]);
   };
@@ -164,10 +188,7 @@ export default function GradingToolPage() {
 
     if (!loggedIn) {
       setErrorMsg(
-        <>You must be logged in to submit. Please log in or&nbsp;
-          <Link href="/signup" style={{ color: '#ad1a1a', textDecoration: 'underline' }}>
-            sign up
-          </Link>.
+        <>You must be logged in to submit. Please <Link href="/login" style={{ color: '#4E6F8A', textDecoration: 'underline', fontWeight: 600 }}>log in</Link> or <Link href="/signup" style={{ color: '#4E6F8A', textDecoration: 'underline', fontWeight: 600 }}>sign up</Link>.
         </>
       );
       return;
@@ -175,7 +196,7 @@ export default function GradingToolPage() {
 
     setErrorMsg('');
     setIsSubmitting(true);
-    setOutputItems([<b key="loading">Evaluation in progress...</b>]);
+    setOutputItems([<div key="loading" className="loading-state"><div className="loading-spinner"></div><p>Evaluation in progress...</p></div>]);
     setTimeLeft(TIMEOUT_SECONDS);
 
     timerIntervalRef.current = setInterval(() => {
@@ -247,77 +268,239 @@ export default function GradingToolPage() {
   };
 
   return (
-    <>
-      <div className="container tools">
-        <h1 className="tool-title">Auto Grade</h1>
-
-        {errorMsg && (
-          <div className="error-banner">
-            <span style={{ flex: 1 }}>{errorMsg}</span>
-            <button onClick={() => setErrorMsg('')} aria-label="Close">×</button>
-          </div>
-        )}
-
-        <div className="tools-layout">
-          <div className="form-section">
-            <form ref={formRef} onSubmit={handleSubmit} encType="multipart/form-data">
-              <label>Grader Name:</label>
-              <input type="text" name="graderName" required />
-
-              <label>Workflow:</label>
-              <select name="workflow" value={workflow} onChange={e => setWorkflow(e.target.value)}>
-                {workflows.map(wf => (
-                  <option key={wf} value={wf}>{WORKFLOW_LABELS[wf] || wf}</option>
-                ))}
-              </select>
-
-              <label>Assignment File (PDF):</label>
-              <input type="file" name="assignmentFile" required />
-
-              <label>Student Solutions (PDF):</label>
-              <input type="file" name="solutionFile" multiple required />
-
-              <label>Sample Solution (PDF):</label>
-              <input type="file" name="sampleFile" required />
-
-              <label>Marking Rubric (PDF):</label>
-              <input type="file" name="rubricsFile" required />
-
-              {timeLeft !== null && (
-                <div className="timer-badge">⏳ Time Remaining: {timeLeft}s</div>
-              )}
-
-              <button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Submitting...' : 'Submit'}
-              </button>
-            </form>
-          </div>
-
-          <div className="output-container">
-            <div className="output-section">
-              <div id="output">
-                {outputItems.map((el, idx) => (
-                  <div key={idx}>{el}</div>
-                ))}
-              </div>
+    <div className="autograde-page">
+      {/* Hero Section with Split Layout */}
+      <section className="autograde-hero">
+        <div className="autograde-hero-container">
+          {/* Left Side - Text and Form */}
+          <div className="autograde-hero-left">
+            <h1 className="autograde-hero-title">
+              <span>Grade Student</span>
+              <span className="title-accent">Submissions</span>
+              <span>With AI</span>
+            </h1>
+            <p className="autograde-hero-subtitle">
+              Automatically evaluate student submissions with AI-powered grading that delivers consistent, fair, and constructive feedback.
+            </p>
+            
+            {/* Decorative Arrow */}
+            <div className="hero-arrow">
+              <svg width="120" height="80" viewBox="0 0 120 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 40 Q30 20, 50 40 T90 40" stroke="#FFD700" strokeWidth="3" fill="none" strokeLinecap="round"/>
+                <path d="M85 35 L90 40 L85 45" stroke="#FFD700" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
             </div>
 
-            {outputItems.length > 0 && (
-              <div className="export-wrapper">
-                <button className="export-btn" onClick={handleExport}>
-                  📁 Export to CSV
+            {/* Form in Hero */}
+            <div className="hero-form-card">
+              {errorMsg && (
+                <div className="autograde-error-banner">
+                  <div className="error-banner-content">
+                    <AlertCircle size={18} />
+                    <span>{errorMsg}</span>
+                  </div>
+                  <button onClick={() => setErrorMsg('')} aria-label="Close" className="error-close-btn">
+                    <X size={16} />
+                  </button>
+                </div>
+              )}
+              
+              <form ref={formRef} onSubmit={handleSubmit} encType="multipart/form-data" className="autograde-form">
+                <div className="form-group">
+                  <label htmlFor="graderName">
+                    <span>Grader Name</span>
+                  </label>
+                  <input 
+                    type="text" 
+                    id="graderName"
+                    name="graderName" 
+                    placeholder="Enter grader name"
+                    required 
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="workflow">
+                    <span>Workflow Type</span>
+                  </label>
+                  <div className="select-wrapper">
+                    <select 
+                      id="workflow"
+                      name="workflow" 
+                      value={workflow} 
+                      onChange={e => setWorkflow(e.target.value)}
+                    >
+                      {workflows.map(wf => (
+                        <option key={wf} value={wf}>{WORKFLOW_LABELS[wf] || wf}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="assignmentFile">
+                    <Upload size={18} />
+                    <span>Assignment File (PDF)</span>
+                  </label>
+                  <div className="file-input-wrapper">
+                    <input 
+                      type="file" 
+                      id="assignmentFile"
+                      name="assignmentFile" 
+                      accept=".pdf"
+                      required 
+                    />
+                    <span className="file-input-label">Choose PDF file</span>
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="solutionFile">
+                    <Upload size={18} />
+                    <span>Student Solutions (PDF)</span>
+                  </label>
+                  <div className="file-input-wrapper">
+                    <input 
+                      type="file" 
+                      id="solutionFile"
+                      name="solutionFile" 
+                      accept=".pdf"
+                      multiple 
+                      required 
+                    />
+                    <span className="file-input-label">Choose PDF file(s)</span>
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="sampleFile">
+                    <Upload size={18} />
+                    <span>Sample Solution (PDF)</span>
+                  </label>
+                  <div className="file-input-wrapper">
+                    <input 
+                      type="file" 
+                      id="sampleFile"
+                      name="sampleFile" 
+                      accept=".pdf"
+                      required 
+                    />
+                    <span className="file-input-label">Choose PDF file</span>
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="rubricsFile">
+                    <Upload size={18} />
+                    <span>Marking Rubric (PDF)</span>
+                  </label>
+                  <div className="file-input-wrapper">
+                    <input 
+                      type="file" 
+                      id="rubricsFile"
+                      name="rubricsFile" 
+                      accept=".pdf"
+                      required 
+                    />
+                    <span className="file-input-label">Choose PDF file</span>
+                  </div>
+                </div>
+
+                {timeLeft !== null && (
+                  <div className="timer-card">
+                    <Clock size={20} />
+                    <div className="timer-content">
+                      <span className="timer-label">Time Remaining</span>
+                      <span className="timer-value">{timeLeft}s</span>
+                    </div>
+                  </div>
+                )}
+
+                <button type="submit" disabled={isSubmitting} className="submit-button">
+                  {isSubmitting ? (
+                    <>
+                      <div className="button-spinner"></div>
+                      <span>Processing...</span>
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle2 size={18} />
+                      <span>Submit</span>
+                    </>
+                  )}
                 </button>
-              </div>
-            )}
+              </form>
+            </div>
           </div>
+
+          {/* Right Side - Image Collage */}
+          <div className="autograde-hero-right">
+            <div className="hero-image-collage">
+              <div className="collage-image collage-image-1">
+                <img src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=400&h=300&fit=crop" alt="Education" />
+              </div>
+              <div className="collage-image collage-image-2">
+                <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400&h=300&fit=crop" alt="Grading" />
+              </div>
+              <div className="collage-image collage-image-3">
+                <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=300&fit=crop" alt="Students" />
+              </div>
+              <div className="collage-image collage-image-4">
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=300&fit=crop" alt="Learning" />
+              </div>
+              <div className="collage-image collage-image-5">
+                <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=400&h=300&fit=crop" alt="Academic" />
+              </div>
+            </div>
+            {/* Decorative Lines */}
+            <svg className="collage-lines" width="100%" height="100%" viewBox="0 0 600 600" preserveAspectRatio="xMidYMid slice">
+              <path d="M100 150 Q200 100, 300 150 T500 150" stroke="#4E6F8A" strokeWidth="2" fill="none" strokeDasharray="5,5" opacity="0.3"/>
+              <path d="M150 250 Q250 200, 350 250 T550 250" stroke="#4E6F8A" strokeWidth="2" fill="none" strokeDasharray="5,5" opacity="0.3"/>
+              <path d="M200 350 Q300 300, 400 350 T600 350" stroke="#4E6F8A" strokeWidth="2" fill="none" strokeDasharray="5,5" opacity="0.3"/>
+            </svg>
+            {/* Yellow Wavy Graphic */}
+            <div className="hero-wavy-graphic"></div>
+          </div>
+        </div>
+      </section>
+
+      {/* Results Section Below Hero */}
+      <div className="autograde-container">
+        <div className="autograde-results-wrapper">
+            <div className="results-header">
+              <h2>Grading Results</h2>
+              {outputItems.length > 0 && (
+                <button className="export-button" onClick={handleExport}>
+                  <Download size={18} />
+                  <span>Export CSV</span>
+                </button>
+              )}
+            </div>
+            
+            <div className="results-container">
+              {outputItems.length === 0 ? (
+                <div className="empty-state">
+                  <FileText size={48} />
+                  <h3>No results yet</h3>
+                  <p>Submit files above to see grading results here</p>
+                </div>
+              ) : (
+                <div className="results-content">
+                  {outputItems.map((el, idx) => (
+                    <div key={idx}>{el}</div>
+                  ))}
+                </div>
+              )}
+            </div>
         </div>
       </div>
 
       {!loggedIn && (
-        <Link href="/products" className="floating-demo-btn">
-          👉 Check out Demo
+        <Link href="/products" className="floating-demo-button">
+          <span>👉</span>
+          <span>Check out Demo</span>
         </Link>
       )}
-    </>
+    </div>
   );
 }
