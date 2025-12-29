@@ -1,428 +1,635 @@
-'use client';
+const assignmentTypes = [
+  {
+    title: 'Handwritten',
+    description: 'AI-powered OCR reads handwriting with high accuracy.',
+    icon: (
+      <svg viewBox="0 0 24 24" className="ag-icon" aria-hidden="true">
+        <path d="M12 20l7-7-4-4-7 7-1 5z" />
+        <path d="M14 6l4 4" />
+        <path d="M3 21h6" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Word Documents',
+    description: 'Seamlessly process .docx files with formatting intact.',
+    icon: (
+      <svg viewBox="0 0 24 24" className="ag-icon" aria-hidden="true">
+        <path d="M7 4h7l5 5v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" />
+        <path d="M14 4v5h5" />
+        <path d="M9 13h6" />
+        <path d="M9 17h6" />
+      </svg>
+    ),
+  },
+  {
+    title: 'PDFs',
+    description: 'Handle scanned and digital PDFs with ease.',
+    icon: (
+      <svg viewBox="0 0 24 24" className="ag-icon" aria-hidden="true">
+        <path d="M7 3h7l5 5v13a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" />
+        <path d="M14 3v5h5" />
+        <path d="M9 11h6" />
+        <path d="M9 14h6" />
+        <path d="M9 17h6" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Essays',
+    description: 'Evaluate long-form writing against your rubric criteria.',
+    icon: (
+      <svg viewBox="0 0 24 24" className="ag-icon" aria-hidden="true">
+        <path d="M4 5h7a3 3 0 0 1 3 3v13H7a3 3 0 0 0-3 3V5z" />
+        <path d="M20 5h-7a3 3 0 0 0-3 3v13h7a3 3 0 0 1 3 3V5z" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Reports',
+    description: 'Grade structured reports and research papers.',
+    icon: (
+      <svg viewBox="0 0 24 24" className="ag-icon" aria-hidden="true">
+        <rect x="6" y="4" width="12" height="16" rx="2" />
+        <path d="M9 4h6v3H9z" />
+        <path d="M9 11h6" />
+        <path d="M9 15h6" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Q&A Assignments',
+    description: 'Efficiently mark question-answer format work.',
+    icon: (
+      <svg viewBox="0 0 24 24" className="ag-icon" aria-hidden="true">
+        <path d="M4 6h16v9H8l-4 4z" />
+        <path d="M10 9a2 2 0 1 1 3 2c0 1-1 1.5-1 2" />
+        <circle cx="12" cy="17" r="0.7" />
+      </svg>
+    ),
+  },
+];
 
-import { useEffect, useState, type MouseEvent } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { ArrowDown } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+const painPoints = [
+  {
+    stat: '5.7',
+    suffix: 'hrs/wk',
+    label: 'Grading workload',
+    description:
+      'Teachers spend about 5.7 hours a week on marking, above the OECD average. Many secondary teachers report 10+ hours.',
+    source: 'OECD, AITSL',
+    icon: (
+      <svg viewBox="0 0 24 24" className="ag-icon" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 7v5l3 2" />
+      </svg>
+    ),
+  },
+  {
+    stat: '50',
+    suffix: '%',
+    label: 'Stress from grading',
+    description:
+      'Up to half of teachers say too much marking drives stress, alongside admin work and tight timelines.',
+    source: 'Pearls and Irritations, acer.org',
+    icon: (
+      <svg viewBox="0 0 24 24" className="ag-icon" aria-hidden="true">
+        <path d="M4 7l6 6 4-4 6 6" />
+        <path d="M20 13v6h-6" />
+      </svg>
+    ),
+  },
+  {
+    stat: 'Bias',
+    suffix: 'risk',
+    label: 'Bias, inconsistency & feedback quality',
+    description:
+      'Human grading can be inconsistent and subjective. Tailored feedback takes time and can be uneven.',
+    source: 'arXiv',
+    icon: (
+      <svg viewBox="0 0 24 24" className="ag-icon" aria-hidden="true">
+        <path d="M9 18h6" />
+        <path d="M10 22h4" />
+        <path d="M12 2a6 6 0 0 0-3 11v3h6v-3a6 6 0 0 0-3-11z" />
+      </svg>
+    ),
+  },
+  {
+    stat: '46.5',
+    suffix: 'hrs/wk',
+    label: 'Work beyond standard hours',
+    description:
+      'Australian teachers work some of the longest OECD hours. Marking and paperwork spill into nights and weekends.',
+    source: 'OECD, Deakin University',
+    icon: (
+      <svg viewBox="0 0 24 24" className="ag-icon" aria-hidden="true">
+        <path d="M4 5h16v10H8l-4 4z" />
+      </svg>
+    ),
+  },
+];
 
-import { apiFetch } from '../../lib/api';
+const painHighlights = [
+  {
+    stat: '10+ hrs',
+    text: '10+ hours on marking is common for secondary teachers.',
+  },
+  {
+    stat: '1 in 4',
+    text: 'Secondary teachers report 10+ hours of marking weekly.',
+  },
+  {
+    stat: 'After-hours',
+    text: 'Grading and paperwork often spill into personal time.',
+  },
+];
 
-export default function AutoGradeLanding(): JSX.Element {
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const router = useRouter();
+const timeComparison = [
+  { label: 'Manual', hours: '10 hrs', width: '100%', tone: 'muted' },
+  { label: 'AutoGrade', hours: '1.5 hrs', width: '15%', tone: 'primary' },
+];
 
-  const features = [
-    {
-      title: 'Before Using Autograde',
-      description: 'Reclaim your time with AutoGrade. Our AI-powered products automate repetitive tasks so you can stay focused on meaningful work, we handle the rest.',
-      bulletPoints: [
-        'Teachers spent up to ~9 hours per week marking assignments',
-        'Feedback was often delayed due to workload',
-        'Grading consistency varied across classes and markers',
-        'Writing detailed feedback for every student was difficult',
-        'Progress tracking required additional manual effort',
-        'Marking contributed significantly to workload stress and burnout'
-      ],
-      image: 'https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=1600&q=80',
-      href: '#feature-grid',
-    },
-    {
-      title: 'After Using Autograde',
-      description: 'Curriculum design, faculty training, and strategic AI implementation to integrate generative AI responsibly.',
-      bulletPoints: [
-        'Marking time is significantly reduced',
-        'Feedback is generated instantly and remains meaningful',
-        'All submissions are evaluated using consistent rubrics',
-        'Students receive clear, actionable guidance',
-        'Writing progress is tracked automatically over time',
-        'Teachers regain time to focus on teaching and student support'
-      ],
-      image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1600&q=80',
-      href: '#services-grid',
-    },
-  ];
+const timeSavings = [
+  { task: 'Essay Marking', before: 45, after: 8 },
+  { task: 'Q&A Grading', before: 30, after: 5 },
+  { task: 'Report Review', before: 40, after: 7 },
+  { task: 'Feedback Writing', before: 25, after: 4 },
+];
 
-  const scrollToSection = (href: string) => {
-    if (typeof window === 'undefined') return;
+const controlPoints = [
+  'Review AI suggestions before finalising grades.',
+  'Customise feedback tone and detail level.',
+  'Apply your professional judgement at every step.',
+  'Maintain complete transparency with students.',
+];
 
-    const [, hash] = href.split('#');
-    if (hash) {
-      const target = document.getElementById(hash);
-      if (target) {
-        const headerOffset = 100;
-        const y = target.getBoundingClientRect().top + window.pageYOffset - headerOffset;
-        window.scrollTo({ top: y, behavior: 'smooth' });
-        return;
-      }
-    }
+const steps = [
+  {
+    step: '01',
+    title: 'Upload Assignments',
+    description:
+      'Drag and drop student work in any format, including handwritten scans, PDFs, Word docs, or images.',
+    icon: (
+      <svg viewBox="0 0 24 24" className="ag-icon" aria-hidden="true">
+        <path d="M12 3v12" />
+        <path d="M7 8l5-5 5 5" />
+        <path d="M4 21h16" />
+      </svg>
+    ),
+  },
+  {
+    step: '02',
+    title: 'Set Your Rubric',
+    description:
+      'Define your grading criteria or use template libraries. AutoGrade learns your standards.',
+    icon: (
+      <svg viewBox="0 0 24 24" className="ag-icon" aria-hidden="true">
+        <path d="M4 6h16" />
+        <path d="M4 12h16" />
+        <path d="M4 18h16" />
+        <circle cx="8" cy="6" r="2" />
+        <circle cx="16" cy="12" r="2" />
+        <circle cx="10" cy="18" r="2" />
+      </svg>
+    ),
+  },
+  {
+    step: '03',
+    title: 'AI Grades & Suggests',
+    description:
+      'Our AI analyses each submission against your rubric, generating grades and personalised feedback.',
+    icon: (
+      <svg viewBox="0 0 24 24" className="ag-icon" aria-hidden="true">
+        <path d="M12 3l2.5 5.5L20 11l-5.5 2.5L12 19l-2.5-5.5L4 11l5.5-2.5z" />
+      </svg>
+    ),
+  },
+  {
+    step: '04',
+    title: 'Review & Approve',
+    description:
+      'Review suggestions, make adjustments, and finalise with confidence. Export or integrate with your LMS.',
+    icon: (
+      <svg viewBox="0 0 24 24" className="ag-icon" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M8 12l2.5 2.5L16 9" />
+      </svg>
+    ),
+  },
+];
 
-    router.push(href);
-  };
+const faqs = [
+  {
+    question: 'How does AutoGrade handle handwritten assignments?',
+    answer:
+      'AutoGrade uses advanced OCR technology trained on handwritten text. Scan or photograph work and the AI digitises and analyses it against your rubric.',
+  },
+  {
+    question: 'Can I customise the grading rubric?',
+    answer:
+      'Absolutely. You control the rubric criteria. Create from scratch, modify templates, or import your school standards.',
+  },
+  {
+    question: "What if I disagree with the AI's assessment?",
+    answer:
+      'You are always in control. Every AI-generated grade and feedback item is a suggestion you can revise or override.',
+  },
+  // {
+  //   question: 'Is student data secure?',
+  //   answer:
+  //     'Yes. Data is encrypted in transit and at rest, with compliance aligned to Australian Privacy Principles and education data standards.',
+  // },
+  // {
+  //   question: 'Does it integrate with our LMS?',
+  //   answer:
+  //     'AutoGrade integrates with popular LMS platforms including Canvas, Moodle, and Google Classroom for seamless import and export.',
+  // },
+  {
+    question: 'How much time can I really save?',
+    answer:
+      'Australian educators using AutoGrade save an average of 7+ hours per week on marking tasks, turning 10-hour workloads into under 2 hours.',
+  },
+];
 
-  const handleCardClick = (event: MouseEvent<HTMLElement>, href: string, index: number) => {
-    event.preventDefault();
-    setActiveIndex(index);
-    scrollToSection(href);
-  };
+const trustLetters = ['A', 'B', 'C', 'D', 'E'];
+const MAX_MINUTES = 50;
 
-  const handleButtonClick = (event: MouseEvent<HTMLButtonElement>, href: string, index: number) => {
-    event.preventDefault();
-    event.stopPropagation();
-    setActiveIndex(index);
-    scrollToSection(href);
-  };
-
-  // Keep in sync across tabs + validate/extend session once on mount
-  useEffect(() => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-
-    const onStorage = () =>
-      setLoggedIn(localStorage.getItem('loggedIn') === 'true');
-    window.addEventListener("storage", onStorage);
-
-    // Optional: cross-tab channel for auth updates
-    let bc: BroadcastChannel | null = null;
-    try {
-      bc = new BroadcastChannel("auth");
-      bc.onmessage = (e) => {
-        if (e?.data?.type === "logout") setLoggedIn(false);
-        if (e?.data?.type === "login" || e?.data?.type === "access-updated") {
-          setLoggedIn(true);
-        }
-      };
-    } catch {
-      // BroadcastChannel not available; storage event will still work
-    }
-
-    // One-time lightweight session check/extend if a refresh token exists
-    (async () => {
-      try {
-        if (localStorage.getItem('refreshToken')) {
-          const res = await apiFetch('/api/activity/', { method: 'POST' });
-          if (res.ok) setLoggedIn(true);
-        }
-      } catch {
-        setLoggedIn(false);
-      }
-    })();
-
-    return () => {
-      window.removeEventListener("storage", onStorage);
-      if (bc) bc.close();
-    };
-  }, []);
-
+export default function AutoGradePage() {
   return (
-    <div className="autograd-landing-page">
-      {/* --- Hero Section with New Design --- */}
-      <header className="hero-section autograde-hero-new">
-        <div className="container hero-container-new">
-          {/* Left Side - Text and CTA */}
-          <div className="hero-content-new">
-            <h1 className="hero-title-new">
-              <span>Grade Student</span>
-              <span className="title-accent-blue">Submissions</span>
-              <span>With AI</span>
-            </h1>
-            <p className="hero-subtitle-new">
-              Automatically evaluate student submissions with AI-powered grading that delivers consistent, fair, and constructive feedback.
-            </p>
-            
-            <div className="hero-cta-new">
-              <Link
-                href={loggedIn ? '/auto-grading-wizard' : '/signup'}
-                className="btn btn-primary"
-              >
-                {loggedIn ? 'Try Me' : 'Sign Up'}
-              </Link>
-            </div>
-          </div>
+    <div className="autograde-page">
+      <section className="autograde-hero">
+        <div className="autograde-container">
+          <div className="autograde-hero-grid">
+            <div className="autograde-hero-content">
+              <span className="autograde-hero-brand">AutoGrade</span>
 
-          {/* Right Side - YouTube Video */}
-          <div className="hero-video-container-new">
-            <div className="hero-video-wrapper-new">
-              <iframe
-                src="https://www.youtube.com/embed/PBtyISfftTc"
-                title="AutoGrade Demo"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
+              <h1 className="autograde-hero-title">
+                Grade Smarter,
+                <br />
+                <span>Not Harder</span>
+              </h1>
+
+              <p className="autograde-hero-text">
+                Transform hours of marking into minutes. AutoGrade uses AI to
+                provide consistent, rubric-aligned feedback while keeping you in
+                complete control.
+              </p>
+
+              <div className="autograde-hero-actions">
+                <a className="ag-button ag-button-primary" href="/signup">
+                  Start Free Trial
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="ag-button-icon ag-button-icon-stroke"
+                    aria-hidden="true"
+                  >
+                    <path d="M5 12h14" />
+                    <path d="M13 6l6 6-6 6" />
+                  </svg>
+                </a>
+
+              </div>
+
+              <div className="autograde-hero-proof">
+                <div className="autograde-avatar-stack">
+                  {/* {trustLetters.map((letter) => (
+                    <span key={letter} className="autograde-avatar">
+                      {letter}
+                    </span>
+                  ))} */}
+                </div>
+                {/* <p>
+                  <strong>500+</strong> Australian educators already saving time
+                </p> */}
+              </div>
+            </div>
+
+            <div className="autograde-hero-media" id="demo">
+              <div className="autograde-video">
+                <iframe
+                  src="https://www.youtube.com/embed/PBtyISfftTc?start=7"
+                  title="AutoGrade Demo Video"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+              <div className="autograde-floating-card">
+                <div className="autograde-icon-shell">
+                  <svg viewBox="0 0 24 24" className="ag-icon ag-icon--sm" aria-hidden="true">
+                    <path d="M4 16l6-6 4 4 6-6" />
+                    <path d="M14 8h6v6" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="autograde-floating-stat">85%</p>
+                  <p className="autograde-floating-label">Less time grading</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </header>
 
-      <main>
-        {/* --- Why Autograde is Better Choice Section --- */}
-        <section className="why-autograde-section">
-          <div className="container why-autograde-container">
-            {/* Statistic Card 1 */}
-            <div className="why-autograde-card">
-              <div className="why-autograde-card-header">
-                <div className="why-autograde-icon">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="10"/>
-                    <polyline points="12 6 12 12 16 14"/>
-                  </svg>
-                </div>
-                <h3 className="why-autograde-card-title">Time Investment</h3>
-              </div>
-              <p className="why-autograde-card-description">
-                Up to ~9 hours per week are spent on marking and assessment alone.
-              </p>
-              <button className="why-autograde-card-button" aria-label="Learn more">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M4 12l8-8M12 4H4v8"/>
-                </svg>
-              </button>
-            </div>
+        <div className="autograde-scroll-indicator" aria-hidden="true">
+          <span />
+        </div>
+      </section>
 
-            {/* Statistic Card 2 */}
-            <div className="why-autograde-card">
-              <div className="why-autograde-card-header">
-                <div className="why-autograde-icon">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                    <circle cx="9" cy="7" r="4"/>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                  </svg>
-                </div>
-                <h3 className="why-autograde-card-title">Teacher Workload</h3>
-              </div>
-              <p className="why-autograde-card-description">
-                ~25% of secondary teachers spend 10+ hours per week grading student work.
-              </p>
-              <button className="why-autograde-card-button" aria-label="Learn more">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M4 12l8-8M12 4H4v8"/>
-                </svg>
-              </button>
-            </div>
-
-            {/* Statistic Card 3 */}
-            <div className="why-autograde-card">
-              <div className="why-autograde-card-header">
-                <div className="why-autograde-icon">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-                  </svg>
-                </div>
-                <h3 className="why-autograde-card-title">Stress Factor</h3>
-              </div>
-              <p className="why-autograde-card-description">
-                50% of teachers report grading as a major source of stress.
-              </p>
-              <button className="why-autograde-card-button" aria-label="Learn more">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M4 12l8-8M12 4H4v8"/>
-                </svg>
-              </button>
-            </div>
-
-            {/* Statistic Card 4 */}
-            <div className="why-autograde-card">
-              <div className="why-autograde-card-header">
-                <div className="why-autograde-icon">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                    <polyline points="14 2 14 8 20 8"/>
-                    <line x1="16" y1="13" x2="8" y2="13"/>
-                    <line x1="16" y1="17" x2="8" y2="17"/>
-                    <polyline points="10 9 9 9 8 9"/>
-                  </svg>
-                </div>
-                <h3 className="why-autograde-card-title">Workload Impact</h3>
-              </div>
-              <p className="why-autograde-card-description">
-                Marking is one of the highest workload contributors in Australian classrooms.
-              </p>
-              <button className="why-autograde-card-button" aria-label="Learn more">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M4 12l8-8M12 4H4v8"/>
-                </svg>
-              </button>
-            </div>
+      <section id="pain-points" className="autograde-pain">
+        <div className="autograde-container">
+          <div className="autograde-section-header">
+            <span className="autograde-eyebrow autograde-eyebrow--inverse">
+              Problems Educators Face With Grading
+            </span>
+            <h2 className="autograde-heading autograde-heading--inverse">
+              Assessment Was Never Meant to Be This Hard
+            </h2>
+            <p className="autograde-lead autograde-lead--inverse">
+              What should support learning has become a weekly burden of
+              exhausting marking, rushed feedback, and lost personal time.
+            </p>
           </div>
-        </section>
 
-        {/* --- Feature Cards Section (Same as Home Page) --- */}
-        <section
-          id="features"
-          className="features-section"
-        >
-          <div className="features-container">
-            {features.map((feature, index) => {
-              const isActive = index === activeIndex;
-              return (
-                <Link
-                  key={feature.title}
-                  href={feature.href}
-                  onMouseEnter={() => setActiveIndex(index)}
-                  onFocus={() => setActiveIndex(index)}
-                  onClick={(event) => handleCardClick(event, feature.href, index)}
-                  className={`feature-card ${isActive ? 'active' : ''}`}
-                >
-                  <div className="card-inner">
-                    {/* Background Image */}
-                    <div className="card-image">
-                      <Image
-                        src={feature.image}
-                        alt={feature.title}
-                        width={2000}
-                        height={2000}
-                        className="card-image-img"
-                        priority={index === 0}
-                      />
-                    </div>
-
-                    {/* Content Overlay */}
-                    <div className="card-content">
-                      {/* Gradient Overlay - EXACT MATCH */}
-                      <div className="card-gradient" />
-
-                      {/* Title */}
-                      <h3>{feature.title}</h3>
-
-                      {/* Show bullet points right after heading for first card (Before Using Autograde) */}
-                      {feature.bulletPoints && feature.bulletPoints.length > 0 && (
-                        <ul className="feature-bullet-list">
-                          {feature.bulletPoints.map((point, pointIndex) => (
-                            <li key={pointIndex} className="feature-bullet-item">
-                              {point}
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-
-                      {/* Bottom Section: Description + Button */}
-                      <div className="card-bottom">
-                        <div className="card-description">
-                          {/* Mobile Description - Always Visible */}
-                          {!feature.bulletPoints && (
-                            <p className="mobile-description">
-                              {feature.description}
-                            </p>
-                          )}
-
-                          {/* Desktop Description - Fades In/Out */}
-                          {!feature.bulletPoints && (
-                            <p
-                              className={`desktop-description ${isActive ? 'active' : ''}`}
-                            >
-                              {feature.description}
-                            </p>
-                          )}
-                        </div>
-
-                        {/* Circular Button - Bottom Right */}
-                        <button
-                          className="card-button"
-                          aria-label={`Explore ${feature.title}`}
-                          onClick={(event) => handleButtonClick(event, feature.href, index)}
-                        >
-                          <ArrowDown />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </section>
-
-        {/* --- Features Grid Section --- */}
-        <section className="features-grid-section">
-          <div className="features-grid-container">
-            {[
-              {
-                number: '01',
-                category: 'AI ASSESSMENT',
-                title: 'AI-Powered Writing Assessment',
-                description: 'Autograde uses artificial intelligence to analyse student essays and written responses based on educator-defined marking criteria. Instead of relying on generic rules, it evaluates writing against the specific rubric provided by the teacher, considering elements such as structure, clarity, argument development, evidence, and language use. This ensures that every submission is assessed fairly, consistently, and in line with classroom expectations.',
-                image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80',
-                imagePosition: 'left'
-              },
-              {
-                number: '02',
-                category: 'FEEDBACK',
-                title: 'High-Quality, Contextual Feedback',
-                description: 'Autograde generates clear and meaningful feedback that directly relates to the student\'s own writing. Comments are specific, actionable, and focused on helping students understand what they did well and how they can improve. Rather than vague statements, students receive guidance that supports learning and skill development, making feedback more effective and easier to act upon.',
-                image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80',
-                imagePosition: 'right'
-              },
-              {
-                number: '03',
-                category: 'SCORING',
-                title: 'Rubric-Based & Consistent Scoring',
-                description: 'All assessments are scored using custom rubrics created by educators, ensuring consistency across classes, subjects, and cohorts. This approach reduces variation in marking and supports fair, objective assessment, especially in large classes or when multiple teachers are involved. Rubric-based scoring also helps maintain alignment with curriculum standards and assessment goals.',
-                image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80',
-                imagePosition: 'left'
-              },
-              {
-                number: '04',
-                category: 'MONITORING',
-                title: 'Student Progress Monitoring',
-                description: 'Autograde tracks student performance across multiple writing tasks over time. Educators can easily observe patterns, strengths, and areas that require further support, helping them understand how each student\'s writing skills are developing. This long-term view supports data-informed teaching and allows timely intervention when needed.',
-                image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80',
-                imagePosition: 'right'
-              },
-              {
-                number: '05',
-                category: 'FLEXIBILITY',
-                title: 'Support for Handwritten & Typed Work',
-                description: 'Autograde is designed for real classroom environments. It accepts typed submissions, as well as scanned or photographed handwritten work, allowing teachers to assess student writing without changing existing workflows. This flexibility makes Autograde suitable for both digital and traditional classroom settings.',
-                image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1200&q=80',
-                imagePosition: 'left'
-              },
-              {
-                number: '06',
-                category: 'ANALYTICS',
-                title: 'Analytics & Performance Insights',
-                description: 'Autograde provides clear, easy-to-understand insights through structured dashboards and reports. Educators can view individual and cohort-level performance trends, identify common skill gaps, and monitor overall writing development. These insights support better instructional planning, curriculum alignment, and evidence-based decision-making.',
-                image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80',
-                imagePosition: 'right'
-              }
-            ].map((item, index) => (
-              <div key={index} className={`feature-grid-item ${item.imagePosition === 'left' ? 'image-left' : 'image-right'}`}>
-                {item.imagePosition === 'left' && (
-                  <div className="feature-grid-image">
-                    <Image
-                      src={item.image}
-                      alt={item.title}
-                      width={800}
-                      height={600}
-                      className="feature-grid-img"
-                    />
-                  </div>
-                )}
-                <div className="feature-grid-content">
-                  <h3 className="feature-grid-title">{item.title}</h3>
-                  <p className="feature-grid-description">{item.description}</p>
+          <div className="autograde-pain-grid">
+            {painPoints.map((point) => (
+              <div className="autograde-pain-card" key={point.label}>
+                <div className="autograde-icon-shell autograde-icon-shell--inverse">
+                  {point.icon}
                 </div>
-                {item.imagePosition === 'right' && (
-                  <div className="feature-grid-image">
-                    <Image
-                      src={item.image}
-                      alt={item.title}
-                      width={800}
-                      height={600}
-                      className="feature-grid-img"
-                    />
-                  </div>
-                )}
+                <div className="autograde-pain-stat">
+                  {point.stat}
+                  <span>{point.suffix}</span>
+                </div>
+                <h3>{point.label}</h3>
+                <p>{point.description}</p>
+                <span className="autograde-pain-source">
+                  Source: {point.source}
+                </span>
               </div>
             ))}
           </div>
-        </section>
-                
-      </main>
+
+          <div className="autograde-pain-band">
+            {painHighlights.map((highlight) => (
+              <div className="autograde-pain-band-item" key={highlight.stat}>
+                <span>{highlight.stat}</span>
+                <p>{highlight.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="impact" className="autograde-impact">
+        <div className="autograde-container">
+          <div className="autograde-section-header">
+            
+            <h2 className="autograde-heading">Time saved, life reclaimed</h2>
+            <p className="autograde-lead">
+              See how AutoGrade transforms hours of marking into minutes, giving
+              you back the time that matters.
+            </p>
+          </div>
+
+          <div className="autograde-impact-grid">
+            <div className="autograde-card">
+              <h3 className="autograde-card-title">
+                Average time per assignment batch
+              </h3>
+              <p className="autograde-card-subtitle">
+                Class of 30 students, essay assignment
+              </p>
+              <div className="ag-bar-chart">
+                {timeComparison.map((item) => (
+                  <div className="ag-bar-row" key={item.label}>
+                    <span>{item.label}</span>
+                    <div className="ag-bar-track">
+                      <span
+                        className={`ag-bar-fill ag-bar-fill--${item.tone}`}
+                        style={{ width: item.width }}
+                      />
+                    </div>
+                    <span className="ag-bar-value">{item.hours}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="ag-stat-callout">
+                <span>Save up to</span>
+                <strong>85%</strong>
+                <span>of your marking time</span>
+              </div>
+            </div>
+
+            <div className="autograde-card">
+              <h3 className="autograde-card-title">
+                Minutes per task comparison
+              </h3>
+              <p className="autograde-card-subtitle">
+                Traditional vs AutoGrade-assisted
+              </p>
+              <div className="autograde-breakdown">
+                {timeSavings.map((item) => {
+                  const beforeWidth = `${(item.before / MAX_MINUTES) * 100}%`;
+                  const afterWidth = `${(item.after / MAX_MINUTES) * 100}%`;
+                  return (
+                    <div className="autograde-breakdown-row" key={item.task}>
+                      <div className="autograde-breakdown-labels">
+                        <span>{item.task}</span>
+                        <span>
+                          {item.before} min to {item.after} min
+                        </span>
+                      </div>
+                      <div className="autograde-progress">
+                        <span
+                          className="autograde-progress-before"
+                          style={{ width: beforeWidth }}
+                        />
+                        <span
+                          className="autograde-progress-after"
+                          style={{ width: afterWidth }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="autograde-legend">
+                <span>
+                  <i className="autograde-legend-dot autograde-legend-dot--muted" />
+                  Traditional
+                </span>
+                <span>
+                  <i className="autograde-legend-dot autograde-legend-dot--primary" />
+                  With AutoGrade
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="autograde-impact-cards">
+            <div className="autograde-stat-card">
+              <span>7+ hrs</span>
+              <p>Hours saved weekly per full-time teacher</p>
+            </div>
+            <div className="autograde-stat-card">
+              <span>98%</span>
+              <p>Consistency rate for rubric-aligned grading</p>
+            </div>
+            <div className="autograde-stat-card">
+              <span>3x</span>
+              <p>More detailed feedback for every student</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="features" className="autograde-features">
+        <div className="autograde-container">
+          <div className="autograde-section-header">
+            <h2 className="autograde-heading">Grade any assignment type</h2>
+            <p className="autograde-lead">
+              From handwritten work to digital documents, AutoGrade handles it
+              all while maintaining the quality feedback your students deserve.
+            </p>
+          </div>
+
+          <div className="autograde-feature-grid">
+            {assignmentTypes.map((type) => (
+              <div className="autograde-feature-card" key={type.title}>
+                <div className="autograde-icon-shell">{type.icon}</div>
+                <h3>{type.title}</h3>
+                <p>{type.description}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="autograde-control">
+            <div className="autograde-control-grid">
+              <div>
+                <h3 className="autograde-subheading">
+                  You stay in control, always
+                </h3>
+                <p className="autograde-lead">
+                  AutoGrade is your assistant, not your replacement. Review,
+                  modify, or override any feedback before it reaches students.
+                </p>
+                <ul className="autograde-checklist">
+                  {controlPoints.map((item) => (
+                    <li key={item}>
+                      <span className="autograde-check">
+                        <svg
+                          viewBox="0 0 24 24"
+                          className="ag-icon ag-icon--sm"
+                          aria-hidden="true"
+                        >
+                          <path d="M5 12l4 4 10-10" />
+                        </svg>
+                      </span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="autograde-suggestion-card">
+                <div className="autograde-suggestion-header">
+                  <div className="autograde-icon-shell">
+                    <span className="autograde-ai-tag">AI</span>
+                  </div>
+                  <div>
+                    <p>AutoGrade Suggestion</p>
+                    <span>Essay Analysis</span>
+                  </div>
+                </div>
+                <div className="autograde-suggestion-metrics">
+                  <div>
+                    <span>Thesis Clarity</span>
+                    <strong>B+</strong>
+                  </div>
+                  <div>
+                    <span>Evidence Usage</span>
+                    <strong>A-</strong>
+                  </div>
+                  <div>
+                    <span>Structure</span>
+                    <strong>B</strong>
+                  </div>
+                </div>
+                <div className="autograde-suggestion-quote">
+                  &quot;Strong introduction with clear thesis statement. Consider
+                  adding more transitional phrases between paragraphs to improve
+                  flow.&quot;
+                </div>
+                <div className="autograde-suggestion-actions">
+                  <button type="button">Approve and Edit</button>
+                  <button type="button" className="is-ghost">
+                    Regenerate
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="how-it-works" className="autograde-steps">
+        <div className="autograde-container">
+          <div className="autograde-section-header">
+            <h2 className="autograde-heading">How AutoGrade works</h2>
+            <p className="autograde-lead">
+              Four simple steps to transform your grading workflow and reclaim
+              your evenings.
+            </p>
+          </div>
+
+          <div className="autograde-steps-grid">
+            {steps.map((step) => (
+              <div className="autograde-step-card" key={step.step}>
+                <div className="autograde-step-icon">
+                  {step.icon}
+                  <span className="autograde-step-number">{step.step}</span>
+                </div>
+                <h3>{step.title}</h3>
+                <p>{step.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="faq" className="autograde-faq">
+        <div className="autograde-container">
+          <div className="autograde-section-header">
+            <h2 className="autograde-heading">FAQ</h2>
+ 
+          </div>
+
+          <div className="autograde-faq-list">
+            {faqs.map((faq, index) => (
+              <details
+                key={faq.question}
+                className="autograde-faq-item"
+                open={index === 0}
+              >
+                <summary>
+                  <span>{faq.question}</span>
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="autograde-faq-icon"
+                    aria-hidden="true"
+                  >
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </summary>
+                <div className="autograde-faq-content">
+                  <p>{faq.answer}</p>
+                </div>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      
     </div>
   );
 }
