@@ -337,9 +337,7 @@ export default function AutoGradePage() {
       <section id="pain-points" className="autograde-pain">
         <div className="autograde-container">
           <div className="autograde-section-header">
-            <span className="autograde-eyebrow autograde-eyebrow--inverse">
-              Problems Educators Face With Grading
-            </span>
+
             <h2 className="autograde-heading autograde-heading--inverse">
               Assessment Was Never Meant to Be This Hard
             </h2>

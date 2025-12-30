@@ -1,14 +1,278 @@
 'use client';
 
-// src/app/plan-my-assignment-wizard/page.tsx
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { apiFetch } from '../../lib/api';
 
+const planTypes = [
+  {
+    title: 'Research Essays',
+    description: 'Turn complex prompts into structured outlines and source plans.',
+    icon: (
+      <svg viewBox="0 0 24 24" className="pma-icon" aria-hidden="true">
+        <path d="M4 5h10a3 3 0 0 1 3 3v11H7a3 3 0 0 0-3 3V5z" />
+        <circle cx="17.5" cy="16.5" r="3" />
+        <path d="M20 19l2 2" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Presentations',
+    description: 'Sequence slides, scripts, and practice sessions in one plan.',
+    icon: (
+      <svg viewBox="0 0 24 24" className="pma-icon" aria-hidden="true">
+        <path d="M4 5h16v10H4z" />
+        <path d="M8 19h8" />
+        <path d="M12 15v4" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Lab Reports',
+    description: 'Map hypotheses, data collection, and analysis checkpoints.',
+    icon: (
+      <svg viewBox="0 0 24 24" className="pma-icon" aria-hidden="true">
+        <path d="M9 3h6" />
+        <path d="M10 3v5l-4 7a4 4 0 0 0 3.5 6h5a4 4 0 0 0 3.5-6l-4-7V3" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Group Projects',
+    description: 'Assign roles, align milestones, and keep everyone on schedule.',
+    icon: (
+      <svg viewBox="0 0 24 24" className="pma-icon" aria-hidden="true">
+        <circle cx="8" cy="9" r="3" />
+        <circle cx="16" cy="9" r="3" />
+        <path d="M3 21a5 5 0 0 1 10 0" />
+        <path d="M11 21a5 5 0 0 1 10 0" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Design Portfolios',
+    description: 'Track iterations, critiques, and final polish tasks.',
+    icon: (
+      <svg viewBox="0 0 24 24" className="pma-icon" aria-hidden="true">
+        <rect x="4" y="4" width="16" height="16" rx="3" />
+        <path d="M8 16l5-5 3 3-5 5H8z" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Exam Prep',
+    description: 'Balance revision, practice, and reflection with clear pacing.',
+    icon: (
+      <svg viewBox="0 0 24 24" className="pma-icon" aria-hidden="true">
+        <circle cx="12" cy="12" r="7" />
+        <path d="M12 9v6" />
+        <path d="M9 12h6" />
+      </svg>
+    ),
+  },
+];
+
+const painPoints = [
+  {
+    stat: '3-5',
+    suffix: 'hrs',
+    label: 'Planning overload',
+    description:
+      'Students often lose hours just figuring out where to start and what matters most.',
+    caption: 'Common in week one',
+    icon: (
+      <svg viewBox="0 0 24 24" className="pma-icon" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 7v5l3 2" />
+      </svg>
+    ),
+  },
+  {
+    stat: '2x',
+    suffix: 'rework',
+    label: 'Scope creep',
+    description:
+      'Plans change midstream when the prompt is not broken down early.',
+    caption: 'Late-stage pivot risk',
+    icon: (
+      <svg viewBox="0 0 24 24" className="pma-icon" aria-hidden="true">
+        <path d="M4 7l6 6 4-4 6 6" />
+        <path d="M20 13v6h-6" />
+      </svg>
+    ),
+  },
+  {
+    stat: 'Late',
+    suffix: 'nights',
+    label: 'Deadline crunch',
+    description:
+      'Without a schedule, drafting and editing collide at the end of the term.',
+    caption: 'Typical final week',
+    icon: (
+      <svg viewBox="0 0 24 24" className="pma-icon" aria-hidden="true">
+        <path d="M4 6h16v9H8l-4 4z" />
+        <path d="M9 10h6" />
+      </svg>
+    ),
+  },
+  {
+    stat: 'Low',
+    suffix: 'confidence',
+    label: 'Unclear expectations',
+    description:
+      'Students often wait for feedback before they feel confident moving ahead.',
+    caption: 'Guidance gap',
+    icon: (
+      <svg viewBox="0 0 24 24" className="pma-icon" aria-hidden="true">
+        <path d="M12 2a6 6 0 0 0-3 11v3h6v-3a6 6 0 0 0-3-11z" />
+        <path d="M9 18h6" />
+      </svg>
+    ),
+  },
+];
+
+const painHighlights = [
+  {
+    stat: 'Day 1',
+    text: 'Get a roadmap immediately instead of waiting for guidance.',
+  },
+  {
+    stat: 'Week 2',
+    text: 'Lock in milestones before workloads spike.',
+  },
+  {
+    stat: 'Finals',
+    text: 'Reduce last-minute stress with smart checkpoints.',
+  },
+];
+
+const timeComparison = [
+  { label: 'Manual planning', hours: '5 hrs', width: '100%', tone: 'muted' },
+  {
+    label: 'Plan My Assignment',
+    hours: '1.2 hrs',
+    width: '24%',
+    tone: 'primary',
+  },
+];
+
+const timeSavings = [
+  { task: 'Prompt analysis', before: 90, after: 20 },
+  { task: 'Research plan', before: 70, after: 20 },
+  { task: 'Outline build', before: 60, after: 15 },
+  { task: 'Revision schedule', before: 50, after: 12 },
+];
+
+const controlPoints = [
+  'Edit tasks, dates, and workload instantly.',
+  'Sync milestones with your calendar and reminders.',
+  'Balance group roles and individual responsibilities.',
+  'Export the plan to PDF or task apps.',
+];
+
+const steps = [
+  {
+    step: '01',
+    title: 'Paste the assignment brief',
+    description:
+      'Share the prompt, rubric, and due date to set the context.',
+    icon: (
+      <svg viewBox="0 0 24 24" className="pma-icon" aria-hidden="true">
+        <path d="M7 4h7l5 5v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" />
+        <path d="M14 4v5h5" />
+        <path d="M9 14h6" />
+      </svg>
+    ),
+  },
+  {
+    step: '02',
+    title: 'Set your availability',
+    description: 'Tell us how many hours per week you can commit.',
+    icon: (
+      <svg viewBox="0 0 24 24" className="pma-icon" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 7v5l3 2" />
+      </svg>
+    ),
+  },
+  {
+    step: '03',
+    title: 'Get an AI roadmap',
+    description: 'Receive milestones, tasks, and resource checkpoints.',
+    icon: (
+      <svg viewBox="0 0 24 24" className="pma-icon" aria-hidden="true">
+        <path d="M12 3l2.5 5.5L20 11l-5.5 2.5L12 19l-2.5-5.5L4 11l5.5-2.5z" />
+      </svg>
+    ),
+  },
+  {
+    step: '04',
+    title: 'Track and adjust',
+    description: 'Update progress and refine the plan as you go.',
+    icon: (
+      <svg viewBox="0 0 24 24" className="pma-icon" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M8 12l2.5 2.5L16 9" />
+      </svg>
+    ),
+  },
+];
+
+const faqs = [
+  {
+    question: 'Can I edit the tasks and deadlines?',
+    answer:
+      'Yes. Every task is editable, and you can move deadlines to fit your schedule.',
+  },
+  {
+    question: 'Does it work for group projects?',
+    answer:
+      'Plan roles, shared milestones, and individual task lists in one view.',
+  },
+  {
+    question: 'What if my prompt changes?',
+    answer:
+      'Update the brief and regenerate the roadmap while keeping your completed work.',
+  },
+  {
+    question: 'Can I export the plan?',
+    answer:
+      'Export to PDF or CSV and sync with calendar tools.',
+  },
+];
+
+const previewTasks = [
+  {
+    title: 'Decode the prompt',
+    time: 'Day 1',
+    hours: '30 min',
+    status: 'complete',
+  },
+  {
+    title: 'Collect 6 sources',
+    time: 'Day 3',
+    hours: '2 hrs',
+    status: 'active',
+  },
+  {
+    title: 'Draft outline',
+    time: 'Day 5',
+    hours: '45 min',
+    status: 'upcoming',
+  },
+  {
+    title: 'Write section one',
+    time: 'Week 2',
+    hours: '3 hrs',
+    status: 'upcoming',
+  },
+];
+
+const MAX_MINUTES = 100;
+
 export default function PlanMyAssignmentLanding(): JSX.Element {
   const [loggedIn, setLoggedIn] = useState(false);
 
-  // Sync across tabs + validate session on mount
   useEffect(() => {
     if (typeof window === 'undefined') {
       return;
@@ -16,14 +280,14 @@ export default function PlanMyAssignmentLanding(): JSX.Element {
 
     const onStorage = () =>
       setLoggedIn(localStorage.getItem('loggedIn') === 'true');
-    window.addEventListener("storage", onStorage);
+    window.addEventListener('storage', onStorage);
 
     let bc: BroadcastChannel | null = null;
     try {
-      bc = new BroadcastChannel("auth");
+      bc = new BroadcastChannel('auth');
       bc.onmessage = (e) => {
-        if (e?.data?.type === "logout") setLoggedIn(false);
-        if (e?.data?.type === "login" || e?.data?.type === "access-updated") {
+        if (e?.data?.type === 'logout') setLoggedIn(false);
+        if (e?.data?.type === 'login' || e?.data?.type === 'access-updated') {
           setLoggedIn(true);
         }
       };
@@ -33,8 +297,8 @@ export default function PlanMyAssignmentLanding(): JSX.Element {
 
     (async () => {
       try {
-        if (localStorage.getItem("refreshToken")) {
-          const res = await apiFetch("/api/activity/", { method: "POST" });
+        if (localStorage.getItem('refreshToken')) {
+          const res = await apiFetch('/api/activity/', { method: 'POST' });
           if (res.ok) setLoggedIn(true);
         }
       } catch {
@@ -43,117 +307,434 @@ export default function PlanMyAssignmentLanding(): JSX.Element {
     })();
 
     return () => {
-      window.removeEventListener("storage", onStorage);
+      window.removeEventListener('storage', onStorage);
       if (bc) bc.close();
     };
   }, []);
 
   return (
-    <div className="plan-landing-page">
-      {/* Hero Section */}
-      <header className="hero-section">
-        <div className="container hero-container">
-          <div className="hero-content">
-            <h1 className="hero-title">Plan Your Assignment with Confidence 🎯</h1>
-            <p className="hero-subtitle">
-              Break down any project into manageable tasks, milestones, and timelines,
-              powered by intelligent AI-driven planning.
-            </p>
-            <div className="hero-cta">
-              <Link
-                href={loggedIn ? '/plan-my-assignment-wizard' : '/signup'}
-                className="btn btn-primary"
-              >
-                {loggedIn ? "Get Started" : "Sign Up"}
-              </Link>
+    <div className="plan-assignment-page">
+      <section className="pma-hero">
+        <div className="pma-container">
+          <div className="pma-hero-grid">
+            <div className="pma-hero-content">
+              <span className="pma-hero-brand">Plan My Assignment</span>
+
+              <h1 className="pma-hero-title">
+                Build a clear assignment roadmap.
+                <br />
+                <span className="pma-hero-highlight">
+                  Stay ahead of every deadline.
+                </span>
+              </h1>
+
+              <p className="pma-hero-text">
+                Plan My Assignment turns any prompt into a week-by-week roadmap
+                with milestones, tasks, and accountability built in.
+              </p>
+
+              <div className="pma-hero-actions">
+                <Link
+                  className="pma-button pma-button-primary"
+                  href={loggedIn ? '/plan-my-assignment' : '/signup'}
+                >
+                  {loggedIn ? 'Build Your Plan' : 'Start Free'}
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="pma-button-icon pma-button-icon-stroke"
+                    aria-hidden="true"
+                  >
+                    <path d="M5 12h14" />
+                    <path d="M13 6l6 6-6 6" />
+                  </svg>
+                </Link>
+
+                <a className="pma-button pma-button-ghost" href="#how-it-works">
+                  See the workflow
+                </a>
+              </div>
+
+              <div className="pma-hero-proof">
+                <span>Built for</span>
+                <div className="pma-hero-tag-stack">
+                  <span className="pma-hero-tag">Essays</span>
+                  <span className="pma-hero-tag">Lab Reports</span>
+                  <span className="pma-hero-tag">Group Projects</span>
+                </div>
+              </div>
             </div>
-          </div>
-          <div className="hero-image-wrapper">
-            <img
-              src="https://images.unsplash.com/photo-1677756119517-756a188d2d94?q=80&w=2650&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
-"
-              alt="Illustration of project planning"
-              className="hero-image"
-            />
+
+            <div className="pma-hero-media">
+              <div className="pma-plan-preview">
+                <div className="pma-plan-header">
+                  <div>
+                    <p className="pma-plan-title">Civics Research Essay</p>
+                    <span className="pma-plan-subtitle">Due in 21 days</span>
+                  </div>
+                  <span className="pma-plan-chip">AI roadmap</span>
+                </div>
+
+                <div className="pma-plan-tasks">
+                  {previewTasks.map((task) => (
+                    <div className="pma-plan-task" key={task.title}>
+                      <span
+                        className={`pma-task-status pma-task-status--${task.status}`}
+                      />
+                      <div>
+                        <p>{task.title}</p>
+                        <span className="pma-plan-time">{task.time}</span>
+                      </div>
+                      <span className="pma-plan-hours">{task.hours}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="pma-plan-footer">
+                  <div className="pma-plan-progress">
+                    <span style={{ width: '45%' }} />
+                  </div>
+                  <div className="pma-plan-footer-meta">
+                    <span>Plan confidence</span>
+                    <strong>High</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pma-floating-card">
+                <div className="pma-icon-shell pma-icon-shell--accent">
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="pma-icon pma-icon--sm"
+                    aria-hidden="true"
+                  >
+                    <path d="M4 16l6-6 4 4 6-6" />
+                    <path d="M14 8h6v6" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="pma-floating-stat">14</p>
+                  <p className="pma-floating-label">Milestones auto-built</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </header>
 
-      <main>
-        {/* Features Section */}
-        <section className="features-section">
-          <div className="container">
-            <h2 className="section-title">Why Plan My Assignment?</h2>
-            <p className="section-subtitle">
-              Smart planning helps you stay on track, meet deadlines, and deliver
-              your best work every time.
+        <div className="pma-scroll-indicator" aria-hidden="true">
+          <span />
+        </div>
+      </section>
+
+      <section id="pain-points" className="pma-pain">
+        <div className="pma-container">
+          <div className="pma-section-header">
+            <span className="pma-eyebrow pma-eyebrow--inverse">
+              Planning should not slow you down
+            </span>
+            <h2 className="pma-heading pma-heading--inverse">
+              Assignment planning feels harder than it should.
+            </h2>
+            <p className="pma-lead pma-lead--inverse">
+              Students lose momentum when the work starts without a roadmap.
+              Plan My Assignment turns every brief into a structured, week-by-week
+              path.
             </p>
-            <div className="features-grid">
-              <div className="feature-card">
-                <h3>Automated Task Breakdown</h3>
-                <p>
-                  AI analyzes your assignment prompt and creates a detailed
-                  work breakdown structure with tasks and subtasks.
-                </p>
-              </div>
-              <div className="feature-card">
-                <h3>Custom Milestones & Deadlines</h3>
-                <p>
-                  Set due dates, receive reminders, and visualize progress
-                  on an intuitive timeline.
-                </p>
-              </div>
-
-
-            </div>
           </div>
-        </section>
 
-        {/* Demo Section */}
-        <section className="demo-section">
-          <div className="container">
-            <h2 className="section-title">See the Planner in Action</h2>
-            <p className="section-subtitle">
-              Watch a quick demo and learn how Plan My Assignment can
-              transform your workflow.
+          <div className="pma-pain-grid">
+            {painPoints.map((point) => (
+              <div className="pma-pain-card" key={point.label}>
+                <div className="pma-icon-shell pma-icon-shell--inverse">
+                  {point.icon}
+                </div>
+                <div className="pma-pain-stat">
+                  {point.stat}
+                  <span>{point.suffix}</span>
+                </div>
+                <h3>{point.label}</h3>
+                <p>{point.description}</p>
+                <span className="pma-pain-caption">{point.caption}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="pma-pain-band">
+            {painHighlights.map((highlight) => (
+              <div className="pma-pain-band-item" key={highlight.stat}>
+                <span>{highlight.stat}</span>
+                <p>{highlight.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="impact" className="pma-impact">
+        <div className="pma-container">
+          <div className="pma-section-header">
+            <h2 className="pma-heading">Plan once, move faster every week</h2>
+            <p className="pma-lead">
+              A clear plan saves time early so students can focus on research,
+              drafting, and polishing instead of guessing what comes next.
             </p>
-            <div className="video-wrapper">
-              <iframe
-                src="https://www.youtube.com/embed/GOOGLE_DEMO_VIDEO_ID"
-                title="Planner Demo Video"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
+          </div>
+
+          <div className="pma-impact-grid">
+            <div className="pma-card">
+              <h3 className="pma-card-title">Time to create a plan</h3>
+              <p className="pma-card-subtitle">Typical assignment setup time</p>
+              <div className="pma-bar-chart">
+                {timeComparison.map((item) => (
+                  <div className="pma-bar-row" key={item.label}>
+                    <span>{item.label}</span>
+                    <div className="pma-bar-track">
+                      <span
+                        className={`pma-bar-fill pma-bar-fill--${item.tone}`}
+                        style={{ width: item.width }}
+                      />
+                    </div>
+                    <span className="pma-bar-value">{item.hours}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="pma-stat-callout">
+                <span>Save up to</span>
+                <strong>75%</strong>
+                <span>of planning time</span>
+              </div>
+            </div>
+
+            <div className="pma-card">
+              <h3 className="pma-card-title">Minutes per planning task</h3>
+              <p className="pma-card-subtitle">Manual vs Plan My Assignment</p>
+              <div className="pma-breakdown">
+                {timeSavings.map((item) => {
+                  const beforeWidth = `${(item.before / MAX_MINUTES) * 100}%`;
+                  const afterWidth = `${(item.after / MAX_MINUTES) * 100}%`;
+                  return (
+                    <div className="pma-breakdown-row" key={item.task}>
+                      <div className="pma-breakdown-labels">
+                        <span>{item.task}</span>
+                        <span>
+                          {item.before} min to {item.after} min
+                        </span>
+                      </div>
+                      <div className="pma-progress">
+                        <span
+                          className="pma-progress-before"
+                          style={{ width: beforeWidth }}
+                        />
+                        <span
+                          className="pma-progress-after"
+                          style={{ width: afterWidth }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="pma-legend">
+                <span>
+                  <i className="pma-legend-dot pma-legend-dot--muted" />
+                  Manual
+                </span>
+                <span>
+                  <i className="pma-legend-dot pma-legend-dot--primary" />
+                  With Plan My Assignment
+                </span>
+              </div>
             </div>
           </div>
-        </section>
 
-        {/* FAQ Section */}
-        <section className="faq-section">
-          <div className="container faq-container">
-            <h2 className="section-title">Frequently Asked Questions</h2>
-            <div className="faq-grid">
-              <div className="faq-item">
-                <h3>How does AI generate tasks?</h3>
-                <p>
-                  Our models parse your assignment description and identify
-                  key deliverables, then create actionable subtasks.
-                </p>
-              </div>
-              <div className="faq-item">
-                <h3>Can I edit the plan?</h3>
-                <p>
-                  Absolutely, add, remove, or adjust any task or deadline
-                  to fit your needs.
-                </p>
-              </div>
-
-
+          <div className="pma-impact-cards">
+            <div className="pma-stat-card">
+              <span>7 days</span>
+              <p>Typical timeline built in minutes</p>
+            </div>
+            <div className="pma-stat-card">
+              <span>4x</span>
+              <p>More checkpoints to stay on track</p>
+            </div>
+            <div className="pma-stat-card">
+              <span>1 view</span>
+              <p>Tasks, milestones, and deadlines together</p>
             </div>
           </div>
-        </section>
-      </main>
+        </div>
+      </section>
+
+      <section id="features" className="pma-features">
+        <div className="pma-container">
+          <div className="pma-section-header">
+            <h2 className="pma-heading">Plan any assignment type</h2>
+            <p className="pma-lead">
+              Whether it is a research paper or a group project, Plan My
+              Assignment builds a tailored roadmap that fits your course and
+              pace.
+            </p>
+          </div>
+
+          <div className="pma-feature-grid">
+            {planTypes.map((type) => (
+              <div className="pma-feature-card" key={type.title}>
+                <div className="pma-icon-shell">{type.icon}</div>
+                <h3>{type.title}</h3>
+                <p>{type.description}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="pma-control">
+            <div className="pma-control-grid">
+              <div>
+                <h3 className="pma-subheading">You stay in control, always</h3>
+                <p className="pma-lead">
+                  Use the AI plan as a starting point, then customize it to
+                  match your schedule, workload, and priorities.
+                </p>
+                <ul className="pma-checklist">
+                  {controlPoints.map((item) => (
+                    <li key={item}>
+                      <span className="pma-check">
+                        <svg
+                          viewBox="0 0 24 24"
+                          className="pma-icon pma-icon--sm"
+                          aria-hidden="true"
+                        >
+                          <path d="M5 12l4 4 10-10" />
+                        </svg>
+                      </span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="pma-snapshot-card">
+                <div className="pma-snapshot-header">
+                  <div className="pma-icon-shell pma-icon-shell--accent">
+                    <span className="pma-ai-tag">AI</span>
+                  </div>
+                  <div>
+                    <p>Planner Snapshot</p>
+                    <span>Week 2 check-in</span>
+                  </div>
+                </div>
+                <div className="pma-snapshot-rows">
+                  <div className="pma-snapshot-row">
+                    <span>Research synthesis</span>
+                    <strong>Complete</strong>
+                  </div>
+                  <div className="pma-snapshot-row">
+                    <span>Outline section drafts</span>
+                    <strong>In progress</strong>
+                  </div>
+                  <div className="pma-snapshot-row">
+                    <span>Supervisor feedback</span>
+                    <strong>Scheduled</strong>
+                  </div>
+                </div>
+                <div className="pma-snapshot-note">
+                  &quot;Everything is scoped and ready for drafting. Next milestone
+                  is the annotated bibliography.&quot;
+                </div>
+                <div className="pma-snapshot-actions">
+                  <button type="button">Open plan</button>
+                  <button type="button" className="is-ghost">
+                    Adjust timeline
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="how-it-works" className="pma-steps">
+        <div className="pma-container">
+          <div className="pma-section-header">
+            <h2 className="pma-heading">How Plan My Assignment works</h2>
+            <p className="pma-lead">
+              Four steps to turn any assignment brief into a realistic,
+              trackable plan.
+            </p>
+          </div>
+
+          <div className="pma-steps-grid">
+            {steps.map((step) => (
+              <div className="pma-step-card" key={step.step}>
+                <div className="pma-step-icon">
+                  {step.icon}
+                  <span className="pma-step-number">{step.step}</span>
+                </div>
+                <h3>{step.title}</h3>
+                <p>{step.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="faq" className="pma-faq">
+        <div className="pma-container">
+          <div className="pma-section-header">
+            <h2 className="pma-heading">FAQ</h2>
+            <p className="pma-lead">
+              Everything you need to know before you start planning.
+            </p>
+          </div>
+
+          <div className="pma-faq-list">
+            {faqs.map((faq, index) => (
+              <details
+                key={faq.question}
+                className="pma-faq-item"
+                open={index === 0}
+              >
+                <summary>
+                  <span>{faq.question}</span>
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="pma-faq-icon"
+                    aria-hidden="true"
+                  >
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </summary>
+                <div className="pma-faq-content">
+                  <p>{faq.answer}</p>
+                </div>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="pma-cta">
+        <div className="pma-container">
+          <div className="pma-cta-inner">
+            <h2>Ready to plan with clarity?</h2>
+            <p>
+              Build a structured roadmap in minutes and stay confident from the
+              first draft to the final submission.
+            </p>
+            <div className="pma-cta-actions">
+              <Link
+                className="pma-button pma-button-light"
+                href={loggedIn ? '/plan-my-assignment' : '/signup'}
+              >
+                {loggedIn ? 'Open Planner' : 'Start Free'}
+              </Link>
+              <a className="pma-button pma-button-outline-light" href="#features">
+                Explore features
+              </a>
+            </div>
+            <span className="pma-cta-note">
+              No setup required. Works with any assignment brief.
+            </span>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

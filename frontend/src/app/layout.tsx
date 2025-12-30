@@ -9,6 +9,7 @@ import '../styles/pages/Services.css';
 import '../styles/pages/Contact.css';
 import '../styles/pages/AutoGrade.css';
 import '../styles/pages/AutoGradingWizard.css';
+import '../styles/pages/PlanMyAssignment.css';
 import '../styles/pages/Tools.css';
 import '../styles/pages/Signup.css';
 import '../styles/pages/WhyEdGenAI.css';
