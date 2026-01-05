@@ -261,13 +261,13 @@ export default function AutoGradePage() {
         <div className="autograde-container">
           <div className="autograde-hero-grid">
             <div className="autograde-hero-content">
-              <span className="autograde-hero-brand">AutoGrade</span>
-
               <h1 className="autograde-hero-title">
                 Grade Smarter,
                 <br />
                 <span>Not Harder</span>
               </h1>
+
+              <span className="autograde-hero-brand">AutoGrade</span>
 
               <p className="autograde-hero-text">
                 Transform hours of marking into minutes. AutoGrade uses AI to
@@ -327,10 +327,6 @@ export default function AutoGradePage() {
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="autograde-scroll-indicator" aria-hidden="true">
-          <span />
         </div>
       </section>
 
@@ -530,38 +526,86 @@ export default function AutoGradePage() {
 
               <div className="autograde-suggestion-card">
                 <div className="autograde-suggestion-header">
-                  <div className="autograde-icon-shell">
-                    <span className="autograde-ai-tag">AI</span>
-                  </div>
                   <div>
-                    <p>AutoGrade Suggestion</p>
-                    <span>Essay Analysis</span>
+                    <p className="autograde-suggestion-filename">Example: Student Submission</p>
+                    <span className="autograde-suggestion-meta">See how AI analyzes each section</span>
+                  </div>
+                  <div className="autograde-suggestion-score">
+                    <span className="autograde-suggestion-score-value">24.5</span>
+                    <span className="autograde-suggestion-score-label">Total Score</span>
                   </div>
                 </div>
-                <div className="autograde-suggestion-metrics">
-                  <div>
-                    <span>Thesis Clarity</span>
-                    <strong>B+</strong>
+                <div className="autograde-suggestion-breakdown">
+                  <div className="autograde-suggestion-breakdown-title">Section Breakdown</div>
+                  <div className="autograde-suggestion-table">
+                    <div className="autograde-suggestion-table-header">
+                      <div className="autograde-suggestion-table-cell">Section</div>
+                      <div className="autograde-suggestion-table-cell autograde-suggestion-table-cell--score">Score</div>
+                      <div className="autograde-suggestion-table-cell">Comments</div>
+                      <div className="autograde-suggestion-table-cell autograde-suggestion-table-cell--action">
+                        <button type="button" className="autograde-suggestion-edit-btn">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                          <span>Edit</span>
+                        </button>
+                      </div>
+                    </div>
+                    <div className="autograde-suggestion-table-row">
+                      <div className="autograde-suggestion-table-cell">Introduction & Thesis</div>
+                      <div className="autograde-suggestion-table-cell autograde-suggestion-table-cell--score">
+                        <span className="autograde-suggestion-score-pill autograde-suggestion-score-pill--high">8 / 10</span>
+                      </div>
+                      <div className="autograde-suggestion-table-cell">
+                        <div className="autograde-suggestion-comment-list">
+                          <div className="autograde-suggestion-comment-line">
+                            <span className="autograde-suggestion-comment-bullet">•</span>
+                            <span className="autograde-suggestion-comment-text">Clear thesis statement with strong introduction</span>
+                          </div>
+                          <div className="autograde-suggestion-comment-line">
+                            <span className="autograde-suggestion-comment-bullet">•</span>
+                            <span className="autograde-suggestion-comment-text">Could benefit from more transitional phrases</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="autograde-suggestion-table-cell autograde-suggestion-table-cell--action"></div>
+                    </div>
+                    <div className="autograde-suggestion-table-row">
+                      <div className="autograde-suggestion-table-cell">Evidence & Analysis</div>
+                      <div className="autograde-suggestion-table-cell autograde-suggestion-table-cell--score">
+                        <span className="autograde-suggestion-score-pill autograde-suggestion-score-pill--medium">7.5 / 10</span>
+                      </div>
+                      <div className="autograde-suggestion-table-cell">
+                        <div className="autograde-suggestion-comment-list">
+                          <div className="autograde-suggestion-comment-line">
+                            <span className="autograde-suggestion-comment-bullet">•</span>
+                            <span className="autograde-suggestion-comment-text">Good use of evidence with adequate analysis</span>
+                          </div>
+                          <div className="autograde-suggestion-comment-line">
+                            <span className="autograde-suggestion-comment-bullet">•</span>
+                            <span className="autograde-suggestion-comment-text">Some sources could be integrated more effectively</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="autograde-suggestion-table-cell autograde-suggestion-table-cell--action"></div>
+                    </div>
+                    <div className="autograde-suggestion-table-row">
+                      <div className="autograde-suggestion-table-cell">Structure & Organization</div>
+                      <div className="autograde-suggestion-table-cell autograde-suggestion-table-cell--score">
+                        <span className="autograde-suggestion-score-pill autograde-suggestion-score-pill--high">9 / 10</span>
+                      </div>
+                      <div className="autograde-suggestion-table-cell">
+                        <div className="autograde-suggestion-comment-list">
+                          <div className="autograde-suggestion-comment-line">
+                            <span className="autograde-suggestion-comment-bullet">•</span>
+                            <span className="autograde-suggestion-comment-text">Well-organized with logical flow between paragraphs</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="autograde-suggestion-table-cell autograde-suggestion-table-cell--action"></div>
+                    </div>
                   </div>
-                  <div>
-                    <span>Evidence Usage</span>
-                    <strong>A-</strong>
-                  </div>
-                  <div>
-                    <span>Structure</span>
-                    <strong>B</strong>
-                  </div>
-                </div>
-                <div className="autograde-suggestion-quote">
-                  &quot;Strong introduction with clear thesis statement. Consider
-                  adding more transitional phrases between paragraphs to improve
-                  flow.&quot;
-                </div>
-                <div className="autograde-suggestion-actions">
-                  <button type="button">Approve and Edit</button>
-                  <button type="button" className="is-ghost">
-                    Regenerate
-                  </button>
                 </div>
               </div>
             </div>
