@@ -1,41 +1,74 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;600;700&family=Manrope:wght@400;500;600;700&display=swap');
+/* ==========================================================================
+   Plan My Assignment Landing Page
+   Clean, elegant design with consistent spacing
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+/* ==========================================================================
+   1. CSS Variables
+   ========================================================================== */
 
 .plan-assignment-page {
-  --pma-primary: #1b3c34;
-  --pma-primary-hover: #244f44;
-  --pma-secondary: #d97745;
-  --pma-ink: #15211d;
-  --pma-muted: rgba(21, 33, 29, 0.7);
-  --pma-cream: #f5efe4;
-  --pma-cream-light: #fbf7ef;
+  /* Colors */
+  --pma-primary: #213342;
+  --pma-primary-hover: #3a5a6f;
+  --pma-secondary: #4E6F8A;
+  --pma-ink: #1e293b;
+  --pma-muted: rgba(30, 41, 59, 0.65);
+  --pma-cream: #f3eee4;
+  --pma-cream-light: #F8F5F0;
   --pma-card: #ffffff;
-  --pma-border: rgba(27, 60, 52, 0.12);
-  --pma-shadow-light: 0 10px 24px rgba(16, 27, 22, 0.08);
-  --pma-shadow-medium: 0 16px 36px rgba(16, 27, 22, 0.12);
-  --pma-shadow-strong: 0 24px 60px rgba(16, 27, 22, 0.16);
-  --pma-radius: 24px;
+  --pma-border: rgba(33, 51, 66, 0.1);
+  --pma-white: #fdfcfb;
+
+  /* Shadows */
+  --pma-shadow-sm: 0 4px 12px rgba(33, 51, 66, 0.06);
+  --pma-shadow-md: 0 12px 32px rgba(33, 51, 66, 0.1);
+  --pma-shadow-lg: 0 20px 48px rgba(33, 51, 66, 0.14);
+
+  /* Spacing */
+  --pma-space-xs: 0.5rem;
+  --pma-space-sm: 1rem;
+  --pma-space-md: 1.5rem;
+  --pma-space-lg: 2.5rem;
+  --pma-space-xl: 4rem;
+  --pma-space-2xl: 6rem;
+
+  /* Border radius */
+  --pma-radius-sm: 12px;
+  --pma-radius-md: 18px;
+  --pma-radius-lg: 24px;
+
+  /* Base styles */
   background: var(--pma-cream-light);
   color: var(--pma-ink);
   margin: -1rem;
   padding: 0;
-  font-family: 'Manrope', 'Segoe UI', sans-serif;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
   line-height: 1.6;
-  overflow: hidden;
+  overflow-x: hidden;
 }
+
+/* ==========================================================================
+   2. Base Element Resets
+   ========================================================================== */
 
 .plan-assignment-page section {
   padding: 0;
 }
 
 .plan-assignment-page section[id] {
-  scroll-margin-top: 6rem;
+  scroll-margin-top: 5rem;
 }
 
 .plan-assignment-page h1,
 .plan-assignment-page h2,
 .plan-assignment-page h3 {
-  font-family: 'Fraunces', 'Times New Roman', serif;
+  font-family: 'Playfair Display', 'Times New Roman', serif !important;
   margin: 0;
+  font-weight: 700;
+  line-height: 1.2;
 }
 
 .plan-assignment-page p {
@@ -47,92 +80,125 @@
   text-decoration: none;
 }
 
+/* ==========================================================================
+   3. Layout Components
+   ========================================================================== */
+
 .pma-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1.5rem;
 }
 
+/* ==========================================================================
+   4. Section Headers
+   ========================================================================== */
+
 .pma-section-header {
-  max-width: 760px;
-  margin: 0 auto 3rem;
+  max-width: 720px;
+  margin: 0 auto var(--pma-space-xl);
   text-align: center;
-  display: grid;
-  gap: 1rem;
 }
 
 .pma-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.35rem 1rem;
+  display: inline-block;
+  padding: 0.4rem 1rem;
   border-radius: 999px;
-  background: rgba(217, 119, 69, 0.16);
+  background: rgba(78, 111, 138, 0.12);
   color: var(--pma-primary);
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 600;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.02em;
+  margin-bottom: var(--pma-space-md);
 }
 
 .pma-eyebrow--inverse {
-  background: rgba(254, 252, 247, 0.15);
-  color: rgba(254, 252, 247, 0.85);
+  background: rgba(253, 252, 251, 0.12);
+  color: rgba(253, 252, 251, 0.9);
 }
 
 .pma-heading {
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-family: 'Playfair Display', 'Times New Roman', serif !important;
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
   color: var(--pma-ink);
   letter-spacing: -0.02em;
+  margin-bottom: var(--pma-space-sm);
+  font-weight: 700;
 }
 
 .pma-heading--inverse {
-  color: #fefcf7;
+  color: var(--pma-white);
 }
 
 .pma-lead {
-  font-size: clamp(1rem, 2.2vw, 1.15rem);
+  font-size: clamp(1rem, 2vw, 1.1rem);
   color: var(--pma-muted);
+  line-height: 1.7;
+  max-width: 600px;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  text-align: center !important;
+  display: block;
+}
+
+.plan-assignment-page p.pma-lead,
+.pma-section-header p.pma-lead,
+.pma-section-header .pma-lead,
+.pma-pain .pma-lead,
+.pma-pain p.pma-lead,
+.pma-impact .pma-lead,
+.pma-impact p.pma-lead,
+.pma-features .pma-lead,
+.pma-features p.pma-lead,
+.pma-steps .pma-lead,
+.pma-steps p.pma-lead {
+  text-align: center !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  display: block !important;
 }
 
 .pma-lead--inverse {
-  color: rgba(254, 252, 247, 0.75);
+  color: rgba(253, 252, 251, 0.7);
 }
 
 .pma-subheading {
-  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-family: 'Playfair Display', 'Times New Roman', serif !important;
+  font-size: clamp(1.4rem, 3vw, 1.8rem);
   color: var(--pma-ink);
-  margin-bottom: 1rem;
+  margin-bottom: var(--pma-space-sm);
+  font-weight: 700;
 }
 
+/* ==========================================================================
+   5. Icons
+   ========================================================================== */
+
 .pma-icon-shell {
-  width: 56px;
-  height: 56px;
-  border-radius: 16px;
-  background: rgba(27, 60, 52, 0.12);
+  width: 52px;
+  height: 52px;
+  border-radius: var(--pma-radius-sm);
+  background: rgba(33, 51, 66, 0.08);
   color: var(--pma-primary);
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .pma-icon-shell--inverse {
-  background: rgba(254, 252, 247, 0.14);
-  color: #fefcf7;
+  background: rgba(253, 252, 251, 0.12);
+  color: var(--pma-white);
 }
 
 .pma-icon-shell--accent {
-  background: rgba(217, 119, 69, 0.18);
-  color: var(--pma-secondary);
-}
-
-.pma-ai-tag {
-  font-weight: 700;
+  background: rgba(78, 111, 138, 0.15);
   color: var(--pma-secondary);
 }
 
 .plan-assignment-page .pma-icon {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   stroke: currentColor;
   stroke-width: 1.8;
   stroke-linecap: round;
@@ -141,80 +207,105 @@
 }
 
 .plan-assignment-page .pma-icon--sm {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
 }
+
+.pma-ai-tag {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--pma-secondary);
+}
+
+/* ==========================================================================
+   6. Buttons
+   ========================================================================== */
 
 .plan-assignment-page .pma-button {
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.9rem 1.6rem;
-  border-radius: 14px;
+  gap: 0.5rem;
+  padding: 0.85rem 1.5rem;
+  border-radius: var(--pma-radius-sm);
   font-weight: 600;
+  font-size: 0.95rem;
   border: 1px solid transparent;
-  transition: transform 0.2s ease, box-shadow 0.2s ease,
-    background 0.2s ease, color 0.2s ease;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .plan-assignment-page .pma-button-primary {
   background: var(--pma-primary);
-  color: #fefcf7;
-  box-shadow: var(--pma-shadow-light);
+  color: var(--pma-white);
+  box-shadow: var(--pma-shadow-sm);
 }
 
 .plan-assignment-page .pma-button-primary:hover {
   background: var(--pma-primary-hover);
-  box-shadow: var(--pma-shadow-medium);
-  transform: translateY(-1px);
+  box-shadow: var(--pma-shadow-md);
+  transform: translateY(-2px);
 }
 
 .plan-assignment-page .pma-button-ghost {
   background: transparent;
   color: var(--pma-primary);
-  border-color: rgba(27, 60, 52, 0.2);
+  border-color: var(--pma-border);
 }
 
 .plan-assignment-page .pma-button-ghost:hover {
-  background: rgba(27, 60, 52, 0.06);
+  background: rgba(33, 51, 66, 0.04);
 }
 
 .plan-assignment-page .pma-button-light {
-  background: #fefcf7;
+  background: var(--pma-white);
   color: var(--pma-primary);
-  box-shadow: var(--pma-shadow-light);
+  box-shadow: var(--pma-shadow-sm);
 }
 
 .plan-assignment-page .pma-button-light:hover {
-  background: rgba(254, 252, 247, 0.92);
+  background: rgba(253, 252, 251, 0.9);
 }
 
 .plan-assignment-page .pma-button-outline-light {
   background: transparent;
-  color: #fefcf7;
-  border-color: rgba(254, 252, 247, 0.4);
+  color: var(--pma-white);
+  border-color: rgba(253, 252, 251, 0.35);
 }
 
 .plan-assignment-page .pma-button-outline-light:hover {
-  background: rgba(254, 252, 247, 0.1);
+  background: rgba(253, 252, 251, 0.08);
 }
 
 .plan-assignment-page .pma-button-icon {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
 }
 
 .plan-assignment-page .pma-button-icon-stroke {
   stroke: currentColor;
-  stroke-width: 2;
+  stroke-width: 2.5;
   fill: none;
 }
 
+/* ==========================================================================
+   7. Hero Section
+   ========================================================================== */
+
 .pma-hero {
   position: relative;
-  padding: clamp(6rem, 10vw, 8rem) 0 clamp(4rem, 8vw, 6rem);
-  background: linear-gradient(180deg, var(--pma-cream) 0%, #e5d7c1 100%);
+  width: 100%;
+  padding-top: clamp(7rem,10vw, 8rem) !important;
+  padding-bottom: clamp(5rem, 12vw, 8rem) !important;
+  padding-left: 0;
+  padding-right: 0;
+  background: #ffffff;
   overflow: hidden;
+}
+
+.pma-hero > .pma-container {
+  max-width: 1400px;
+  padding-left: clamp(1.5rem, 4vw, 3rem);
+  padding-right: clamp(1.5rem, 4vw, 3rem);
 }
 
 .pma-hero::before {
@@ -222,9 +313,8 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 20% 20%, rgba(217, 119, 69, 0.18), transparent 45%),
-    radial-gradient(circle at 80% 0%, rgba(27, 60, 52, 0.12), transparent 40%);
-  opacity: 0.7;
+    radial-gradient(ellipse at 25% 10%, rgba(78, 111, 138, 0.12), transparent 50%),
+    radial-gradient(ellipse at 75% 90%, rgba(33, 51, 66, 0.08), transparent 50%);
   pointer-events: none;
 }
 
@@ -233,10 +323,10 @@
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(27, 60, 52, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(27, 60, 52, 0.05) 1px, transparent 1px);
-  background-size: 120px 120px;
-  opacity: 0.3;
+    linear-gradient(rgba(33, 51, 66, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(33, 51, 66, 0.03) 1px, transparent 1px);
+  background-size: 100px 100px;
+  opacity: 0.5;
   pointer-events: none;
 }
 
@@ -244,175 +334,166 @@
   position: relative;
   z-index: 1;
   display: grid;
-  gap: 3rem;
+  gap: clamp(2rem, 5vw, 4rem);
   align-items: center;
+  max-width: 100%;
 }
 
 .pma-hero-content {
-  display: grid;
-  gap: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.pma-hero-title {
+  font-family: 'Playfair Display', 'Times New Roman', serif !important;
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  color: var(--pma-ink);
+  margin-bottom: 1rem;
+  font-weight: 700;
 }
 
 .pma-hero-brand {
   display: block;
-  font-size: clamp(1.05rem, 2vw, 1.35rem);
+  font-size: clamp(0.75rem, 1.2vw, 0.9rem);
   text-transform: uppercase;
-  letter-spacing: 0.28em;
+  letter-spacing: 0.25em;
   font-weight: 600;
   color: var(--pma-secondary);
-  margin-bottom: 0.6rem;
-  font-family: 'Manrope', 'Segoe UI', sans-serif;
-}
-
-.pma-hero-title {
-  font-size: clamp(2.8rem, 6vw, 4.6rem);
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-}
-
-.pma-hero-highlight {
-  color: var(--pma-secondary);
-  display: inline-block;
+  margin-bottom: var(--pma-space-lg);
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  margin-top: 0;
 }
 
 .pma-hero-text {
-  max-width: 520px;
-  font-size: clamp(1rem, 2vw, 1.2rem);
+  max-width: 560px;
+  font-size: clamp(0.95rem, 1.6vw, 1.05rem);
   color: var(--pma-muted);
+  line-height: 1.7;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
 }
 
 .pma-hero-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: var(--pma-space-sm);
+  margin-top: var(--pma-space-md);
 }
 
-.pma-hero-proof {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-  color: var(--pma-muted);
+.pma-hero-highlight {
+  color: var(--pma-secondary);
 }
 
-.pma-hero-tag-stack {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.pma-hero-tag {
-  padding: 0.3rem 0.8rem;
-  border-radius: 999px;
-  background: rgba(27, 60, 52, 0.08);
-  color: var(--pma-primary);
-  font-size: 0.85rem;
-  font-weight: 600;
-}
-
+/* Hero Media / Preview Card */
 .pma-hero-media {
   position: relative;
   z-index: 1;
+  animation: pma-fade-up 0.7s ease both;
+  animation-delay: 0.15s;
 }
 
 .pma-plan-preview {
   background: var(--pma-card);
-  border-radius: 26px;
+  border-radius: var(--pma-radius-lg);
   border: 1px solid var(--pma-border);
-  padding: 1.8rem;
-  box-shadow: var(--pma-shadow-strong);
+  padding: var(--pma-space-md);
+  box-shadow: var(--pma-shadow-lg);
   display: grid;
-  gap: 1.2rem;
+  gap: var(--pma-space-sm);
 }
 
 .pma-plan-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--pma-space-sm);
 }
 
 .pma-plan-title {
   font-weight: 600;
-  margin: 0;
+  font-size: 1rem;
   color: var(--pma-ink);
 }
 
 .pma-plan-subtitle {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--pma-muted);
+  margin-top: 0.2rem;
 }
 
 .pma-plan-chip {
-  background: rgba(217, 119, 69, 0.16);
+  background: rgba(78, 111, 138, 0.12);
   color: var(--pma-secondary);
   border-radius: 999px;
-  padding: 0.3rem 0.7rem;
-  font-size: 0.75rem;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.7rem;
   font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .pma-plan-tasks {
   display: grid;
-  gap: 0.75rem;
+  gap: 0.6rem;
 }
 
 .pma-plan-task {
   display: grid;
-  grid-template-columns: 18px 1fr auto;
-  gap: 0.75rem;
+  grid-template-columns: 14px 1fr auto;
+  gap: 0.7rem;
   align-items: center;
   background: var(--pma-cream-light);
-  border: 1px solid rgba(27, 60, 52, 0.08);
-  border-radius: 14px;
-  padding: 0.6rem 0.75rem;
+  border: 1px solid rgba(33, 51, 66, 0.06);
+  border-radius: var(--pma-radius-sm);
+  padding: 0.5rem 0.7rem;
 }
 
 .pma-plan-task p {
-  margin: 0;
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
+  color: var(--pma-ink);
 }
 
 .pma-plan-time {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--pma-muted);
 }
 
 .pma-plan-hours {
   font-weight: 600;
   color: var(--pma-primary);
-  font-size: 0.85rem;
+  font-size: 0.8rem;
 }
 
 .pma-task-status {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 999px;
-  background: rgba(27, 60, 52, 0.3);
+  background: rgba(33, 51, 66, 0.25);
 }
 
 .pma-task-status--complete {
-  background: #2f7d6d;
+  background: var(--pma-primary);
 }
 
 .pma-task-status--active {
   background: var(--pma-secondary);
-  box-shadow: 0 0 0 4px rgba(217, 119, 69, 0.2);
+  box-shadow: 0 0 0 3px rgba(78, 111, 138, 0.2);
 }
 
 .pma-task-status--upcoming {
-  background: rgba(27, 60, 52, 0.35);
+  background: rgba(33, 51, 66, 0.25);
 }
 
 .pma-plan-footer {
   display: grid;
-  gap: 0.7rem;
+  gap: 0.5rem;
 }
 
 .pma-plan-progress {
-  height: 8px;
-  background: rgba(27, 60, 52, 0.12);
+  height: 6px;
+  background: rgba(33, 51, 66, 0.1);
   border-radius: 999px;
   overflow: hidden;
 }
@@ -427,7 +508,7 @@
 .pma-plan-footer-meta {
   display: flex;
   justify-content: space-between;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--pma-muted);
 }
 
@@ -435,62 +516,53 @@
   color: var(--pma-primary);
 }
 
+/* Floating Card */
 .pma-floating-card {
   position: absolute;
-  left: -1.5rem;
-  bottom: -1.5rem;
+  left: -1rem;
+  bottom: -3rem;
   background: var(--pma-card);
-  border-radius: 18px;
+  border-radius: var(--pma-radius-md);
   border: 1px solid var(--pma-border);
-  padding: 1rem 1.2rem;
+  padding: 0.85rem 1rem;
   display: flex;
   align-items: center;
-  gap: 0.9rem;
-  box-shadow: var(--pma-shadow-medium);
-  animation: pma-float 6s ease-in-out infinite;
+  gap: 0.75rem;
+  box-shadow: var(--pma-shadow-md);
+  animation: pma-float 5s ease-in-out infinite;
 }
 
 .pma-floating-stat {
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   font-weight: 700;
-  margin: 0;
+  color: var(--pma-ink);
 }
 
 .pma-floating-label {
+  font-size: 0.8rem;
   color: var(--pma-muted);
-  font-size: 0.9rem;
 }
 
-.pma-scroll-indicator {
-  position: absolute;
-  bottom: 1.5rem;
-  left: 50%;
-  width: 26px;
-  height: 42px;
-  border-radius: 999px;
-  border: 2px solid rgba(27, 60, 52, 0.2);
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding-top: 6px;
-  transform: translateX(-50%);
-  animation: pma-bounce 2s infinite;
-  z-index: 1;
-}
-
-.pma-scroll-indicator span {
-  width: 4px;
-  height: 8px;
-  border-radius: 999px;
-  background: var(--pma-secondary);
-}
+/* ==========================================================================
+   8. Pain Points Section
+   ========================================================================== */
 
 .pma-pain {
   position: relative;
-  padding: clamp(4rem, 8vw, 6rem) 0;
+  width: 100%;
+  padding-top: clamp(3.5rem, 6vw, 4.5rem) !important;
+  padding-bottom: clamp(3.5rem, 6vw, 4.5rem) !important;
+  padding-left: 0;
+  padding-right: 0;
   background: var(--pma-primary);
-  color: #fefcf7;
+  color: var(--pma-white);
   overflow: hidden;
+}
+
+.pma-pain > .pma-container {
+  max-width: 1400px;
+  padding-left: clamp(1.5rem, 4vw, 3rem);
+  padding-right: clamp(1.5rem, 4vw, 3rem);
 }
 
 .pma-pain::before {
@@ -498,9 +570,8 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 15% 15%, rgba(254, 252, 247, 0.08), transparent 45%),
-    radial-gradient(circle at 85% 0%, rgba(254, 252, 247, 0.12), transparent 40%);
-  opacity: 0.6;
+    radial-gradient(ellipse at 10% 20%, rgba(253, 252, 251, 0.06), transparent 50%),
+    radial-gradient(ellipse at 90% 80%, rgba(253, 252, 251, 0.04), transparent 50%);
   pointer-events: none;
 }
 
@@ -508,155 +579,165 @@
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--pma-space-md);
 }
 
 .pma-pain-card {
-  background: rgba(254, 252, 247, 0.08);
-  border: 1px solid rgba(254, 252, 247, 0.16);
-  border-radius: 20px;
-  padding: 1.5rem;
-  backdrop-filter: blur(6px);
+  background: rgba(253, 252, 251, 0.06);
+  border: 1px solid rgba(253, 252, 251, 0.1);
+  border-radius: var(--pma-radius-md);
+  padding: var(--pma-space-md);
   display: grid;
-  gap: 0.75rem;
-  animation: pma-fade-up 0.8s ease both;
+  gap: 0.6rem;
+  animation: pma-fade-up 0.6s ease both;
 }
 
-.pma-pain-card:nth-child(1) {
-  animation-delay: 0.1s;
-}
-
-.pma-pain-card:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.pma-pain-card:nth-child(3) {
-  animation-delay: 0.3s;
-}
-
-.pma-pain-card:nth-child(4) {
-  animation-delay: 0.4s;
-}
+.pma-pain-card:nth-child(1) { animation-delay: 0.1s; }
+.pma-pain-card:nth-child(2) { animation-delay: 0.15s; }
+.pma-pain-card:nth-child(3) { animation-delay: 0.2s; }
+.pma-pain-card:nth-child(4) { animation-delay: 0.25s; }
 
 .pma-pain-card h3 {
-  color: #fefcf7;
-  font-size: 1.1rem;
+  font-family: 'Playfair Display', 'Times New Roman', serif !important;
+  color: var(--pma-white);
+  font-size: 1.05rem;
+  font-weight: 700;
 }
 
 .pma-pain-card p {
-  color: rgba(254, 252, 247, 0.75);
-  font-size: 0.95rem;
+  color: rgba(253, 252, 251, 0.7);
+  font-size: 0.9rem;
+  line-height: 1.6;
 }
 
 .pma-pain-stat {
-  font-size: 2.2rem;
+  font-size: 2rem;
   font-weight: 700;
   display: flex;
   align-items: baseline;
-  gap: 0.3rem;
+  gap: 0.25rem;
 }
 
 .pma-pain-stat span {
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 500;
-  opacity: 0.8;
+  opacity: 0.75;
 }
 
 .pma-pain-caption {
-  font-size: 0.75rem;
-  color: rgba(254, 252, 247, 0.6);
+  font-size: 0.7rem;
+  color: rgba(253, 252, 251, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .pma-pain-band {
-  margin-top: 2.5rem;
+  margin-top: var(--pma-space-lg);
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
-  background: rgba(254, 252, 247, 0.08);
-  border: 1px solid rgba(254, 252, 247, 0.16);
-  border-radius: 24px;
-  padding: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--pma-space-md);
+  background: rgba(253, 252, 251, 0.06);
+  border: 1px solid rgba(253, 252, 251, 0.1);
+  border-radius: var(--pma-radius-lg);
+  padding: var(--pma-space-md);
   position: relative;
   z-index: 1;
 }
 
 .pma-pain-band-item {
   text-align: center;
-  display: grid;
-  gap: 0.5rem;
 }
 
 .pma-pain-band-item span {
-  font-size: 2rem;
+  display: block;
+  font-size: 1.6rem;
   font-weight: 700;
+  margin-bottom: 0.4rem;
 }
 
 .pma-pain-band-item p {
-  color: rgba(254, 252, 247, 0.75);
-  font-size: 0.95rem;
+  color: rgba(253, 252, 251, 0.7);
+  font-size: 0.9rem;
 }
 
+/* ==========================================================================
+   9. Impact Section
+   ========================================================================== */
+
 .pma-impact {
-  padding: clamp(4rem, 8vw, 6rem) 0;
+  width: 100%;
+  padding-top: clamp(3.5rem, 6vw, 4.5rem) !important;
+  padding-bottom: clamp(3.5rem, 6vw, 4.5rem) !important;
+  padding-left: 0;
+  padding-right: 0;
   background: var(--pma-cream-light);
+}
+
+.pma-impact > .pma-container {
+  max-width: 1400px;
+  padding-left: clamp(1.5rem, 4vw, 3rem);
+  padding-right: clamp(1.5rem, 4vw, 3rem);
 }
 
 .pma-impact-grid {
   display: grid;
-  gap: 2rem;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--pma-space-lg);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
 .pma-card {
   background: var(--pma-card);
   border: 1px solid var(--pma-border);
-  border-radius: 24px;
-  padding: 2rem;
-  box-shadow: var(--pma-shadow-light);
+  border-radius: var(--pma-radius-lg);
+  padding: var(--pma-space-lg);
+  box-shadow: var(--pma-shadow-sm);
   display: grid;
-  gap: 1.2rem;
+  gap: var(--pma-space-sm);
 }
 
 .pma-card-title {
-  font-size: 1.2rem;
+  font-family: 'Playfair Display', 'Times New Roman', serif !important;
+  font-size: 1.15rem;
+  color: var(--pma-ink);
+  font-weight: 700;
 }
 
 .pma-card-subtitle {
   color: var(--pma-muted);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
+/* Bar Chart */
 .pma-bar-chart {
   display: grid;
-  gap: 1rem;
+  gap: 0.85rem;
+  margin-top: var(--pma-space-sm);
 }
 
 .pma-bar-row {
   display: grid;
-  grid-template-columns: 120px 1fr 70px;
-  gap: 1rem;
+  grid-template-columns: 110px 1fr 60px;
+  gap: 0.75rem;
   align-items: center;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: var(--pma-ink);
 }
 
 .pma-bar-track {
-  height: 10px;
-  background: rgba(27, 60, 52, 0.12);
+  height: 8px;
+  background: rgba(33, 51, 66, 0.1);
   border-radius: 999px;
-  position: relative;
   overflow: hidden;
 }
 
 .pma-bar-fill {
   height: 100%;
-  display: block;
   border-radius: 999px;
 }
 
 .pma-bar-fill--muted {
-  background: rgba(27, 60, 52, 0.35);
+  background: rgba(33, 51, 66, 0.3);
 }
 
 .pma-bar-fill--primary {
@@ -666,49 +747,54 @@
 .pma-bar-value {
   text-align: right;
   color: var(--pma-muted);
+  font-size: 0.85rem;
 }
 
 .pma-stat-callout {
   display: flex;
   align-items: baseline;
-  gap: 0.6rem;
+  gap: 0.5rem;
   justify-content: center;
   flex-wrap: wrap;
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: var(--pma-muted);
+  margin-top: var(--pma-space-sm);
 }
 
 .pma-stat-callout strong {
-  font-size: 2rem;
+  font-size: 1.8rem;
   color: var(--pma-primary);
-  font-family: 'Fraunces', 'Times New Roman', serif;
+  font-family: 'Playfair Display', 'Times New Roman', serif;
 }
 
+/* Progress Breakdown */
 .pma-breakdown {
   display: grid;
-  gap: 1.2rem;
+  gap: 1rem;
+  margin-top: var(--pma-space-sm);
 }
 
 .pma-breakdown-row {
   display: grid;
-  gap: 0.6rem;
+  gap: 0.5rem;
 }
 
 .pma-breakdown-labels {
   display: flex;
   justify-content: space-between;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: var(--pma-ink);
 }
 
 .pma-breakdown-labels span:last-child {
   color: var(--pma-muted);
+  font-size: 0.85rem;
 }
 
 .pma-progress {
   position: relative;
-  height: 12px;
-  background: rgba(27, 60, 52, 0.08);
+  height: 10px;
+  background: rgba(33, 51, 66, 0.06);
   border-radius: 999px;
   overflow: hidden;
 }
@@ -723,7 +809,7 @@
 }
 
 .pma-progress-before {
-  background: rgba(27, 60, 52, 0.28);
+  background: rgba(33, 51, 66, 0.2);
 }
 
 .pma-progress-after {
@@ -733,164 +819,190 @@
 .pma-legend {
   display: flex;
   justify-content: center;
-  gap: 1.5rem;
-  font-size: 0.9rem;
+  gap: 1.25rem;
+  font-size: 0.85rem;
   color: var(--pma-muted);
-  margin-top: 1rem;
+  margin-top: var(--pma-space-sm);
 }
 
 .pma-legend span {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
 
 .pma-legend-dot {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 999px;
-  display: inline-block;
 }
 
 .pma-legend-dot--muted {
-  background: rgba(27, 60, 52, 0.35);
+  background: rgba(33, 51, 66, 0.3);
 }
 
 .pma-legend-dot--primary {
   background: var(--pma-primary);
 }
 
+/* Impact Stat Cards */
 .pma-impact-cards {
-  margin-top: 2.5rem;
+  margin-top: var(--pma-space-lg);
   display: grid;
-  gap: 1.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--pma-space-md);
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 }
 
 .pma-stat-card {
   background: var(--pma-card);
   border: 1px solid var(--pma-border);
-  border-radius: 20px;
-  padding: 1.5rem;
+  border-radius: var(--pma-radius-md);
+  padding: var(--pma-space-md);
   text-align: center;
-  box-shadow: var(--pma-shadow-light);
+  box-shadow: var(--pma-shadow-sm);
 }
 
 .pma-stat-card span {
-  font-size: 2rem;
+  display: block;
+  font-size: 1.75rem;
   font-weight: 700;
   color: var(--pma-primary);
+  font-family: 'Playfair Display', 'Times New Roman', serif;
 }
 
 .pma-stat-card p {
   color: var(--pma-muted);
-  font-size: 0.95rem;
-  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  margin-top: 0.4rem;
 }
 
+/* ==========================================================================
+   10. Features Section
+   ========================================================================== */
+
 .pma-features {
-  padding: clamp(4rem, 8vw, 6rem) 0;
+  width: 100%;
+  padding-top: clamp(3.5rem, 6vw, 4.5rem) !important;
+  padding-bottom: clamp(3.5rem, 6vw, 4.5rem) !important;
+  padding-left: 0;
+  padding-right: 0;
   background: #ffffff;
+}
+
+.pma-features > .pma-container {
+  max-width: 1400px;
+  padding-left: clamp(1.5rem, 4vw, 3rem);
+  padding-right: clamp(1.5rem, 4vw, 3rem);
 }
 
 .pma-feature-grid {
   display: grid;
-  gap: 1.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--pma-space-md);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
 .pma-feature-card {
   background: var(--pma-card);
   border: 1px solid var(--pma-border);
-  border-radius: 20px;
-  padding: 1.5rem;
-  box-shadow: var(--pma-shadow-light);
+  border-radius: var(--pma-radius-md);
+  padding: var(--pma-space-md);
+  box-shadow: var(--pma-shadow-sm);
   display: grid;
-  gap: 0.75rem;
+  gap: 0.6rem;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .pma-feature-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--pma-shadow-medium);
+  transform: translateY(-3px);
+  box-shadow: var(--pma-shadow-md);
 }
 
 .pma-feature-card h3 {
-  font-size: 1.15rem;
+  font-family: 'Playfair Display', 'Times New Roman', serif !important;
+  font-size: 1.1rem;
+  color: var(--pma-ink);
+  font-weight: 700;
 }
 
 .pma-feature-card p {
   color: var(--pma-muted);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
+  line-height: 1.6;
 }
 
+/* Control Section */
 .pma-control {
-  margin-top: 3.5rem;
+  margin-top: var(--pma-space-xl);
 }
 
 .pma-control-grid {
   display: grid;
-  gap: 2rem;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  align-items: center;
+  gap: var(--pma-space-xl);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  align-items: start;
 }
 
 .pma-checklist {
   list-style: none;
   padding: 0;
-  margin: 1.5rem 0 0;
+  margin: var(--pma-space-md) 0 0;
   display: grid;
-  gap: 0.9rem;
+  gap: 0.75rem;
 }
 
 .pma-checklist li {
   display: flex;
-  gap: 0.75rem;
+  gap: 0.65rem;
   align-items: flex-start;
   color: var(--pma-ink);
+  font-size: 0.95rem;
+  line-height: 1.5;
 }
 
 .pma-check {
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
   border-radius: 999px;
-  background: rgba(217, 119, 69, 0.2);
+  background: rgba(78, 111, 138, 0.15);
   color: var(--pma-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  margin-top: 2px;
+  margin-top: 1px;
 }
 
+/* Snapshot Card */
 .pma-snapshot-card {
   background: var(--pma-card);
   border: 1px solid var(--pma-border);
-  border-radius: 24px;
-  padding: 1.75rem;
-  box-shadow: var(--pma-shadow-medium);
+  border-radius: var(--pma-radius-lg);
+  padding: var(--pma-space-md);
+  box-shadow: var(--pma-shadow-md);
   display: grid;
-  gap: 1.2rem;
+  gap: var(--pma-space-sm);
 }
 
 .pma-snapshot-header {
   display: flex;
-  gap: 1rem;
+  gap: 0.85rem;
   align-items: center;
 }
 
 .pma-snapshot-header p {
   font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--pma-ink);
 }
 
 .pma-snapshot-header span {
   color: var(--pma-muted);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
 .pma-snapshot-rows {
   display: grid;
-  gap: 0.75rem;
+  gap: 0.6rem;
 }
 
 .pma-snapshot-row {
@@ -898,48 +1010,51 @@
   justify-content: space-between;
   align-items: center;
   background: var(--pma-cream-light);
-  border-radius: 12px;
-  padding: 0.75rem 1rem;
+  border-radius: var(--pma-radius-sm);
+  padding: 0.65rem 0.9rem;
 }
 
 .pma-snapshot-row span {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: var(--pma-ink);
 }
 
 .pma-snapshot-row strong {
   color: var(--pma-secondary);
+  font-size: 0.85rem;
 }
 
 .pma-snapshot-note {
-  background: rgba(27, 60, 52, 0.06);
-  border: 1px solid rgba(27, 60, 52, 0.15);
-  border-radius: 14px;
-  padding: 0.9rem 1rem;
-  font-size: 0.9rem;
+  background: rgba(33, 51, 66, 0.04);
+  border: 1px solid rgba(33, 51, 66, 0.08);
+  border-radius: var(--pma-radius-sm);
+  padding: 0.75rem 0.9rem;
+  font-size: 0.85rem;
   color: var(--pma-muted);
   font-style: italic;
+  line-height: 1.5;
 }
 
 .pma-snapshot-actions {
   display: flex;
-  gap: 0.75rem;
+  gap: 0.6rem;
 }
 
 .pma-snapshot-actions button {
   flex: 1;
-  border-radius: 12px;
+  border-radius: var(--pma-radius-sm);
   border: none;
-  padding: 0.7rem 1rem;
+  padding: 0.6rem 0.9rem;
   font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
   background: var(--pma-primary);
-  color: #fefcf7;
-  transition: background 0.2s ease, transform 0.2s ease;
+  color: var(--pma-white);
+  transition: all 0.2s ease;
 }
 
 .pma-snapshot-actions button:hover {
   background: var(--pma-primary-hover);
-  transform: translateY(-1px);
 }
 
 .pma-snapshot-actions button.is-ghost {
@@ -949,37 +1064,50 @@
 }
 
 .pma-snapshot-actions button.is-ghost:hover {
-  background: rgba(27, 60, 52, 0.05);
-  transform: translateY(-1px);
+  background: rgba(33, 51, 66, 0.04);
 }
 
+/* ==========================================================================
+   11. Steps Section
+   ========================================================================== */
+
 .pma-steps {
-  padding: clamp(4rem, 8vw, 6rem) 0;
+  width: 100%;
+  padding-top: clamp(3.5rem, 6vw, 4.5rem) !important;
+  padding-bottom: clamp(3.5rem, 6vw, 4.5rem) !important;
+  padding-left: 0;
+  padding-right: 0;
   background: var(--pma-cream);
+}
+
+.pma-steps > .pma-container {
+  max-width: 1400px;
+  padding-left: clamp(1.5rem, 4vw, 3rem);
+  padding-right: clamp(1.5rem, 4vw, 3rem);
 }
 
 .pma-steps-grid {
   display: grid;
-  gap: 1.5rem;
+  gap: var(--pma-space-md);
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
 .pma-step-card {
   background: var(--pma-card);
   border: 1px solid var(--pma-border);
-  border-radius: 24px;
-  padding: 1.5rem;
+  border-radius: var(--pma-radius-lg);
+  padding: var(--pma-space-md);
   text-align: center;
-  box-shadow: var(--pma-shadow-light);
+  box-shadow: var(--pma-shadow-sm);
   display: grid;
-  gap: 0.75rem;
+  gap: 0.6rem;
 }
 
 .pma-step-icon {
-  width: 90px;
-  height: 90px;
+  width: 80px;
+  height: 80px;
   border-radius: 999px;
-  background: rgba(27, 60, 52, 0.08);
+  background: rgba(33, 51, 66, 0.06);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -990,53 +1118,84 @@
 
 .pma-step-number {
   position: absolute;
-  top: -8px;
-  right: -8px;
-  width: 30px;
-  height: 30px;
+  top: -6px;
+  right: -6px;
+  width: 28px;
+  height: 28px;
   border-radius: 999px;
   background: var(--pma-primary);
-  color: #fefcf7;
+  color: var(--pma-white);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.pma-step-card h3 {
+  font-family: 'Playfair Display', 'Times New Roman', serif !important;
+  font-size: 1.05rem;
+  color: var(--pma-ink);
   font-weight: 700;
 }
 
 .pma-step-card p {
   color: var(--pma-muted);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
+  line-height: 1.6;
 }
 
+/* ==========================================================================
+   12. FAQ Section
+   ========================================================================== */
+
 .pma-faq {
-  padding: clamp(4rem, 8vw, 6rem) 0;
+  width: 100%;
+  padding-top: clamp(3.5rem, 6vw, 4.5rem) !important;
+  padding-bottom: clamp(3.5rem, 6vw, 4.5rem) !important;
+  padding-left: 0;
+  padding-right: 0;
   background: #ffffff;
 }
 
+.pma-faq > .pma-container {
+  max-width: 1400px;
+  padding-left: clamp(1.5rem, 4vw, 3rem);
+  padding-right: clamp(1.5rem, 4vw, 3rem);
+}
+
 .pma-faq-list {
-  max-width: 720px;
+  max-width: 900px;
   margin: 0 auto;
   display: grid;
-  gap: 1rem;
+  gap: 0.5rem;
 }
 
 .pma-faq-item {
-  border: 1px solid var(--pma-border);
-  border-radius: 18px;
-  background: var(--pma-cream-light);
-  overflow: hidden;
+  background: #ffffff;
+  border-bottom: 1px solid var(--pma-border);
+}
+
+.pma-faq-item:last-child {
+  border-bottom: none;
 }
 
 .pma-faq-item summary {
   list-style: none;
   cursor: pointer;
-  padding: 1.25rem 1.5rem;
+  padding: 1.1rem 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
   font-weight: 600;
+  font-size: 1rem;
+  color: var(--pma-ink);
+  transition: color 0.2s ease;
+}
+
+.pma-faq-item summary:hover {
+  color: var(--pma-secondary);
 }
 
 .pma-faq-item summary::-webkit-details-marker {
@@ -1044,8 +1203,8 @@
 }
 
 .pma-faq-icon {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   stroke: currentColor;
   stroke-width: 2;
   fill: none;
@@ -1058,93 +1217,29 @@
 }
 
 .pma-faq-content {
-  padding: 0 1.5rem 1.25rem;
+  padding: 0 0 1.1rem;
   color: var(--pma-muted);
+  font-size: 0.95rem;
+  line-height: 1.7;
 }
 
-.pma-cta {
-  position: relative;
-  padding: clamp(4rem, 8vw, 6rem) 0;
-  background: linear-gradient(135deg, #1b3c34 0%, #0f251f 100%);
-  color: #fefcf7;
-  overflow: hidden;
-}
-
-.pma-cta::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at top left, rgba(254, 252, 247, 0.2), transparent 45%),
-    radial-gradient(circle at bottom right, rgba(254, 252, 247, 0.2), transparent 40%);
-  opacity: 0.6;
-  pointer-events: none;
-}
-
-.pma-cta-inner {
-  max-width: 720px;
-  margin: 0 auto;
-  text-align: center;
-  display: grid;
-  gap: 1.5rem;
-  position: relative;
-  z-index: 1;
-}
-
-.pma-cta h2 {
-  color: #fefcf7;
-  font-size: clamp(2rem, 4vw, 3rem);
-}
-
-.pma-cta p {
-  color: rgba(254, 252, 247, 0.8);
-}
-
-.pma-cta-actions {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.pma-cta-note {
-  font-size: 0.9rem;
-  color: rgba(254, 252, 247, 0.6);
-}
+/* ==========================================================================
+   13. Animations
+   ========================================================================== */
 
 .pma-hero-content > * {
-  animation: pma-fade-up 0.8s ease both;
+  animation: pma-fade-up 0.6s ease both;
 }
 
-.pma-hero-content > *:nth-child(1) {
-  animation-delay: 0.1s;
-}
-
-.pma-hero-content > *:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.pma-hero-content > *:nth-child(3) {
-  animation-delay: 0.3s;
-}
-
-.pma-hero-content > *:nth-child(4) {
-  animation-delay: 0.4s;
-}
-
-.pma-hero-content > *:nth-child(5) {
-  animation-delay: 0.5s;
-}
-
-.pma-hero-media {
-  animation: pma-fade-up 0.9s ease both;
-  animation-delay: 0.3s;
-}
+.pma-hero-content > *:nth-child(1) { animation-delay: 0.05s; }
+.pma-hero-content > *:nth-child(2) { animation-delay: 0.1s; }
+.pma-hero-content > *:nth-child(3) { animation-delay: 0.15s; }
+.pma-hero-content > *:nth-child(4) { animation-delay: 0.2s; }
 
 @keyframes pma-fade-up {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(16px);
   }
   to {
     opacity: 1;
@@ -1153,39 +1248,36 @@
 }
 
 @keyframes pma-float {
-  0%,
-  100% {
+  0%, 100% {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-8px);
+    transform: translateY(-6px);
   }
 }
 
-@keyframes pma-bounce {
-  0%,
-  100% {
-    transform: translate(-50%, 0);
-  }
-  50% {
-    transform: translate(-50%, 6px);
-  }
-}
+/* ==========================================================================
+   15. Responsive Design
+   ========================================================================== */
 
 @media (min-width: 960px) {
   .pma-hero-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: clamp(3rem, 6vw, 5rem);
+  }
+}
+
+@media (min-width: 1200px) {
+  .pma-hero-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(4rem, 8vw, 6rem);
   }
 }
 
 @media (max-width: 980px) {
   .pma-floating-card {
     position: static;
-    margin-top: 1rem;
-  }
-
-  .pma-scroll-indicator {
-    display: none;
+    margin-top: var(--pma-space-sm);
   }
 }
 
@@ -1199,23 +1291,14 @@
     justify-content: center;
   }
 
-  .pma-hero-proof {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
   .pma-bar-row {
-    grid-template-columns: 90px 1fr 50px;
+    grid-template-columns: 80px 1fr 50px;
+    font-size: 0.85rem;
   }
 
   .pma-breakdown-labels {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 0.2rem;
-  }
-
-  .pma-cta-actions {
-    flex-direction: column;
+    gap: 0.15rem;
   }
 }
 

@@ -239,6 +239,11 @@ const faqs = [
     answer:
       'Export to PDF or CSV and sync with calendar tools.',
   },
+  {
+    question: 'Is it really free to start?',
+    answer:
+      'Yes! Sign up is completely free with no credit card required. Start planning your assignments right away.',
+  },
 ];
 
 const previewTasks = [
@@ -318,19 +323,15 @@ export default function PlanMyAssignmentLanding(): JSX.Element {
         <div className="pma-container">
           <div className="pma-hero-grid">
             <div className="pma-hero-content">
-              <span className="pma-hero-brand">Plan My Assignment</span>
-
               <h1 className="pma-hero-title">
-                Build a clear assignment roadmap.
-                <br />
-                <span className="pma-hero-highlight">
-                  Stay ahead of every deadline.
-                </span>
+                A Structured Path to On-Time Submissions
               </h1>
 
+              <span className="pma-hero-brand">Plan My Assignment</span>
+
               <p className="pma-hero-text">
-                Plan My Assignment turns any prompt into a week-by-week roadmap
-                with milestones, tasks, and accountability built in.
+                Turn any assignment brief into a structured, week-by-week roadmap
+                with milestones, tasks, and deadlines. Get started in minutes—no credit card required.
               </p>
 
               <div className="pma-hero-actions">
@@ -338,7 +339,7 @@ export default function PlanMyAssignmentLanding(): JSX.Element {
                   className="pma-button pma-button-primary"
                   href={loggedIn ? '/plan-my-assignment' : '/signup'}
                 >
-                  {loggedIn ? 'Build Your Plan' : 'Start Free'}
+                  {loggedIn ? 'Build Your Plan' : 'Start Free Trial'}
                   <svg
                     viewBox="0 0 24 24"
                     className="pma-button-icon pma-button-icon-stroke"
@@ -348,19 +349,6 @@ export default function PlanMyAssignmentLanding(): JSX.Element {
                     <path d="M13 6l6 6-6 6" />
                   </svg>
                 </Link>
-
-                <a className="pma-button pma-button-ghost" href="#how-it-works">
-                  See the workflow
-                </a>
-              </div>
-
-              <div className="pma-hero-proof">
-                <span>Built for</span>
-                <div className="pma-hero-tag-stack">
-                  <span className="pma-hero-tag">Essays</span>
-                  <span className="pma-hero-tag">Lab Reports</span>
-                  <span className="pma-hero-tag">Group Projects</span>
-                </div>
               </div>
             </div>
 
@@ -419,18 +407,11 @@ export default function PlanMyAssignmentLanding(): JSX.Element {
             </div>
           </div>
         </div>
-
-        <div className="pma-scroll-indicator" aria-hidden="true">
-          <span />
-        </div>
       </section>
 
       <section id="pain-points" className="pma-pain">
         <div className="pma-container">
           <div className="pma-section-header">
-            <span className="pma-eyebrow pma-eyebrow--inverse">
-              Planning should not slow you down
-            </span>
             <h2 className="pma-heading pma-heading--inverse">
               Assignment planning feels harder than it should.
             </h2>
@@ -574,16 +555,6 @@ export default function PlanMyAssignmentLanding(): JSX.Element {
             </p>
           </div>
 
-          <div className="pma-feature-grid">
-            {planTypes.map((type) => (
-              <div className="pma-feature-card" key={type.title}>
-                <div className="pma-icon-shell">{type.icon}</div>
-                <h3>{type.title}</h3>
-                <p>{type.description}</p>
-              </div>
-            ))}
-          </div>
-
           <div className="pma-control">
             <div className="pma-control-grid">
               <div>
@@ -679,9 +650,6 @@ export default function PlanMyAssignmentLanding(): JSX.Element {
         <div className="pma-container">
           <div className="pma-section-header">
             <h2 className="pma-heading">FAQ</h2>
-            <p className="pma-lead">
-              Everything you need to know before you start planning.
-            </p>
           </div>
 
           <div className="pma-faq-list">
@@ -706,32 +674,6 @@ export default function PlanMyAssignmentLanding(): JSX.Element {
                 </div>
               </details>
             ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="pma-cta">
-        <div className="pma-container">
-          <div className="pma-cta-inner">
-            <h2>Ready to plan with clarity?</h2>
-            <p>
-              Build a structured roadmap in minutes and stay confident from the
-              first draft to the final submission.
-            </p>
-            <div className="pma-cta-actions">
-              <Link
-                className="pma-button pma-button-light"
-                href={loggedIn ? '/plan-my-assignment' : '/signup'}
-              >
-                {loggedIn ? 'Open Planner' : 'Start Free'}
-              </Link>
-              <a className="pma-button pma-button-outline-light" href="#features">
-                Explore features
-              </a>
-            </div>
-            <span className="pma-cta-note">
-              No setup required. Works with any assignment brief.
-            </span>
           </div>
         </div>
       </section>
