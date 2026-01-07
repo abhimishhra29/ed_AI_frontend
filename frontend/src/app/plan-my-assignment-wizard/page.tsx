@@ -5,38 +5,8 @@ import Link from 'next/link';
 import { apiFetch } from '../../lib/api';
 
 const planTypes = [
-  {
-    title: 'Research Essays',
-    description: 'Turn complex prompts into structured outlines and source plans.',
-    icon: (
-      <svg viewBox="0 0 24 24" className="pma-icon" aria-hidden="true">
-        <path d="M4 5h10a3 3 0 0 1 3 3v11H7a3 3 0 0 0-3 3V5z" />
-        <circle cx="17.5" cy="16.5" r="3" />
-        <path d="M20 19l2 2" />
-      </svg>
-    ),
-  },
-  {
-    title: 'Presentations',
-    description: 'Sequence slides, scripts, and practice sessions in one plan.',
-    icon: (
-      <svg viewBox="0 0 24 24" className="pma-icon" aria-hidden="true">
-        <path d="M4 5h16v10H4z" />
-        <path d="M8 19h8" />
-        <path d="M12 15v4" />
-      </svg>
-    ),
-  },
-  {
-    title: 'Lab Reports',
-    description: 'Map hypotheses, data collection, and analysis checkpoints.',
-    icon: (
-      <svg viewBox="0 0 24 24" className="pma-icon" aria-hidden="true">
-        <path d="M9 3h6" />
-        <path d="M10 3v5l-4 7a4 4 0 0 0 3.5 6h5a4 4 0 0 0 3.5-6l-4-7V3" />
-      </svg>
-    ),
-  },
+  
+
   {
     title: 'Group Projects',
     description: 'Assign roles, align milestones, and keep everyone on schedule.',
@@ -50,7 +20,7 @@ const planTypes = [
     ),
   },
   {
-    title: 'Design Portfolios',
+    title: 'Track Progress',
     description: 'Track iterations, critiques, and final polish tasks.',
     icon: (
       <svg viewBox="0 0 24 24" className="pma-icon" aria-hidden="true">
@@ -131,20 +101,6 @@ const painPoints = [
   },
 ];
 
-const painHighlights = [
-  {
-    stat: 'Day 1',
-    text: 'Get a roadmap immediately instead of waiting for guidance.',
-  },
-  {
-    stat: 'Week 2',
-    text: 'Lock in milestones before workloads spike.',
-  },
-  {
-    stat: 'Finals',
-    text: 'Reduce last-minute stress with smart checkpoints.',
-  },
-];
 
 const timeComparison = [
   { label: 'Manual planning', hours: '5 hrs', width: '100%', tone: 'muted' },
@@ -349,19 +305,9 @@ export default function PlanMyAssignmentLanding(): JSX.Element {
                   </svg>
                 </Link>
 
-                <a className="pma-button pma-button-ghost" href="#how-it-works">
-                  See the workflow
-                </a>
               </div>
 
-              <div className="pma-hero-proof">
-                <span>Built for</span>
-                <div className="pma-hero-tag-stack">
-                  <span className="pma-hero-tag">Essays</span>
-                  <span className="pma-hero-tag">Lab Reports</span>
-                  <span className="pma-hero-tag">Group Projects</span>
-                </div>
-              </div>
+
             </div>
 
             <div className="pma-hero-media">
@@ -428,9 +374,7 @@ export default function PlanMyAssignmentLanding(): JSX.Element {
       <section id="pain-points" className="pma-pain">
         <div className="pma-container">
           <div className="pma-section-header">
-            <span className="pma-eyebrow pma-eyebrow--inverse">
-              Planning should not slow you down
-            </span>
+
             <h2 className="pma-heading pma-heading--inverse">
               Assignment planning feels harder than it should.
             </h2>
@@ -454,15 +398,6 @@ export default function PlanMyAssignmentLanding(): JSX.Element {
                 <h3>{point.label}</h3>
                 <p>{point.description}</p>
                 <span className="pma-pain-caption">{point.caption}</span>
-              </div>
-            ))}
-          </div>
-
-          <div className="pma-pain-band">
-            {painHighlights.map((highlight) => (
-              <div className="pma-pain-band-item" key={highlight.stat}>
-                <span>{highlight.stat}</span>
-                <p>{highlight.text}</p>
               </div>
             ))}
           </div>
@@ -547,13 +482,10 @@ export default function PlanMyAssignmentLanding(): JSX.Element {
           </div>
 
           <div className="pma-impact-cards">
+
             <div className="pma-stat-card">
-              <span>7 days</span>
-              <p>Typical timeline built in minutes</p>
-            </div>
-            <div className="pma-stat-card">
-              <span>4x</span>
-              <p>More checkpoints to stay on track</p>
+              <span>Work Breakdown Structure</span>
+              <p>Checkpoints to stay on track</p>
             </div>
             <div className="pma-stat-card">
               <span>1 view</span>
@@ -710,31 +642,7 @@ export default function PlanMyAssignmentLanding(): JSX.Element {
         </div>
       </section>
 
-      <section className="pma-cta">
-        <div className="pma-container">
-          <div className="pma-cta-inner">
-            <h2>Ready to plan with clarity?</h2>
-            <p>
-              Build a structured roadmap in minutes and stay confident from the
-              first draft to the final submission.
-            </p>
-            <div className="pma-cta-actions">
-              <Link
-                className="pma-button pma-button-light"
-                href={loggedIn ? '/plan-my-assignment' : '/signup'}
-              >
-                {loggedIn ? 'Open Planner' : 'Start Free'}
-              </Link>
-              <a className="pma-button pma-button-outline-light" href="#features">
-                Explore features
-              </a>
-            </div>
-            <span className="pma-cta-note">
-              No setup required. Works with any assignment brief.
-            </span>
-          </div>
-        </div>
-      </section>
+      
     </div>
   );
 }
