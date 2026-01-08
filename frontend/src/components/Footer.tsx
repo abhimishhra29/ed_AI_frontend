@@ -28,7 +28,7 @@ export default function Footer() {
           <div className="footer-column footer-brand">
             <div className="footer-brand-header">
 
-              <h3 className="footer-brand-title">edgen AI</h3>
+              <h3 className="footer-brand-title">EdGenAI</h3>
             </div>
             <p className="footer-brand-description">
                             EdGenAI helps institutions adopt AI with clarity, confidence, and responsibility.
@@ -44,7 +44,6 @@ export default function Footer() {
 
           {/* Useful Links Column */}
           <div className="footer-column">
-            <h4 className="footer-column-title">Useful</h4>
             <ul className="footer-links-list">
               <li>
                 <a href="https://www.linkedin.com/company/edgenaiau/jobs/" target="_blank" rel="noopener noreferrer">
@@ -56,7 +55,6 @@ export default function Footer() {
 
           {/* Updates Links Column */}
           <div className="footer-column">
-            <h4 className="footer-column-title">Updates</h4>
             <ul className="footer-links-list">
               <li>
                 <a href="https://www.linkedin.com/company/edgenaiau" target="_blank" rel="noopener noreferrer">

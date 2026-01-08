@@ -4,9 +4,32 @@ import { ArrowUpRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function FeatureGrid() {
   const router = useRouter();
+  const demoVideoHref = 'https://www.youtube.com/watch?v=PBtyISfftTc&t=8s';
+  const demoVideoEmbedUrl = 'https://www.youtube.com/embed/PBtyISfftTc?start=8';
+  const [isDemoOpen, setIsDemoOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isDemoOpen) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsDemoOpen(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isDemoOpen]);
 
   const features = [
     {
@@ -20,7 +43,7 @@ export default function FeatureGrid() {
       title: 'View Demo of AutoGrade',
       description: 'Watch a quick walkthrough of AutoGrade evaluating a submission in real time.',
       image: '/backgrounds/Screenshot%202025-12-11%20at%206.09.10%E2%80%AFPM.png', // Provided demo screenshot
-      href: '/auto-grade',
+      href: demoVideoHref,
       size: 'small' as const,
       isDemo: true,
     },
@@ -49,6 +72,11 @@ export default function FeatureGrid() {
           <Link
             key={feature.title}
             href={feature.href}
+            onClick={(event) => {
+              if (!feature.isDemo) return;
+              event.preventDefault();
+              setIsDemoOpen(true);
+            }}
             className={`feature-grid-card ${feature.size === 'large' ? 'large' : 'small'}`}
           >
             <div className="card-inner">
@@ -81,10 +109,14 @@ export default function FeatureGrid() {
                   {/* Circular Button - Bottom Right */}
                   <button
                     className="card-button"
-                    aria-label={`Explore ${feature.title}`}
+                    aria-label={feature.isDemo ? 'Open demo video' : `Explore ${feature.title}`}
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
+                      if (feature.isDemo) {
+                        setIsDemoOpen(true);
+                        return;
+                      }
                       router.push(feature.href);
                     }}
                   >
@@ -96,6 +128,29 @@ export default function FeatureGrid() {
           </Link>
         ))}
       </div>
+      {isDemoOpen && (
+        <div className="demo-overlay" role="dialog" aria-modal="true" aria-label="AutoGrade demo video">
+          <div className="demo-backdrop" onClick={() => setIsDemoOpen(false)} />
+          <div className="demo-content">
+            <button
+              type="button"
+              className="demo-close"
+              aria-label="Close demo video"
+              onClick={() => setIsDemoOpen(false)}
+            >
+              &times;
+            </button>
+            <div className="demo-iframe-wrapper">
+              <iframe
+                src={demoVideoEmbedUrl}
+                title="AutoGrade demo video"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
