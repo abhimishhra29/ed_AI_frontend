@@ -7,6 +7,7 @@ import { useRouter, usePathname } from 'next/navigation';
 
 import logo from './logo.png';
 import { apiFetch } from '../lib/api';
+import PillButton from './PillButton';
 
 interface JwtPayload {
   exp?: number;
@@ -54,7 +55,7 @@ const Header: FC = () => {
         const bc = new BroadcastChannel("auth");
         bc.postMessage({ type: "logout" });
         bc.close();
-      } catch {}
+      } catch { }
       window.dispatchEvent(new Event("storage"));
     }
   }
@@ -96,7 +97,7 @@ const Header: FC = () => {
       const bc = new BroadcastChannel('auth');
       bc.postMessage({ type: 'logout' });
       bc.close();
-    } catch {}
+    } catch { }
     window.dispatchEvent(new Event('storage'));
     setLoggedIn(false);
     setSessionExpired(false);
@@ -206,7 +207,7 @@ const Header: FC = () => {
                   aria-label="Close menu"
                 >
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M18 6L6 18M6 6L18 18" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M18 6L6 18M6 6L18 18" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </button>
               </div>
@@ -283,7 +284,7 @@ const Header: FC = () => {
             onMouseEnter={() => setOpenMenu("products")}
             onMouseLeave={() => setOpenMenu(null)}
           >
-            <Link 
+            <Link
               href={autoGradeHref}
               className="nav-link"
               onClick={closeAll}
@@ -330,9 +331,9 @@ const Header: FC = () => {
             </button>
           )}
 
-          <Link href="/contact" className="nav-link book-demo-btn" onClick={closeAll}>
+          <PillButton href="/contact" onClick={closeAll}>
             Book a Demo
-          </Link>
+          </PillButton>
         </nav>
       </header>
       <div

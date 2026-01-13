@@ -7,7 +7,7 @@
   --text-light: #fdfcfb;
   --text-muted: rgba(30, 41, 59, 0.7);
   --link-color: #ffffff;
-  --link-hover-bg: rgba(255,255,255,0.1);
+  --link-hover-bg: rgba(255, 255, 255, 0.1);
   --nav-link-radius: 6px;
   --nav-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   --header-bg: var(--primary-dark);
@@ -76,7 +76,7 @@
 
 /* --- Nav Links & Buttons --- */
 .nav-link,
-.nav a,
+.nav a:not(.pill-button),
 .nav button.nav-link {
   color: var(--text-dark);
   background: none;
@@ -96,7 +96,7 @@
 }
 
 .nav-link:hover,
-.nav a:hover,
+.nav a:not(.pill-button):hover,
 .nav button.nav-link:hover {
   background: rgba(33, 51, 66, 0.1);
   color: var(--text-dark);
@@ -114,12 +114,12 @@
   position: relative;
 }
 
-.nav-item > .nav-link {
+.nav-item>.nav-link {
   cursor: pointer;
   pointer-events: auto;
 }
 
-.nav-item > .nav-link:hover {
+.nav-item>.nav-link:hover {
   cursor: pointer;
 }
 
@@ -163,7 +163,7 @@
   transform: translateY(0);
 }
 
-/* --- Book a Demo Button --- */
+/* --- Book a Demo Button (Legacy) --- */
 .book-demo-btn {
   background: var(--primary-dark, #213342) !important;
   color: #ffffff !important;
@@ -181,6 +181,61 @@
   background: var(--primary-hover, #3a5a6f) !important;
   color: #ffffff !important;
   transform: translateY(-1px);
+}
+
+/* --- Premium Pill Button --- */
+.pill-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1.25rem;
+  background: var(--primary-dark, #213342);
+  color: #ffffff;
+  border-radius: 24px;
+  font-weight: 500;
+  font-size: 1rem;
+  text-decoration: none;
+  overflow: hidden;
+  cursor: pointer;
+  white-space: nowrap;
+  border: none;
+  box-shadow: 0 2px 6px rgba(33, 51, 66, 0.12);
+  transition: box-shadow 0.25s ease, transform 0.1s ease;
+}
+
+.pill-button:hover {
+  box-shadow: 0 4px 12px rgba(33, 51, 66, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Internal elements are styled inline by PillButton.tsx component for precise geometry */
+
+/* --- Nav Link Hover Underline --- */
+.nav-link {
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--primary-highlight, #4E6F8A);
+  border-radius: 1px;
+  transform: translateX(-50%);
+  transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-link:hover::after {
+  width: 70%;
+}
+
+.nav-link.book-demo-btn::after,
+.pill-button::after {
+  display: none;
 }
 
 .book-demo-btn-mobile {
@@ -239,6 +294,7 @@
     from {
       opacity: 0;
     }
+
     to {
       opacity: 1;
     }
@@ -409,7 +465,7 @@
   font-weight: 600;
   font-size: 1rem;
   z-index: 9999;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 .header-spacer {
