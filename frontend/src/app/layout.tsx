@@ -15,6 +15,7 @@ import '../styles/pages/Signup.css';
 import '../styles/pages/WhyEdGenAI.css';
 import '../styles/pages/AdminPanel.css';
 import '../styles/pages/login.css';
+import '../styles/pages/Dashboard.css';
 
 import ActivityReporter from '../components/ActivityReporter';
 import Footer from '../components/Footer';
@@ -36,7 +37,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en">
       <head>
         <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
       </head>
