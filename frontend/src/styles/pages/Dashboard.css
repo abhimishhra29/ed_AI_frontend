@@ -3,6 +3,32 @@
    Elegant, minimal, breathing workspace
    ============================================ */
 
+:root {
+  /* Core palette */
+  --primary-dark: #213342;
+  --primary-highlight: #4E6F8A;
+  --primary-hover: #3a5a6f;
+  --warm-white: #f3eee4;
+  --warm-white-light: #F8F5F0;
+  --accent: #f3eee4;
+  --text-dark: #1e293b;
+  --text-light: #fdfcfb;
+  --text-muted: rgba(30, 41, 59, 0.7);
+
+  /* Enhanced gradients */
+  --hero-gradient-start: #f3eee4;
+  --hero-gradient-end: #EADFD0;
+  --hero-gradient-overlay: linear-gradient(135deg, rgba(33, 51, 66, 0.02) 0%, rgba(78, 111, 138, 0.03) 100%);
+
+  /* Radii & shadows */
+  --radius: 24px;
+  --radius-sm: 16px;
+  --shadow-light: 0 4px 20px rgba(33, 51, 66, 0.08);
+  --shadow-medium: 0 8px 30px rgba(33, 51, 66, 0.12);
+  --shadow-strong: 0 16px 50px rgba(33, 51, 66, 0.18);
+  --shadow-hover: 0 20px 60px rgba(33, 51, 66, 0.22);
+}
+
 /* Base Layout */
 .dashboard-layout {
   display: grid;
@@ -13,7 +39,7 @@
   padding: 0;
   overflow: hidden;
   position: relative;
-  background: linear-gradient(135deg, #FAFAF9 0%, #F5F3F0 100%);
+  background: linear-gradient(135deg, var(--warm-white-light) 0%, var(--warm-white) 50%, #FAFAF9 100%);
 }
 
 .dashboard-layout--collapsed {
@@ -28,14 +54,19 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: linear-gradient(180deg, #F8F5F0 0%, #FFFFFF 100%);
+  background: linear-gradient(180deg, var(--warm-white-light) 0%, #FFFFFF 100%);
   border-right: 1px solid rgba(33, 51, 66, 0.06);
   position: relative;
+  align-items: stretch;
+  box-shadow: 2px 0 20px rgba(33, 51, 66, 0.03);
 }
 
 /* Header */
 .assignments-header {
-  padding: 1.25rem 1rem;
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
   background: rgba(248, 245, 240, 0.95);
   backdrop-filter: blur(8px);
   display: flex;
@@ -44,6 +75,7 @@
   flex-shrink: 0;
   border-bottom: 1px solid rgba(33, 51, 66, 0.06);
   min-height: 60px;
+  box-sizing: border-box;
 }
 
 .assignments-header-content {
@@ -56,10 +88,13 @@
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 0.875rem;
   font-weight: 600;
-  color: #213342;
+  color: var(--primary-dark);
   margin: 0;
   letter-spacing: 0.02em;
   text-transform: uppercase;
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
 }
 
 .assignment-count-badge {
@@ -68,7 +103,7 @@
   justify-content: center;
   padding: 0.2rem 0.6rem;
   background: linear-gradient(135deg, rgba(78, 111, 138, 0.12) 0%, rgba(33, 51, 66, 0.08) 100%);
-  color: #4E6F8A;
+  color: var(--primary-highlight);
   border-radius: 20px;
   font-size: 0.75rem;
   font-weight: 600;
@@ -85,7 +120,7 @@
   background: transparent;
   border: 1px solid rgba(33, 51, 66, 0.1);
   border-radius: 8px;
-  color: #4E6F8A;
+  color: var(--primary-highlight);
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   flex-shrink: 0;
@@ -94,7 +129,7 @@
 .sidebar-toggle:hover {
   background: rgba(33, 51, 66, 0.05);
   border-color: rgba(33, 51, 66, 0.15);
-  color: #213342;
+  color: var(--primary-dark);
 }
 
 /* Assignments List Container */
@@ -160,11 +195,11 @@
   align-items: center;
   gap: 0.875rem;
   padding: 0.875rem 1rem;
-  background: linear-gradient(135deg, #FAFAF9 0%, #F8F5F0 100%);
+  background: linear-gradient(135deg, #FAFAF9 0%, var(--warm-white-light) 100%);
   border: 1px solid rgba(33, 51, 66, 0.08);
   border-radius: 12px;
   text-decoration: none;
-  color: #1e293b;
+  color: var(--text-dark);
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   box-shadow:
@@ -199,7 +234,7 @@
 
 .assignment-item--selected {
   background: #ffffff;
-  border-color: #4E6F8A;
+  border-color: var(--primary-highlight);
   box-shadow:
     0 4px 20px rgba(78, 111, 138, 0.15),
     0 0 0 2px rgba(78, 111, 138, 0.1) inset;
@@ -223,7 +258,7 @@
 }
 
 .assignment-icon {
-  color: #4E6F8A;
+  color: var(--primary-highlight);
   transition: color 0.25s ease;
 }
 
@@ -232,11 +267,11 @@
 }
 
 .assignment-item:hover .assignment-icon {
-  color: #213342;
+  color: var(--primary-dark);
 }
 
 .assignment-item--selected .assignment-icon-wrapper {
-  background: linear-gradient(135deg, #4E6F8A 0%, #3D5A73 100%);
+  background: linear-gradient(135deg, var(--primary-highlight) 0%, var(--primary-hover) 100%);
 }
 
 .assignment-item--selected .assignment-icon {
@@ -255,20 +290,40 @@
 .assignment-label {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 0.875rem;
-  font-weight: 500;
-  color: #1e293b;
+  font-weight: 600;
+  color: var(--text-dark);
   line-height: 1.4;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin-bottom: 0.375rem;
 }
 
-.assignment-number {
+.assignment-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.assignment-id {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 0.75rem;
-  font-weight: 400;
-  color: rgba(30, 41, 59, 0.5);
+  font-weight: 500;
+  color: rgba(78, 111, 138, 0.8);
   line-height: 1.4;
+  letter-spacing: 0.01em;
+}
+
+.assignment-marks {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--primary-highlight);
+  line-height: 1.4;
+  padding: 0.125rem 0.5rem;
+  background: linear-gradient(135deg, rgba(78, 111, 138, 0.1) 0%, rgba(78, 111, 138, 0.05) 100%);
+  border-radius: 12px;
 }
 
 /* Assignment Arrow */
@@ -279,12 +334,12 @@
 }
 
 .assignment-item:hover .assignment-arrow {
-  color: #4E6F8A;
+  color: var(--primary-highlight);
   transform: translateX(4px);
 }
 
 .assignment-item--selected .assignment-arrow {
-  color: #4E6F8A;
+  color: var(--primary-highlight);
 }
 
 /* ============================================
@@ -304,13 +359,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #FAFAF9 0%, #F8F5F0 100%);
+  background: linear-gradient(135deg, #FAFAF9 0%, var(--warm-white-light) 100%);
   border: 1px solid rgba(33, 51, 66, 0.1);
   border-radius: 10px;
   font-family: 'Inter', sans-serif;
   font-size: 0.75rem;
   font-weight: 600;
-  color: #4E6F8A;
+  color: var(--primary-highlight);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -322,7 +377,7 @@
 }
 
 .assignment-mini-dot--active {
-  background: linear-gradient(135deg, #4E6F8A 0%, #3D5A73 100%);
+  background: linear-gradient(135deg, var(--primary-highlight) 0%, var(--primary-hover) 100%);
   border-color: transparent;
   color: #ffffff;
   box-shadow: 0 4px 12px rgba(78, 111, 138, 0.3);
@@ -351,29 +406,53 @@
   flex-direction: column;
   overflow: hidden;
   background: #ffffff;
+  align-items: stretch;
 }
 
-/* Workspace Header */
-.workspace-header {
-  padding: 1.25rem 2rem;
-  background: rgba(248, 245, 240, 0.6);
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid rgba(33, 51, 66, 0.06);
+/* Workspace Back Button */
+.workspace-back-header {
+  padding: 1rem 2rem;
+  background: #ffffff;
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 1rem;
-  min-height: 60px;
+  gap: 1.5rem;
 }
 
-.workspace-header h2 {
+.workspace-assignment-heading {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-size: 0.875rem;
+  font-size: 1.5rem;
   font-weight: 600;
-  color: #213342;
+  color: var(--primary-dark);
   margin: 0;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
+  flex: 1;
+}
+
+.workspace-back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 10.4px 24px;
+  background: var(--primary-dark);
+  border: none;
+  border-radius: 24px;
+  color: var(--warm-white);
+  font-family: 'Mulish', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 15.2px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.workspace-back-button:hover {
+  background: var(--primary-hover);
+  color: var(--warm-white);
+  transform: translateX(-2px);
+}
+
+.workspace-back-button:active {
+  transform: translateX(0);
+  background: #1a2833;
 }
 
 .workspace-badge {
@@ -393,7 +472,7 @@
   align-items: center;
   justify-content: center;
   padding: 3rem;
-  background: linear-gradient(135deg, #ffffff 0%, #FAFAF9 100%);
+  background: linear-gradient(135deg, #ffffff 0%, var(--warm-white-light) 100%);
   overflow: hidden;
 }
 
@@ -427,7 +506,7 @@
 .workspace-empty-text {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 1rem;
-  color: #213342;
+  color: var(--primary-dark);
   margin: 0;
   font-weight: 500;
 }
@@ -435,7 +514,7 @@
 .workspace-empty-subtext {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 0.875rem;
-  color: rgba(30, 41, 59, 0.5);
+  color: var(--text-muted);
   margin: 0;
   font-weight: 400;
   line-height: 1.6;
@@ -479,6 +558,38 @@
   font-weight: 600;
   color: #213342;
   margin: 0;
+}
+
+.workspace-card-info {
+  display: flex;
+  gap: 1.5rem;
+  margin: 1rem 0 1.25rem 0;
+  padding: 1rem;
+  background: linear-gradient(135deg, rgba(248, 245, 240, 0.6) 0%, rgba(255, 255, 255, 0.4) 100%);
+  border-radius: 12px;
+  border: 1px solid rgba(33, 51, 66, 0.06);
+}
+
+.workspace-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.workspace-info-label {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(30, 41, 59, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.workspace-info-value {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #213342;
 }
 
 .workspace-card-description {

@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { FileText, ChevronRight, ChevronLeft, Sparkles } from 'lucide-react';
 
@@ -28,6 +29,13 @@ interface AssignmentItemProps {
 const AssignmentItem: React.FC<AssignmentItemProps> = ({ num, index, isSelected, onSelect }) => {
   const ref = useRef<HTMLAnchorElement>(null);
   const isInView = useInView(ref, { amount: 0.3, once: false });
+  const router = useRouter();
+
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    onSelect();
+    router.push(`/assignment/${num}`);
+  };
 
   return (
     <motion.div
@@ -43,17 +51,13 @@ const AssignmentItem: React.FC<AssignmentItemProps> = ({ num, index, isSelected,
         ref={ref}
         href={`/assignment/${num}`}
         className={`assignment-item ${isSelected ? 'assignment-item--selected' : ''}`}
-        onClick={(e) => {
-          e.preventDefault();
-          onSelect();
-        }}
+        onClick={handleClick}
       >
         <div className="assignment-icon-wrapper">
           <FileText className="assignment-icon" size={18} strokeWidth={1.5} />
         </div>
         <div className="assignment-content">
           <span className="assignment-label">Assignment {num}</span>
-          <span className="assignment-number">#{num}</span>
         </div>
         <ChevronRight className="assignment-arrow" size={16} strokeWidth={2} />
       </Link>
@@ -62,6 +66,7 @@ const AssignmentItem: React.FC<AssignmentItemProps> = ({ num, index, isSelected,
 };
 
 function DashboardView(): JSX.Element {
+  const router = useRouter();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [selectedAssignment, setSelectedAssignment] = useState<number | null>(null);
   const [topGradientOpacity, setTopGradientOpacity] = useState(0);
@@ -147,7 +152,10 @@ function DashboardView(): JSX.Element {
                     exit={{ opacity: 0, scale: 0.8 }}
                     transition={{ delay: index * 0.03 }}
                     className="assignment-mini"
-                    onClick={() => setSelectedAssignment(num)}
+                    onClick={() => {
+                      setSelectedAssignment(num);
+                      router.push(`/assignment/${num}`);
+                    }}
                   >
                     <div className={`assignment-mini-dot ${selectedAssignment === num ? 'assignment-mini-dot--active' : ''}`}>
                       {num}
@@ -179,43 +187,9 @@ function DashboardView(): JSX.Element {
 
       {/* Workspace Area */}
       <div className="dashboard-right">
-        <div className="workspace-header">
-          <h2>Workspace</h2>
-          {selectedAssignment && (
-            <motion.span
-              className="workspace-badge"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-            >
-              Assignment {selectedAssignment}
-            </motion.span>
-          )}
-        </div>
         <div className="workspace-content">
           <AnimatePresence mode="wait">
-            {selectedAssignment ? (
-              <motion.div
-                key={selectedAssignment}
-                className="workspace-selected"
-                initial={{ opacity: 0, y: 20, filter: 'blur(8px)' }}
-                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                exit={{ opacity: 0, y: -20, filter: 'blur(8px)' }}
-                transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
-              >
-                <div className="workspace-card">
-                  <div className="workspace-card-header">
-                    <Sparkles className="workspace-card-icon" size={24} />
-                    <h3>Assignment {selectedAssignment}</h3>
-                  </div>
-                  <p className="workspace-card-description">
-                    Ready to work on this assignment. Click to open the full grading workspace.
-                  </p>
-                  <PillButton href={`/assignment/${selectedAssignment}`}>
-                    Open Assignment
-                  </PillButton>
-                </div>
-              </motion.div>
-            ) : (
+            {!selectedAssignment ? (
               <motion.div
                 key="empty"
                 className="workspace-empty"
@@ -246,7 +220,7 @@ function DashboardView(): JSX.Element {
                 <p className="workspace-empty-text">Select an assignment to view details</p>
                 <p className="workspace-empty-subtext">Content will appear here</p>
               </motion.div>
-            )}
+            ) : null}
           </AnimatePresence>
         </div>
       </div>
